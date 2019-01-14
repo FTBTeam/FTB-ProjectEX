@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:star",
+	"result": {"item": "final_star"},
+	"pattern": [
+		"TDT",
+		"DND",
+		"TDT"
+	],
+	"key": {
+		"T": {"item": "projecte:item.pe_tome"},
+		"N": {"item": "minecraft:nether_star"},
+		"D": {"item": "minecraft:dragon_egg"}
+	}
+}

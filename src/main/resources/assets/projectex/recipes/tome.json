@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:tome",
+	"result": {"item": "projecte:item.pe_tome"},
+	"pattern": [
+		"SSS",
+		"SBS",
+		"SSS"
+	],
+	"key": {
+		"S": {"item": "magnum_star_omega"},
+		"B": {"item": "knowledge_sharing_book"}
+	}
+}

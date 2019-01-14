@@ -3,12 +3,11 @@
 	"group": "projectex:personal_link",
 	"result": {"item": "personal_link"},
 	"pattern": [
-		"DTD",
-		"ACA",
-		"DFD"
+		" C ",
+		"ATA",
+		" F "
 	],
 	"key": {
-		"D": {"item": "projecte:matter_block", "data": 0},
 		"T": {"item": "projecte:transmutation_table"},
 		"A": {"item": "projecte:item.pe_destruction_catalyst"},
 		"F": {"item": "projecte:dm_furnace"},

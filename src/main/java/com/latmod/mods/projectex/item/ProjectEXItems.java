@@ -21,4 +21,6 @@ public class ProjectEXItems
 	public static final Item MAGNUM_STAR_OMEGA = Items.AIR;
 	public static final Item FINAL_STAR = Items.AIR;
 	public static final Item KNOWLEDGE_SHARING_BOOK = Items.AIR;
+	public static final Item INFUSED_DARK_MATTER = Items.AIR;
+	public static final Item INFUSED_RED_MATTER = Items.AIR;
 }

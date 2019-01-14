@@ -3,6 +3,7 @@ package com.latmod.mods.projectex;
 import com.latmod.mods.projectex.block.BlockPeronalLink;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
 import com.latmod.mods.projectex.item.ItemFinalStar;
+import com.latmod.mods.projectex.item.ItemInfused;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.tile.TilePersonalLink;
@@ -65,6 +66,8 @@ public class ProjectEXEventHandler
 		r.register(withName(new ItemMagnumStar(KleinStar.EnumKleinTier.OMEGA), "magnum_star_omega"));
 		r.register(withName(new ItemFinalStar(), "final_star"));
 		r.register(withName(new ItemKnowledgeSharingBook(), "knowledge_sharing_book"));
+		r.register(withName(new ItemInfused(), "infused_dark_matter"));
+		r.register(withName(new ItemInfused(), "infused_red_matter"));
 	}
 
 	@SubscribeEvent

@@ -34,5 +34,7 @@ public class ProjectEXClientEventHandler
 		addModel(ProjectEXItems.MAGNUM_STAR_OMEGA, "inventory");
 		addModel(ProjectEXItems.FINAL_STAR, "inventory");
 		addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
+		addModel(ProjectEXItems.INFUSED_DARK_MATTER, "inventory");
+		addModel(ProjectEXItems.INFUSED_RED_MATTER, "inventory");
 	}
 }

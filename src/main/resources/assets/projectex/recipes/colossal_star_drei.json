@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:star",
+	"result": {"item": "colossal_star_drei"},
+	"pattern": [
+		"SS",
+		"SS"
+	],
+	"key": {
+		"S": {"item": "colossal_star_zwei"}
+	}
+}

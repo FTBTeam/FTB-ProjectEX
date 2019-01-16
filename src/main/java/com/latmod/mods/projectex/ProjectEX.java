@@ -25,7 +25,7 @@ public class ProjectEX
 		@Override
 		public ItemStack createIcon()
 		{
-			return new ItemStack(ProjectEXItems.MAGNUM_STAR_VIER);
+			return new ItemStack(ProjectEXItems.FINAL_STAR);
 		}
 	};
 

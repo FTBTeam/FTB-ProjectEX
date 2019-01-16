@@ -12,7 +12,18 @@ import net.minecraft.item.ItemStack;
  */
 public class ItemMagnumStar extends Item implements IItemEmc
 {
-	public static final long[] MAGNUM_STAR_EMC = new long[] {204800000L, 819200000L, 3276800000L, 13107200000L, 52428800000L, 209715200000L};
+	public static final long[] STAR_EMC = new long[12];
+
+	static
+	{
+		long emc = 204800000L;
+
+		for (int i = 0; i < STAR_EMC.length; i++)
+		{
+			STAR_EMC[i] = emc;
+			emc *= 4L;
+		}
+	}
 
 	public final KleinStar.EnumKleinTier tier;
 
@@ -60,12 +71,12 @@ public class ItemMagnumStar extends Item implements IItemEmc
 	@Override
 	public double getMaximumEmc(ItemStack stack)
 	{
-		return MAGNUM_STAR_EMC[tier.ordinal()];
+		return STAR_EMC[tier.ordinal()];
 	}
 
 	@Override
 	public EnumRarity getRarity(ItemStack stack)
 	{
-		return EnumRarity.RARE;
+		return EnumRarity.UNCOMMON;
 	}
 }

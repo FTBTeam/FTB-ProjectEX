@@ -19,6 +19,12 @@ public class ProjectEXItems
 	public static final Item MAGNUM_STAR_VIER = Items.AIR;
 	public static final Item MAGNUM_STAR_SPHERE = Items.AIR;
 	public static final Item MAGNUM_STAR_OMEGA = Items.AIR;
+	public static final Item COLOSSAL_STAR_EIN = Items.AIR;
+	public static final Item COLOSSAL_STAR_ZWEI = Items.AIR;
+	public static final Item COLOSSAL_STAR_DREI = Items.AIR;
+	public static final Item COLOSSAL_STAR_VIER = Items.AIR;
+	public static final Item COLOSSAL_STAR_SPHERE = Items.AIR;
+	public static final Item COLOSSAL_STAR_OMEGA = Items.AIR;
 	public static final Item FINAL_STAR = Items.AIR;
 	public static final Item KNOWLEDGE_SHARING_BOOK = Items.AIR;
 	public static final Item INFUSED_DARK_MATTER = Items.AIR;

@@ -2,6 +2,7 @@ package com.latmod.mods.projectex;
 
 import com.latmod.mods.projectex.block.BlockPeronalLink;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
+import com.latmod.mods.projectex.item.ItemColossalStar;
 import com.latmod.mods.projectex.item.ItemFinalStar;
 import com.latmod.mods.projectex.item.ItemInfused;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
@@ -64,6 +65,12 @@ public class ProjectEXEventHandler
 		r.register(withName(new ItemMagnumStar(KleinStar.EnumKleinTier.VIER), "magnum_star_vier"));
 		r.register(withName(new ItemMagnumStar(KleinStar.EnumKleinTier.SPHERE), "magnum_star_sphere"));
 		r.register(withName(new ItemMagnumStar(KleinStar.EnumKleinTier.OMEGA), "magnum_star_omega"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.EIN), "colossal_star_ein"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.ZWEI), "colossal_star_zwei"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.DREI), "colossal_star_drei"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.VIER), "colossal_star_vier"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.SPHERE), "colossal_star_sphere"));
+		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.OMEGA), "colossal_star_omega"));
 		r.register(withName(new ItemFinalStar(), "final_star"));
 		r.register(withName(new ItemKnowledgeSharingBook(), "knowledge_sharing_book"));
 		r.register(withName(new ItemInfused(), "infused_dark_matter"));

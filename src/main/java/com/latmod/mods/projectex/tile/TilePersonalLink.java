@@ -2,6 +2,7 @@ package com.latmod.mods.projectex.tile;
 
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,7 +79,7 @@ public class TilePersonalLink extends TileEntity implements IItemHandler
 			if (!simulate)
 			{
 				IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-				provider.setEmc(provider.getEmc() + stack.getCount() * value);
+				provider.setEmc(provider.getEmc() + stack.getCount() * value * ProjectEConfig.difficulty.covalenceLoss);
 				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
 
 				if (player != null)

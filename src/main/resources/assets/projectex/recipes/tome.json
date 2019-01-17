@@ -3,12 +3,12 @@
 	"group": "projectex:tome",
 	"result": {"item": "projecte:item.pe_tome"},
 	"pattern": [
-		"SSS",
+		" S ",
 		"SBS",
-		"SSS"
+		" S "
 	],
 	"key": {
-		"S": {"item": "colossal_star_omega"},
+		"S": {"item": "final_star"},
 		"B": {"item": "knowledge_sharing_book"}
 	}
 }

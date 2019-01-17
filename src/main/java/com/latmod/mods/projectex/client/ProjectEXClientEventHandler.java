@@ -38,6 +38,7 @@ public class ProjectEXClientEventHandler
 		addModel(ProjectEXItems.COLOSSAL_STAR_VIER, "inventory");
 		addModel(ProjectEXItems.COLOSSAL_STAR_SPHERE, "inventory");
 		addModel(ProjectEXItems.COLOSSAL_STAR_OMEGA, "inventory");
+		addModel(ProjectEXItems.FINAL_STAR_SHARD, "inventory");
 		addModel(ProjectEXItems.FINAL_STAR, "inventory");
 		addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
 		addModel(ProjectEXItems.INFUSED_DARK_MATTER, "inventory");

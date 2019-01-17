@@ -36,7 +36,7 @@ public class ItemMagnumStar extends Item implements IItemEmc
 	@Override
 	public boolean showDurabilityBar(ItemStack stack)
 	{
-		return true;
+		return getStoredEmc(stack) > 0D;
 	}
 
 	@Override

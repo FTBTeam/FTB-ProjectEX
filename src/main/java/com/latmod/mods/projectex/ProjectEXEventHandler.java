@@ -71,6 +71,7 @@ public class ProjectEXEventHandler
 		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.VIER), "colossal_star_vier"));
 		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.SPHERE), "colossal_star_sphere"));
 		r.register(withName(new ItemColossalStar(KleinStar.EnumKleinTier.OMEGA), "colossal_star_omega"));
+		r.register(withName(new Item(), "final_star_shard"));
 		r.register(withName(new ItemFinalStar(), "final_star"));
 		r.register(withName(new ItemKnowledgeSharingBook(), "knowledge_sharing_book"));
 		r.register(withName(new ItemInfused(), "infused_dark_matter"));

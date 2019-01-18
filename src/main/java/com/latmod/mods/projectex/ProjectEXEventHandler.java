@@ -1,13 +1,13 @@
 package com.latmod.mods.projectex;
 
-import com.latmod.mods.projectex.block.BlockPeronalLink;
+import com.latmod.mods.projectex.block.BlockLink;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
 import com.latmod.mods.projectex.item.ItemColossalStar;
 import com.latmod.mods.projectex.item.ItemFinalStar;
 import com.latmod.mods.projectex.item.ItemInfused;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
-import com.latmod.mods.projectex.tile.TilePersonalLink;
+import com.latmod.mods.projectex.tile.TileLink;
 import moze_intel.projecte.api.item.IItemEmc;
 import moze_intel.projecte.gameObjs.items.KleinStar;
 import net.minecraft.block.Block;
@@ -48,9 +48,9 @@ public class ProjectEXEventHandler
 	public static void registerBlocks(RegistryEvent.Register<Block> event)
 	{
 		IForgeRegistry<Block> r = event.getRegistry();
-		r.register(withName(new BlockPeronalLink(), "personal_link"));
+		r.register(withName(new BlockLink(), "personal_link"));
 
-		GameRegistry.registerTileEntity(TilePersonalLink.class, new ResourceLocation(ProjectEX.MOD_ID, "personal_link"));
+		GameRegistry.registerTileEntity(TileLink.class, new ResourceLocation(ProjectEX.MOD_ID, "personal_link"));
 	}
 
 	@SubscribeEvent

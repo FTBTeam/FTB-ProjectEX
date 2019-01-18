@@ -3,14 +3,15 @@
 	"group": "projectex:personal_link",
 	"result": {"item": "personal_link"},
 	"pattern": [
-		" C ",
+		"NCN",
 		"ATA",
-		" F "
+		"NFN"
 	],
 	"key": {
 		"T": {"item": "projecte:transmutation_table"},
 		"A": {"item": "projecte:item.pe_destruction_catalyst"},
-		"F": {"item": "projecte:dm_furnace"},
-		"C": {"item": "projecte:condenser_mk1"}
+		"F": {"item": "projecte:rm_furnace"},
+		"C": {"item": "projecte:condenser_mk2"},
+		"N": {"item": "minecraft:nether_star"}
 	}
 }

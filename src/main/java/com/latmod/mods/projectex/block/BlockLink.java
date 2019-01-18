@@ -1,6 +1,7 @@
 package com.latmod.mods.projectex.block;
 
-import com.latmod.mods.projectex.tile.TilePersonalLink;
+import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.tile.TileLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -18,9 +19,9 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class BlockPeronalLink extends Block
+public class BlockLink extends Block
 {
-	public BlockPeronalLink()
+	public BlockLink()
 	{
 		super(Material.ROCK, MapColor.BLACK);
 		setHardness(2F);
@@ -35,7 +36,7 @@ public class BlockPeronalLink extends Block
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new TilePersonalLink();
+		return new TileLink();
 	}
 
 	@Override
@@ -45,9 +46,16 @@ public class BlockPeronalLink extends Block
 		{
 			TileEntity tileEntity = world.getTileEntity(pos);
 
-			if (tileEntity instanceof TilePersonalLink)
+			if (tileEntity instanceof TileLink)
 			{
-				player.sendStatusMessage(new TextComponentString(((TilePersonalLink) tileEntity).name), true);
+				if (player.getUniqueID().equals(((TileLink) tileEntity).owner))
+				{
+					player.openGui(ProjectEX.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+				}
+				else
+				{
+					player.sendStatusMessage(new TextComponentString(((TileLink) tileEntity).name), true);
+				}
 			}
 		}
 
@@ -59,10 +67,10 @@ public class BlockPeronalLink extends Block
 	{
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof TilePersonalLink)
+		if (tileEntity instanceof TileLink)
 		{
-			((TilePersonalLink) tileEntity).owner = placer.getUniqueID();
-			((TilePersonalLink) tileEntity).name = placer.getName();
+			((TileLink) tileEntity).owner = placer.getUniqueID();
+			((TileLink) tileEntity).name = placer.getName();
 			tileEntity.markDirty();
 		}
 	}

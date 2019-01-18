@@ -10,6 +10,6 @@
 	"key": {
 		"R": {"item": "projecte:item.pe_matter", "data": 1},
 		"B": {"item": "minecraft:writable_book"},
-		"N": {"item": "minecraft:nether_star"}
+		"N": {"type": "forge:ore_dict", "ore": "netherStar"}
 	}
 }

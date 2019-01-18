@@ -9,6 +9,6 @@
 	],
 	"key": {
 		"S": {"item": "colossal_star_omega"},
-		"N": {"item": "minecraft:nether_star"}
+		"N": {"type": "forge:ore_dict", "ore": "netherStar"}
 	}
 }

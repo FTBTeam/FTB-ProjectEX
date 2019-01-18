@@ -1,0 +1,146 @@
+package com.latmod.mods.projectex.gui;
+
+import com.latmod.mods.projectex.ProjectEX;
+import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.utils.Constants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+
+/**
+ * @author LatvianModder
+ */
+public class GuiLink extends GuiContainer
+{
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/link.png");
+
+	private class ButtonFilter extends GuiButton
+	{
+		public ButtonFilter(int id, int x, int y)
+		{
+			super(id, x, y, 16, 16, "");
+		}
+
+		@Override
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+		{
+			if (visible)
+			{
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
+				GlStateManager.enableBlend();
+				GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+				GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+				if (hovered)
+				{
+					//int left, int top, int right, int bottom
+					drawRect(x, y, x + width, y + height, -2130706433);
+				}
+
+				if (!container.link.output.isEmpty())
+				{
+					zLevel = 100F;
+					itemRender.zLevel = 100F;
+					GlStateManager.enableDepth();
+					RenderHelper.enableGUIStandardItemLighting();
+					itemRender.renderItemAndEffectIntoGUI(mc.player, container.link.output, x, y);
+					itemRender.renderItemOverlayIntoGUI(fontRenderer, container.link.output, x, y, "");
+					itemRender.zLevel = 0F;
+					zLevel = 0F;
+				}
+
+				mouseDragged(mc, mouseX, mouseY);
+			}
+		}
+	}
+
+	public final ContainerLink container;
+	public double lastEMC;
+	public long lastUpdate;
+	public double emcs;
+
+	public GuiLink(ContainerLink c)
+	{
+		super(c);
+		ySize = 118;
+		container = c;
+		lastEMC = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
+		lastUpdate = System.currentTimeMillis();
+		emcs = 0D;
+	}
+
+	@Override
+	public void initGui()
+	{
+		super.initGui();
+		buttonList.add(new ButtonFilter(0, guiLeft + 8, guiTop + 11));
+	}
+
+	@Override
+	protected void actionPerformed(GuiButton button)
+	{
+		if (button instanceof ButtonFilter)
+		{
+			if (container.enchantItem(container.player, 0))
+			{
+				mc.playerController.sendEnchantPacket(container.windowId, 0);
+			}
+		}
+	}
+
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks)
+	{
+		drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, partialTicks);
+		renderHoveredToolTip(mouseX, mouseY);
+	}
+
+	@Override
+	public void renderHoveredToolTip(int x, int y)
+	{
+		super.renderHoveredToolTip(x, y);
+
+		for (GuiButton button : buttonList)
+		{
+			if (button.isMouseOver() && button instanceof ButtonFilter)
+			{
+				if (!container.link.output.isEmpty())
+				{
+					renderToolTip(container.link.output, x, y);
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+	{
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		mc.getTextureManager().bindTexture(TEXTURE);
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+	}
+
+	@Override
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
+	{
+		long now = System.currentTimeMillis();
+		double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
+
+		if ((now - lastUpdate) >= 1000L)
+		{
+			emcs = emc - lastEMC;
+			lastEMC = emc;
+			lastUpdate = now;
+		}
+
+		fontRenderer.drawString(container.link.name, 29, 5, 4210752);
+		fontRenderer.drawString(Constants.EMC_FORMATTER.format(emc), 29, 15, 4210752);
+		fontRenderer.drawString((emcs == 0D ? "" : emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s", 29, 25, 4210752);
+	}
+}

@@ -67,7 +67,6 @@ public class GuiLink extends GuiContainer
 	public GuiLink(ContainerLink c)
 	{
 		super(c);
-		ySize = 118;
 		container = c;
 		lastEMC = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
 		lastUpdate = System.currentTimeMillis();
@@ -78,7 +77,7 @@ public class GuiLink extends GuiContainer
 	public void initGui()
 	{
 		super.initGui();
-		buttonList.add(new ButtonFilter(0, guiLeft + 8, guiTop + 11));
+		buttonList.add(new ButtonFilter(0, guiLeft + 152, guiTop + 35));
 	}
 
 	@Override
@@ -139,8 +138,15 @@ public class GuiLink extends GuiContainer
 			lastUpdate = now;
 		}
 
-		fontRenderer.drawString(container.link.name, 29, 5, 4210752);
-		fontRenderer.drawString(Constants.EMC_FORMATTER.format(emc), 29, 15, 4210752);
-		fontRenderer.drawString((emcs == 0D ? "" : emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s", 29, 25, 4210752);
+		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
+
+		String s = Constants.EMC_FORMATTER.format(emc);
+
+		if (emcs != 0D)
+		{
+			s += (emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
+		}
+
+		fontRenderer.drawString(s, 8, 73, 4210752);
 	}
 }

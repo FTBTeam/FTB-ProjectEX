@@ -7,24 +7,36 @@ import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
  * @author LatvianModder
  */
-public class TileLink extends TileEntity implements IItemHandler
+public class TileLink extends TileEntity implements IItemHandlerModifiable, ITickable
 {
 	public UUID owner = null;
 	public String name = "";
 	public ItemStack output = ItemStack.EMPTY;
 	private IKnowledgeProvider knowledgeProvider;
+	private boolean isDirty = false;
+	public final ItemStack[] inputSlots = new ItemStack[18];
+
+	public TileLink()
+	{
+		Arrays.fill(inputSlots, ItemStack.EMPTY);
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
@@ -36,6 +48,15 @@ public class TileLink extends TileEntity implements IItemHandler
 		if (output.isEmpty())
 		{
 			output = ItemStack.EMPTY;
+		}
+
+		NBTTagList inputList = nbt.getTagList("input", Constants.NBT.TAG_COMPOUND);
+		Arrays.fill(inputSlots, ItemStack.EMPTY);
+
+		for (int i = 0; i < inputList.tagCount(); i++)
+		{
+			NBTTagCompound nbt1 = inputList.getCompoundTagAt(i);
+			inputSlots[nbt1.getByte("Slot")] = new ItemStack(nbt1);
 		}
 
 		knowledgeProvider = null;
@@ -54,6 +75,20 @@ public class TileLink extends TileEntity implements IItemHandler
 			output.setCount(1);
 			nbt.setTag("output", output.serializeNBT());
 		}
+
+		NBTTagList inputList = new NBTTagList();
+
+		for (int i = 0; i < inputSlots.length; i++)
+		{
+			if (!inputSlots[i].isEmpty())
+			{
+				NBTTagCompound nbt1 = inputSlots[i].serializeNBT();
+				nbt1.setByte("Slot", (byte) i);
+				inputList.appendTag(nbt1);
+			}
+		}
+
+		nbt.setTag("input", inputList);
 
 		return super.writeToNBT(nbt);
 	}
@@ -80,74 +115,96 @@ public class TileLink extends TileEntity implements IItemHandler
 	@Override
 	public int getSlots()
 	{
-		return 2;
+		return 19;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot == 1 && !output.isEmpty())
+		if (slot == 18)
 		{
+			if (output.isEmpty())
+			{
+				return ItemStack.EMPTY;
+			}
+
 			output.setCount(output.getMaxStackSize());
 			return output;
 		}
 
-		return ItemStack.EMPTY;
+		return inputSlots[slot];
+	}
+
+	@Override
+	public void setStackInSlot(int slot, ItemStack stack)
+	{
+		if (slot != 18)
+		{
+			inputSlots[slot] = stack;
+			markDirty();
+		}
 	}
 
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		if (world.isRemote || owner == null || slot == 1)
+		if (slot == 18 || !ProjectEAPI.getEMCProxy().hasValue(stack))
 		{
 			return stack;
 		}
 
-		long value = ProjectEAPI.getEMCProxy().getValue(stack);
+		int limit = stack.getMaxStackSize();
 
-		if (value > 0L)
+		if (!inputSlots[slot].isEmpty())
 		{
-			if (!simulate)
+			if (!ItemHandlerHelper.canItemStacksStack(stack, inputSlots[slot]))
 			{
-				if (knowledgeProvider == null)
-				{
-					knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-				}
-
-				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + (long) ((double) stack.getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss));
-				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-				if (player != null)
-				{
-					knowledgeProvider.sync(player);
-				}
+				return stack;
 			}
 
-			return ItemStack.EMPTY;
+			limit -= inputSlots[slot].getCount();
 		}
 
-		return stack;
+		if (limit <= 0)
+		{
+			return stack;
+		}
+
+		boolean reachedLimit = stack.getCount() > limit;
+
+		if (!simulate)
+		{
+			if (inputSlots[slot].isEmpty())
+			{
+				inputSlots[slot] = reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack;
+			}
+			else
+			{
+				inputSlots[slot].grow(reachedLimit ? limit : stack.getCount());
+			}
+
+			markDirty();
+		}
+
+		return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
 	}
 
 	@Override
 	public void markDirty()
 	{
-		if (world != null)
-		{
-			world.markChunkDirty(pos, this);
-		}
+		isDirty = true;
 	}
 
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack)
 	{
-		return !world.isRemote && slot == 0 && owner != null && ProjectEAPI.getEMCProxy().hasValue(stack);
+		return slot != 18 && ProjectEAPI.getEMCProxy().hasValue(stack);
 	}
 
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		if (slot == 1 && amount > 0 && !world.isRemote && !output.isEmpty())
+		if (slot == 18 && amount > 0 && !world.isRemote && !output.isEmpty())
 		{
 			output.setCount(1);
 			long value = ProjectEAPI.getEMCProxy().getValue(output);
@@ -193,6 +250,52 @@ public class TileLink extends TileEntity implements IItemHandler
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return Integer.MAX_VALUE;
+		return 64;
+	}
+
+	@Override
+	public void update()
+	{
+		if (!world.isRemote)
+		{
+			boolean sync = false;
+
+			for (int i = 0; i < inputSlots.length; i++)
+			{
+				if (!inputSlots[i].isEmpty())
+				{
+					long value = ProjectEAPI.getEMCProxy().getValue(inputSlots[i]);
+
+					if (value > 0L)
+					{
+						if (knowledgeProvider == null)
+						{
+							knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+						}
+
+						knowledgeProvider.setEmc(knowledgeProvider.getEmc() + (long) ((double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss));
+						sync = true;
+						inputSlots[i] = ItemStack.EMPTY;
+						markDirty();
+					}
+				}
+			}
+
+			if (sync)
+			{
+				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+
+				if (player != null)
+				{
+					knowledgeProvider.sync(player);
+				}
+			}
+		}
+
+		if (isDirty)
+		{
+			isDirty = false;
+			world.markChunkDirty(pos, this);
+		}
 	}
 }

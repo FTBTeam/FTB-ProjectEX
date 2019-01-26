@@ -7,6 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * @author LatvianModder
@@ -21,17 +22,22 @@ public class ContainerLink extends Container
 		player = ep;
 		link = p;
 
+		for (int i = 0; i < 18; i++)
+		{
+			addSlotToContainer(new SlotItemHandler(link, i, 8 + (i % 6) * 18, 17 + (i / 6) * 18));
+		}
+
 		for (int k = 0; k < 3; ++k)
 		{
 			for (int i1 = 0; i1 < 9; ++i1)
 			{
-				addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 36 + k * 18));
+				addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
 			}
 		}
 
 		for (int l = 0; l < 9; ++l)
 		{
-			addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 94));
+			addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 142));
 		}
 	}
 

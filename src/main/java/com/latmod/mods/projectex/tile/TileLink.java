@@ -1,5 +1,7 @@
 package com.latmod.mods.projectex.tile;
 
+import com.latmod.mods.projectex.net.MessageSyncEMC;
+import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.config.ProjectEConfig;
@@ -236,7 +238,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 					if (player != null)
 					{
-						knowledgeProvider.sync(player);
+						ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
 					}
 				}
 
@@ -287,7 +289,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 				if (player != null)
 				{
-					knowledgeProvider.sync(player);
+					ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
 				}
 			}
 		}

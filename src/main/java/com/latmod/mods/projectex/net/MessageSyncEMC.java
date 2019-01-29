@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.net;
 
 import io.netty.buffer.ByteBuf;
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -41,12 +40,13 @@ public class MessageSyncEMC implements IMessage
 		@Override
 		public IMessage onMessage(MessageSyncEMC message, MessageContext ctx)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() -> {
-				IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID());
-				provider.setEmc(message.emc);
-			});
-
+			setEMC(message.emc);
 			return null;
+		}
+
+		private void setEMC(double emc)
+		{
+			Minecraft.getMinecraft().addScheduledTask(() -> ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).setEmc(emc));
 		}
 	}
 }

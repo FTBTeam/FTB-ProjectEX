@@ -31,7 +31,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	public UUID owner = null;
 	public String name = "";
 	public ItemStack output = ItemStack.EMPTY;
-	private IKnowledgeProvider knowledgeProvider;
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots = new ItemStack[18];
 
@@ -60,8 +59,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			NBTTagCompound nbt1 = inputList.getCompoundTagAt(i);
 			inputSlots[nbt1.getByte("Slot")] = new ItemStack(nbt1);
 		}
-
-		knowledgeProvider = null;
 
 		super.readFromNBT(nbt);
 	}
@@ -125,13 +122,28 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		if (slot == 18)
 		{
-			if (output.isEmpty())
+			if (world.isRemote || output.isEmpty())
 			{
 				return ItemStack.EMPTY;
 			}
 
-			output.setCount(output.getMaxStackSize());
-			return output;
+			output.setCount(1);
+			long value = ProjectEAPI.getEMCProxy().getValue(output);
+
+			if (value > 0L)
+			{
+				IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+
+				if (knowledgeProvider.getEmc() < value)
+				{
+					return ItemStack.EMPTY;
+				}
+
+				output.setCount((int) (Math.min(Integer.MAX_VALUE, knowledgeProvider.getEmc() / (double) value)));
+				return output.getCount() <= 0 ? ItemStack.EMPTY : output;
+			}
+
+			return ItemStack.EMPTY;
 		}
 
 		return inputSlots[slot];
@@ -213,10 +225,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 			if (value > 0L)
 			{
-				if (knowledgeProvider == null)
-				{
-					knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-				}
+				IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
 
 				if (knowledgeProvider.getEmc() < value)
 				{
@@ -226,23 +235,28 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 				ItemStack stack = output.copy();
 				stack.setCount((int) (Math.min(amount, Math.min(output.getMaxStackSize(), knowledgeProvider.getEmc() / (double) value))));
 
-				if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
+				if (stack.getCount() >= 1)
 				{
-					stack.setTagCompound(new NBTTagCompound());
-				}
-
-				if (!simulate)
-				{
-					knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
-					EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-					if (player != null)
+					if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
 					{
-						ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
+						stack.setTagCompound(new NBTTagCompound());
 					}
+
+					if (!simulate)
+					{
+						knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
+						EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+
+						if (player != null)
+						{
+							ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
+						}
+					}
+
+					return stack;
 				}
 
-				return stack;
+				return ItemStack.EMPTY;
 			}
 		}
 
@@ -261,6 +275,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		if (!world.isRemote)
 		{
 			boolean sync = false;
+			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
 
 			for (int i = 0; i < inputSlots.length; i++)
 			{
@@ -270,10 +285,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 					if (value > 0L)
 					{
-						if (knowledgeProvider == null)
-						{
-							knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-						}
 
 						knowledgeProvider.setEmc(knowledgeProvider.getEmc() + (long) ((double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss));
 						sync = true;

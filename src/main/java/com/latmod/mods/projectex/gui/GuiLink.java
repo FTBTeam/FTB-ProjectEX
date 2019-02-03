@@ -85,9 +85,9 @@ public class GuiLink extends GuiContainer
 	{
 		if (button instanceof ButtonFilter)
 		{
-			if (container.enchantItem(container.player, 0))
+			if (container.enchantItem(container.player, isCtrlKeyDown() ? 2 : isShiftKeyDown() ? 1 : 0))
 			{
-				mc.playerController.sendEnchantPacket(container.windowId, 0);
+				mc.playerController.sendEnchantPacket(container.windowId, isCtrlKeyDown() ? 2 : isShiftKeyDown() ? 1 : 0);
 			}
 		}
 	}

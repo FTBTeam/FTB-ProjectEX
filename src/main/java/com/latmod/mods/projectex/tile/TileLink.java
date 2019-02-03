@@ -68,10 +68,10 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		nbt.setUniqueId("owner", owner);
 		nbt.setString("name", name);
+		output.setCount(1);
 
 		if (!output.isEmpty())
 		{
-			output.setCount(1);
 			nbt.setTag("output", output.serializeNBT());
 		}
 
@@ -88,7 +88,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		}
 
 		nbt.setTag("input", inputList);
-
 		return super.writeToNBT(nbt);
 	}
 
@@ -139,7 +138,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 					return ItemStack.EMPTY;
 				}
 
-				output.setCount((int) (Math.min(Integer.MAX_VALUE, knowledgeProvider.getEmc() / (double) value)));
+				output.setCount(getCount(knowledgeProvider, value, Integer.MAX_VALUE));
 				return output.getCount() <= 0 ? ItemStack.EMPTY : output;
 			}
 
@@ -233,7 +232,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 				}
 
 				ItemStack stack = output.copy();
-				stack.setCount((int) (Math.min(amount, Math.min(output.getMaxStackSize(), knowledgeProvider.getEmc() / (double) value))));
+				stack.setCount(getCount(knowledgeProvider, value, Math.min(amount, output.getMaxStackSize())));
 
 				if (stack.getCount() >= 1)
 				{
@@ -310,5 +309,15 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			isDirty = false;
 			world.markChunkDirty(pos, this);
 		}
+	}
+
+	public int getCount(IKnowledgeProvider knowledgeProvider, long value, int limit)
+	{
+		if (knowledgeProvider.getEmc() < value)
+		{
+			return 0;
+		}
+
+		return (int) (Math.min(limit, knowledgeProvider.getEmc() / (double) value));
 	}
 }

@@ -56,16 +56,39 @@ public class ContainerLink extends Container
 	@Override
 	public boolean enchantItem(EntityPlayer player, int id)
 	{
+		if (!player.getUniqueID().equals(link.owner))
+		{
+			return false;
+		}
+
 		if (player.inventory.getItemStack().isEmpty())
 		{
-			link.output = ItemStack.EMPTY;
+			if (id == 1)
+			{
+				link.output = ItemStack.EMPTY;
+				link.markDirty();
+				return true;
+			}
+
+			if (!player.world.isRemote)
+			{
+				ItemStack stack = link.extractItem(18, id == 2 ? 1 : 64, false);
+
+				if (!stack.isEmpty())
+				{
+					ItemHandlerHelper.giveItemToPlayer(player, stack);
+				}
+			}
+
+			return true;
 		}
 		else if (ProjectEAPI.getEMCProxy().getValue(player.inventory.getItemStack()) > 0L)
 		{
 			link.output = ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), 1);
+			link.markDirty();
+			return true;
 		}
 
-		link.markDirty();
-		return true;
+		return false;
 	}
 }

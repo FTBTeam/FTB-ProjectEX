@@ -50,7 +50,37 @@ public class ContainerLink extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
-		return ItemStack.EMPTY;
+		ItemStack stack = ItemStack.EMPTY;
+		Slot slot = inventorySlots.get(index);
+
+		if (slot != null && slot.getHasStack())
+		{
+			ItemStack stack1 = slot.getStack();
+			stack = stack1.copy();
+
+			if (index < 18)
+			{
+				if (!mergeItemStack(stack1, 18, inventorySlots.size(), true))
+				{
+					return ItemStack.EMPTY;
+				}
+			}
+			else if (!mergeItemStack(stack1, 0, 18, false))
+			{
+				return ItemStack.EMPTY;
+			}
+
+			if (stack1.isEmpty())
+			{
+				slot.putStack(ItemStack.EMPTY);
+			}
+			else
+			{
+				slot.onSlotChanged();
+			}
+		}
+
+		return stack;
 	}
 
 	@Override

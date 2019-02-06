@@ -2,10 +2,12 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.tile.TileLink;
 import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -114,8 +116,14 @@ public class ContainerLink extends Container
 		}
 		else if (ProjectEAPI.getEMCProxy().getValue(player.inventory.getItemStack()) > 0L)
 		{
-			link.output = ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), 1);
-			link.markDirty();
+			ItemStack stack = ItemHandlerHelper.copyStackWithSize(player.inventory.getItemStack(), 1);
+
+			if (!MinecraftForge.EVENT_BUS.post(new PlayerAttemptCondenserSetEvent(player, stack)))
+			{
+				link.output = stack;
+				link.markDirty();
+			}
+
 			return true;
 		}
 

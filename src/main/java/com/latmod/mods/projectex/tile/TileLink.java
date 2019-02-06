@@ -4,6 +4,7 @@ import com.latmod.mods.projectex.net.MessageSyncEMC;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.api.tile.IEmcAcceptor;
 import moze_intel.projecte.config.ProjectEConfig;
 import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,13 +27,14 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class TileLink extends TileEntity implements IItemHandlerModifiable, ITickable
+public class TileLink extends TileEntity implements IItemHandlerModifiable, ITickable, IEmcAcceptor
 {
 	public UUID owner = null;
 	public String name = "";
 	public ItemStack output = ItemStack.EMPTY;
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots = new ItemStack[18];
+	public double addEMC = 0D;
 
 	public TileLink()
 	{
@@ -276,6 +278,13 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			boolean sync = false;
 			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
 
+			if (addEMC > 0D)
+			{
+				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + addEMC);
+				addEMC = 0D;
+				sync = true;
+			}
+
 			for (int i = 0; i < inputSlots.length; i++)
 			{
 				if (!inputSlots[i].isEmpty())
@@ -319,5 +328,28 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		}
 
 		return (int) (Math.min(limit, knowledgeProvider.getEmc() / (double) value));
+	}
+
+	@Override
+	public double acceptEMC(EnumFacing facing, double v)
+	{
+		if (!world.isRemote)
+		{
+			addEMC += v;
+		}
+
+		return v;
+	}
+
+	@Override
+	public double getStoredEmc()
+	{
+		return 0D;
+	}
+
+	@Override
+	public double getMaximumEmc()
+	{
+		return Double.MAX_VALUE;
 	}
 }

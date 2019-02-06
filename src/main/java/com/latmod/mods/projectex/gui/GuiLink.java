@@ -140,7 +140,7 @@ public class GuiLink extends GuiContainer
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 
-		String s = Constants.EMC_FORMATTER.format(emc);
+		String s = Constants.EMC_FORMATTER.format(Math.round(emc));
 
 		if (emcs != 0D)
 		{

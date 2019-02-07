@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class TileLink extends TileEntity implements IItemHandlerModifiable, ITickable, IEmcAcceptor
 {
-	public UUID owner = null;
+	public UUID owner = new UUID(0L, 0L);
 	public String name = "";
 	public ItemStack output = ItemStack.EMPTY;
 	private boolean isDirty = false;
@@ -118,12 +118,17 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		return 19;
 	}
 
+	public boolean hasOwner()
+	{
+		return owner.getLeastSignificantBits() != 0L || owner.getMostSignificantBits() != 0L;
+	}
+
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
 		if (slot == 18)
 		{
-			if (world.isRemote || output.isEmpty())
+			if (world.isRemote || output.isEmpty() || !hasOwner())
 			{
 				return ItemStack.EMPTY;
 			}
@@ -219,7 +224,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		if (slot == 18 && amount > 0 && !world.isRemote && !output.isEmpty())
+		if (slot == 18 && amount > 0 && !world.isRemote && !output.isEmpty() && hasOwner())
 		{
 			output.setCount(1);
 			long value = ProjectEAPI.getEMCProxy().getValue(output);
@@ -273,7 +278,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public void update()
 	{
-		if (!world.isRemote)
+		if (!world.isRemote && hasOwner())
 		{
 			boolean sync = false;
 			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);

@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:matter",
+	"result": {"item": "blue_matter"},
+	"pattern": [
+		"FFF",
+		"MMM",
+		"FFF"
+	],
+	"key": {
+		"M": {"item": "purple_matter"},
+		"F": {"item": "projecte:item.pe_fuel", "data": 2}
+	}
+}

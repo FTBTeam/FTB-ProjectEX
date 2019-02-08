@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:collector",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:collector_mk5"
+		}
+	],
+	"result": {"item": "collector_mk5"},
+	"pattern": [
+		"GMG",
+		"GRG",
+		"GGG"
+	],
+	"key": {
+		"M": {"item": "blue_matter"},
+		"G": {"type": "forge:ore_dict", "ore": "glowstone"},
+		"R": {"item": "collector_mk4"}
+	}
+}

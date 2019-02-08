@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:relay",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:relay_mk5"
+		}
+	],
+	"result": {"item": "relay_mk5"},
+	"pattern": [
+		"OMO",
+		"ORO",
+		"OOO"
+	],
+	"key": {
+		"M": {"item": "blue_matter"},
+		"O": {"type": "forge:ore_dict", "ore": "obsidian"},
+		"R": {"item": "relay_mk4"}
+	}
+}

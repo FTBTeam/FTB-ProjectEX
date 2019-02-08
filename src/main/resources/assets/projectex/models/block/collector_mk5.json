@@ -1,0 +1,9 @@
+{
+	"parent": "projecte:block/orientable_horizontal",
+	"textures": {
+		"top": "projectex:blocks/collector_mk5",
+		"front": "projecte:blocks/collectors/front",
+		"side": "projecte:blocks/collectors/other",
+		"bottom": "projecte:blocks/collectors/other"
+	}
+}

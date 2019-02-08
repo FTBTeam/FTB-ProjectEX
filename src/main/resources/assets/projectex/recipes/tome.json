@@ -1,6 +1,11 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"group": "projectex:tome",
+	"conditions": [
+		{
+			"type": "projectex:tome"
+		}
+	],
 	"result": {"item": "projecte:item.pe_tome"},
 	"pattern": [
 		"BBB",

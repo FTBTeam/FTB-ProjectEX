@@ -25,6 +25,14 @@ public class ProjectEXClientEventHandler
 	public static void registerModels(ModelRegistryEvent event)
 	{
 		addModel(ProjectEXItems.PERSONAL_LINK, "normal");
+		addModel(ProjectEXItems.COLLECTOR_MK4, "facing=north");
+		addModel(ProjectEXItems.COLLECTOR_MK5, "facing=north");
+		addModel(ProjectEXItems.COLLECTOR_MK6, "facing=north");
+		addModel(ProjectEXItems.FINAL_COLLECTOR, "facing=north");
+		addModel(ProjectEXItems.RELAY_MK4, "facing=north");
+		addModel(ProjectEXItems.RELAY_MK5, "facing=north");
+		addModel(ProjectEXItems.RELAY_MK6, "facing=north");
+		addModel(ProjectEXItems.FINAL_RELAY, "facing=north");
 
 		addModel(ProjectEXItems.MAGNUM_STAR_EIN, "inventory");
 		addModel(ProjectEXItems.MAGNUM_STAR_ZWEI, "inventory");
@@ -38,10 +46,11 @@ public class ProjectEXClientEventHandler
 		addModel(ProjectEXItems.COLOSSAL_STAR_VIER, "inventory");
 		addModel(ProjectEXItems.COLOSSAL_STAR_SPHERE, "inventory");
 		addModel(ProjectEXItems.COLOSSAL_STAR_OMEGA, "inventory");
+		addModel(ProjectEXItems.PURPLE_MATTER, "inventory");
+		addModel(ProjectEXItems.BLUE_MATTER, "inventory");
+		addModel(ProjectEXItems.CYAN_MATTER, "inventory");
 		addModel(ProjectEXItems.FINAL_STAR_SHARD, "inventory");
 		addModel(ProjectEXItems.FINAL_STAR, "inventory");
 		addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
-		addModel(ProjectEXItems.INFUSED_DARK_MATTER, "inventory");
-		addModel(ProjectEXItems.INFUSED_RED_MATTER, "inventory");
 	}
 }

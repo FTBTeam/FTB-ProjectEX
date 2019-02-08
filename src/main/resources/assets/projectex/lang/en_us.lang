@@ -2,6 +2,14 @@ itemGroup.projectex=Project EX
 
 tile.projectex.personal_link.name=Personal EMC Link
 tile.projectex.transmutation_table_mk2.name=Transmutation Table MK2
+tile.projectex.collector_mk4.name=Energy Collector MK4
+tile.projectex.collector_mk5.name=Energy Collector MK5
+tile.projectex.collector_mk6.name=Energy Collector MK6
+tile.projectex.final_collector.name=The Final Energy Collector
+tile.projectex.relay_mk4.name=Anti-Matter Relay MK4
+tile.projectex.relay_mk5.name=Anti-Matter Relay MK5
+tile.projectex.relay_mk6.name=Anti-Matter Relay MK6
+tile.projectex.final_relay.name=The Final Anti-Matter Relay
 
 item.projectex.magnum_star_ein.name=Magnum Star Ein
 item.projectex.magnum_star_zwei.name=Magnum Star Zwei
@@ -15,9 +23,10 @@ item.projectex.colossal_star_drei.name=Colossal Star Drei
 item.projectex.colossal_star_vier.name=Colossal Star Vier
 item.projectex.colossal_star_sphere.name=Colossal Star Sphere
 item.projectex.colossal_star_omega.name=Colossal Star Omega
+item.projectex.purple_matter.name=Purple Matter
+item.projectex.blue_matter.name=Blue Matter
+item.projectex.cyan_matter.name=Cyan Matter
 item.projectex.final_star_shard.name=The Final Star Shard
 item.projectex.final_star.name=The Final Star
 item.projectex.knowledge_sharing_book.name=Knowledge Sharing Book
 item.projectex.transmutation_tablet_mk2.name=Transmutation Tablet MK2
-item.projectex.infused_dark_matter.name=Infused Dark Matter
-item.projectex.infused_red_matter.name=Infused Red Matter

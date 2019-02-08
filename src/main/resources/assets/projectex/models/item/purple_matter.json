@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "projecte:items/matter/dark"
+		"layer0": "projectex:items/purple_matter"
 	}
 }

@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": {"model": "projectex:final_collector"},
+		"facing=south": {"model": "projectex:final_collector", "y": 180},
+		"facing=west": {"model": "projectex:final_collector", "y": 270},
+		"facing=east": {"model": "projectex:final_collector", "y": 90}
+	}
+}

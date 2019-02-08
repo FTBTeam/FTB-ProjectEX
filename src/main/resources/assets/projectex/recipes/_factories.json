@@ -1,0 +1,5 @@
+{
+	"conditions": {
+		"tome": "com.latmod.mods.projectex.item.TomeRecipeFactory"
+	}
+}

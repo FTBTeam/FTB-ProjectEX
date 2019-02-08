@@ -1,6 +1,12 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"group": "projectex:personal_link",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:personal_link"
+		}
+	],
 	"result": {"item": "personal_link"},
 	"pattern": [
 		"RBR",

@@ -14,7 +14,7 @@
 		"RNR"
 	],
 	"key": {
-		"R": {"item": "purple_matter"},
+		"R": {"item": "matter", "data": 3},
 		"B": {"item": "minecraft:writable_book"},
 		"N": {"type": "forge:ore_dict", "ore": "netherStar"}
 	}

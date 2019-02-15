@@ -1,85 +1,46 @@
 package com.latmod.mods.projectex.block;
 
-import net.minecraft.block.BlockHorizontal;
+import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.tile.TileCollector;
+import moze_intel.projecte.utils.Constants;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public class BlockCollector extends BlockHorizontal
+public class BlockCollector extends BlockTier
 {
-	public final Supplier<TileEntity> supplier;
-
-	public BlockCollector(Supplier<TileEntity> s)
+	public BlockCollector()
 	{
-		super(Material.GLASS);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		setLightLevel(15F);
+		super(Material.GLASS, MapColor.YELLOW);
 		setHardness(0.3F);
-		supplier = s;
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState()
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new BlockStateContainer(this, FACING);
+		return new TileCollector();
 	}
 
 	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta)
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-	}
-
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(FACING).getHorizontalIndex();
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState withRotation(IBlockState state, Rotation rotation)
-	{
-		return state.withProperty(FACING, rotation.rotate(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState withMirror(IBlockState state, Mirror mirror)
-	{
-		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
-	{
-		return supplier.get();
+		ProjectEXConfig.MKBlock properties = EnumTier.byMeta(stack.getMetadata()).properties;
+		tooltip.add(I18n.format("tile.projectex.collector.tooltip"));
+		tooltip.add(I18n.format("tile.projectex.collector.emc_produced", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.collector_output)));
 	}
 }

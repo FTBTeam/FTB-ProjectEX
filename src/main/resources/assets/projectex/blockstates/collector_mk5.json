@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": {"model": "projectex:collector_mk5"},
-		"facing=south": {"model": "projectex:collector_mk5", "y": 180},
-		"facing=west": {"model": "projectex:collector_mk5", "y": 270},
-		"facing=east": {"model": "projectex:collector_mk5", "y": 90}
-	}
-}

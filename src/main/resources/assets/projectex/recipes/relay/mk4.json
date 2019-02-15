@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:relay",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:relay"
+		}
+	],
+	"result": {"item": "relay", "data": 3},
+	"ingredients": [
+		{"item": "relay", "data": 2},
+		{"item": "matter", "data": 0}
+	]
+}

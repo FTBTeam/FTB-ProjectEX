@@ -1,85 +1,52 @@
 package com.latmod.mods.projectex.block;
 
-import net.minecraft.block.BlockHorizontal;
+import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.tile.TileRelay;
+import moze_intel.projecte.utils.Constants;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
-import java.util.function.Supplier;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public class BlockRelay extends BlockHorizontal
+public class BlockRelay extends BlockTier
 {
-	public final Supplier<TileEntity> supplier;
-
-	public BlockRelay(Supplier<TileEntity> s)
+	public BlockRelay()
 	{
-		super(Material.ROCK);
-		setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-		setLightLevel(15F);
-		setHardness(10.0F);
-		supplier = s;
+		super(Material.ROCK, MapColor.BLACK);
+		setHardness(10F);
 	}
 
 	@Override
-	protected BlockStateContainer createBlockState()
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new BlockStateContainer(this, FACING);
+		return new TileRelay();
 	}
 
 	@Override
-	@Deprecated
-	public IBlockState getStateFromMeta(int meta)
+	@SideOnly(Side.CLIENT)
+	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		return this.getDefaultState().withProperty(FACING, EnumFacing.byHorizontalIndex(meta));
-	}
+		ProjectEXConfig.MKBlock properties = EnumTier.byMeta(stack.getMetadata()).properties;
+		tooltip.add(I18n.format("tile.projectex.relay.tooltip"));
 
-	@Override
-	public int getMetaFromState(IBlockState state)
-	{
-		return state.getValue(FACING).getHorizontalIndex();
-	}
+		if (properties.relay_transfer != Double.MAX_VALUE)
+		{
+			tooltip.add(I18n.format("tile.projectex.relay.max_transfer", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.relay_transfer)));
+		}
 
-	@Override
-	@Deprecated
-	public IBlockState withRotation(IBlockState state, Rotation rotation)
-	{
-		return state.withProperty(FACING, rotation.rotate(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState withMirror(IBlockState state, Mirror mirror)
-	{
-		return state.withRotation(mirror.toRotation(state.getValue(FACING)));
-	}
-
-	@Override
-	@Deprecated
-	public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
-		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
-	}
-
-	@Override
-	public boolean hasTileEntity(IBlockState state)
-	{
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(@Nonnull World world, @Nonnull IBlockState state)
-	{
-		return supplier.get();
+		tooltip.add(I18n.format("tile.projectex.relay.relay_bonus", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.relay_bonus)));
 	}
 }

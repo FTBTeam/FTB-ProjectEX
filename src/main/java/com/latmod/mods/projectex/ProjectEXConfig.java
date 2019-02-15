@@ -21,36 +21,53 @@ public class ProjectEXConfig
 
 	public static class General
 	{
-		public final MKBlock mk4 = new MKBlock(150D, 2D, 200000D);
-		public final MKBlock mk5 = new MKBlock(500D, 7D, 200000D);
-		public final MKBlock mk6 = new MKBlock(2000D, 24D, 200000D);
-		public final MKBlock mk_final = new MKBlock(1000000000D, 1000000000D, Double.MAX_VALUE);
+		public final MKBlock mk1 = new MKBlock(4, 1, 64);
+		public final MKBlock mk2 = new MKBlock(12, 3, 192);
+		public final MKBlock mk3 = new MKBlock(40, 10, 640);
+		public final MKBlock mk4 = new MKBlock(160, 40, 2560);
+		public final MKBlock mk5 = new MKBlock(640, 150, 10240);
+		public final MKBlock mk6 = new MKBlock(2560, 750, 40960);
+		public final MKBlock mk7 = new MKBlock(10240, 3750, 163840);
+		public final MKBlock mk8 = new MKBlock(40960, 15000, 655360);
+		public final MKBlock mk9 = new MKBlock(163840, 60000, 2621440);
+		public final MKBlock mk10 = new MKBlock(655360, 240000, 10485760);
+		public final MKBlock mk_final = new MKBlock(1000000000000D, 1000000000000D, Double.MAX_VALUE);
 	}
 
 	public static class MKBlock
 	{
+		@Config.LangKey("projectex.general.collector_output")
 		public double collector_output;
-		public double relay_bonus;
-		public double capacity;
 
-		public MKBlock(double co, double rb, double c)
+		@Config.LangKey("projectex.general.relay_bonus")
+		public double relay_bonus;
+
+		@Config.LangKey("projectex.general.relay_transfer")
+		public double relay_transfer;
+
+		public MKBlock(double co, double rb, double rt)
 		{
 			collector_output = co;
 			relay_bonus = rb;
-			capacity = c;
+			relay_transfer = rt;
 		}
 	}
 
 	public static class ItemsConfig
 	{
+		@Config.LangKey("tile.projectex.personal_link.name")
 		public boolean link = true;
+
+		@Config.LangKey("item.projectex.knowledge_sharing_book.name")
 		public boolean knowledge_sharing_book = true;
+
 		public boolean stars = true;
+
+		@Config.LangKey("item.projectex.final_star.name")
 		public boolean final_star = true;
+
 		public boolean collectors = true;
-		public boolean final_collector = true;
 		public boolean relays = true;
-		public boolean final_relay = true;
 		public boolean tome = true;
 	}
 

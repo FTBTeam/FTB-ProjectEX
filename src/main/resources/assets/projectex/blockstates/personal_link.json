@@ -1,5 +1,5 @@
 {
 	"variants": {
-		"normal": [{"model": "projectex:personal_link"}]
+		"normal": {"model": "projectex:personal_link"}
 	}
 }

@@ -1,0 +1,6 @@
+{
+	"parent": "projectex:block/collector/collector",
+	"textures": {
+		"texture": "projectex:blocks/collectors/mk2"
+	}
+}

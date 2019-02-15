@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": {"model": "projectex:final_relay"},
-		"facing=south": {"model": "projectex:final_relay", "y": 180},
-		"facing=west": {"model": "projectex:final_relay", "y": 270},
-		"facing=east": {"model": "projectex:final_relay", "y": 90}
-	}
-}

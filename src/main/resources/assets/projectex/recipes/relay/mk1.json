@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:relay",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:relay"
+		}
+	],
+	"result": {"item": "relay", "data": 0},
+	"pattern": [
+		"OSO",
+		"OAO",
+		"OOO"
+	],
+	"key": {
+		"O": {"type": "forge:ore_dict", "ore": "obsidian"},
+		"A": {"item": "projecte:fuel_block", "data": 2},
+		"S": {"type": "forge:ore_dict", "ore": "blockGlass"}
+	}
+}

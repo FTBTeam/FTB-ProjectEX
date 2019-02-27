@@ -35,6 +35,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots = new ItemStack[18];
 	public double addEMC = 0D;
+	private boolean syncEMC = false;
 
 	public TileLink()
 	{
@@ -251,12 +252,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 					if (!simulate)
 					{
 						knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
-						EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-						if (player != null)
-						{
-							ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
-						}
+						syncEMC = true;
 					}
 
 					return stack;
@@ -280,14 +276,14 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		if (!world.isRemote && hasOwner())
 		{
-			boolean sync = false;
 			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+			double emc = knowledgeProvider.getEmc();
 
 			if (addEMC > 0D)
 			{
-				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + addEMC);
+				emc += addEMC;
 				addEMC = 0D;
-				sync = true;
+				syncEMC = true;
 			}
 
 			for (int i = 0; i < inputSlots.length; i++)
@@ -298,23 +294,26 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 					if (value > 0L)
 					{
-
-						knowledgeProvider.setEmc(knowledgeProvider.getEmc() + (long) ((double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss));
-						sync = true;
+						emc += (double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
+						syncEMC = true;
 						inputSlots[i] = ItemStack.EMPTY;
 						markDirty();
 					}
 				}
 			}
 
-			if (sync)
+			if (syncEMC)
 			{
+				knowledgeProvider.setEmc(emc);
+
 				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
 
 				if (player != null)
 				{
 					ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
 				}
+
+				syncEMC = false;
 			}
 		}
 

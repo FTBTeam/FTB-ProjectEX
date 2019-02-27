@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.utils.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -11,12 +10,15 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 
+import java.text.DecimalFormat;
+
 /**
  * @author LatvianModder
  */
 public class GuiLink extends GuiContainer
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/link.png");
+	public static final DecimalFormat EMC_FORMATTER = new DecimalFormat("#,###");
 
 	private class ButtonFilter extends GuiButton
 	{
@@ -131,20 +133,20 @@ public class GuiLink extends GuiContainer
 		long now = System.currentTimeMillis();
 		double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
 
-		if ((now - lastUpdate) >= 1000L)
+		if ((now - lastUpdate) >= 2000L)
 		{
-			emcs = emc - lastEMC;
+			emcs = (emc - lastEMC) / 2D;
 			lastEMC = emc;
 			lastUpdate = now;
 		}
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 
-		String s = Constants.EMC_FORMATTER.format(Math.round(emc));
+		String s = EMC_FORMATTER.format(emc);
 
 		if (emcs != 0D)
 		{
-			s += (emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
+			s += (emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
 		}
 
 		fontRenderer.drawString(s, 8, 73, 4210752);

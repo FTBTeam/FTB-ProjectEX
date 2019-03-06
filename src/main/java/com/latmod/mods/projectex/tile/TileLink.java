@@ -4,9 +4,11 @@ import com.latmod.mods.projectex.net.MessageSyncEMC;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import moze_intel.projecte.config.ProjectEConfig;
 import moze_intel.projecte.utils.NBTWhitelist;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -355,5 +358,23 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	public double getMaximumEmc()
 	{
 		return Double.MAX_VALUE;
+	}
+
+	public boolean setOutputStack(EntityPlayer player, ItemStack stack)
+	{
+		if (ProjectEAPI.getEMCProxy().hasValue(stack) && ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID()).hasKnowledge(stack))
+		{
+			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
+
+			if (!MinecraftForge.EVENT_BUS.post(new PlayerAttemptCondenserSetEvent(player, stack)))
+			{
+				output = stack;
+				markDirty();
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 }

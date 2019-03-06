@@ -3,6 +3,7 @@ package com.latmod.mods.projectex;
 import com.latmod.mods.projectex.block.BlockCollector;
 import com.latmod.mods.projectex.block.BlockLink;
 import com.latmod.mods.projectex.block.BlockRelay;
+import com.latmod.mods.projectex.block.BlockStoneTable;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
 import com.latmod.mods.projectex.item.ItemBlockTier;
 import com.latmod.mods.projectex.item.ItemColossalStar;
@@ -10,6 +11,7 @@ import com.latmod.mods.projectex.item.ItemFinalStar;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
+import com.latmod.mods.projectex.item.ItemTabletMK2;
 import com.latmod.mods.projectex.tile.TileCollector;
 import com.latmod.mods.projectex.tile.TileLink;
 import com.latmod.mods.projectex.tile.TileRelay;
@@ -71,6 +73,11 @@ public class ProjectEXEventHandler
 			r.register(withName(new BlockRelay(), "relay"));
 			GameRegistry.registerTileEntity(TileRelay.class, new ResourceLocation(ProjectEX.MOD_ID, "relay"));
 		}
+
+		if (ProjectEXConfig.items.stone_table)
+		{
+			r.register(withName(new BlockStoneTable(), "stone_table"));
+		}
 	}
 
 	@SubscribeEvent
@@ -91,6 +98,11 @@ public class ProjectEXEventHandler
 		if (ProjectEXConfig.items.relays)
 		{
 			r.register(new ItemBlockTier(ProjectEXBlocks.RELAY).setRegistryName("relay"));
+		}
+
+		if (ProjectEXConfig.items.stone_table)
+		{
+			r.register(withName(new ItemBlock(ProjectEXBlocks.STONE_TABLE), "stone_table"));
 		}
 
 		if (ProjectEXConfig.items.stars)
@@ -120,6 +132,11 @@ public class ProjectEXEventHandler
 		if (ProjectEXConfig.items.knowledge_sharing_book)
 		{
 			r.register(withName(new ItemKnowledgeSharingBook(), "knowledge_sharing_book"));
+		}
+
+		if (ProjectEXConfig.items.tablet_mk2)
+		{
+			r.register(withName(new ItemTabletMK2(), "tablet_mk2"));
 		}
 	}
 

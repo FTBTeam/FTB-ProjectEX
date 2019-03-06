@@ -34,6 +34,8 @@ public class ProjectEXClientEventHandler
 			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.RELAY, tier.metadata, new ModelResourceLocation(ProjectEXItems.RELAY.getRegistryName(), "tier=" + tier.getName()));
 		}
 
+		addModel(ProjectEXItems.STONE_TABLE, "normal");
+
 		addModel(ProjectEXItems.MAGNUM_STAR_EIN, "inventory");
 		addModel(ProjectEXItems.MAGNUM_STAR_ZWEI, "inventory");
 		addModel(ProjectEXItems.MAGNUM_STAR_DREI, "inventory");
@@ -55,5 +57,6 @@ public class ProjectEXClientEventHandler
 		addModel(ProjectEXItems.FINAL_STAR_SHARD, "inventory");
 		addModel(ProjectEXItems.FINAL_STAR, "inventory");
 		addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
+		addModel(ProjectEXItems.TABLET_MK2, "inventory");
 	}
 }

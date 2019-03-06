@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:tablet_mk2",
+	"result": {"item": "tablet_mk2"},
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:tablet_mk2"
+		}
+	],
+	"pattern": [
+		"TWT",
+		"MSM",
+		"TCT"
+	],
+	"key": {
+		"T": {"item": "projecte:item.pe_transmutation_tablet"},
+		"M": {"item": "matter", "data": 2},
+		"W": {"type": "forge:ore_dict", "ore": "workbench"},
+		"C": {"type": "forge:ore_dict", "ore": "chest"},
+		"S": {"item": "magnum_star_ein"}
+	}
+}

@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex.block;
 
-import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.gui.ProjectEXGuiHandler;
 import com.latmod.mods.projectex.tile.TileLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -50,7 +50,7 @@ public class BlockLink extends Block
 			{
 				if (player.getUniqueID().equals(((TileLink) tileEntity).owner))
 				{
-					player.openGui(ProjectEX.INSTANCE, 0, world, pos.getX(), pos.getY(), pos.getZ());
+					ProjectEXGuiHandler.open(player, ProjectEXGuiHandler.LINK, pos.getX(), pos.getY(), pos.getZ());
 				}
 				else
 				{

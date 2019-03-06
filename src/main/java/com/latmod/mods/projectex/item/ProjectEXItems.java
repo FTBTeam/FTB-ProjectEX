@@ -14,6 +14,7 @@ public class ProjectEXItems
 	public static final Item PERSONAL_LINK = Items.AIR;
 	public static final Item COLLECTOR = Items.AIR;
 	public static final Item RELAY = Items.AIR;
+	public static final Item STONE_TABLE = Items.AIR;
 
 	public static final Item MAGNUM_STAR_EIN = Items.AIR;
 	public static final Item MAGNUM_STAR_ZWEI = Items.AIR;
@@ -31,4 +32,5 @@ public class ProjectEXItems
 	public static final Item FINAL_STAR_SHARD = Items.AIR;
 	public static final Item FINAL_STAR = Items.AIR;
 	public static final Item KNOWLEDGE_SHARING_BOOK = Items.AIR;
+	public static final Item TABLET_MK2 = Items.AIR;
 }

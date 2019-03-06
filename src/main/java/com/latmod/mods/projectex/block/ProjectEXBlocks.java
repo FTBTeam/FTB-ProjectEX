@@ -14,4 +14,5 @@ public class ProjectEXBlocks
 	public static final Block PERSONAL_LINK = Blocks.AIR;
 	public static final Block COLLECTOR = Blocks.AIR;
 	public static final Block RELAY = Blocks.AIR;
+	public static final Block STONE_TABLE = Blocks.AIR;
 }

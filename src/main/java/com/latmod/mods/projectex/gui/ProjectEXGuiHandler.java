@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.tile.TileLink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -12,19 +13,37 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public enum ProjectEXGuiHandler implements IGuiHandler
+public class ProjectEXGuiHandler implements IGuiHandler
 {
-	INSTANCE;
+	public static final int LINK = 1;
+	public static final int STONE_TABLE = 2;
+	public static final int TABLET_MK2 = 3;
+
+	public static void open(EntityPlayer player, int id, int x, int y, int z)
+	{
+		player.openGui(ProjectEX.INSTANCE, id, player.world, x, y, z);
+	}
 
 	@Nullable
 	@Override
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-
-		if (tileEntity instanceof TileLink)
+		if (id == LINK)
 		{
-			return new ContainerLink(player, (TileLink) tileEntity);
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+
+			if (tileEntity instanceof TileLink)
+			{
+				return new ContainerLink(player, (TileLink) tileEntity);
+			}
+		}
+		else if (id == STONE_TABLE)
+		{
+			return new ContainerStoneTable(player);
+		}
+		else if (id == TABLET_MK2)
+		{
+			return new ContainerTabletMK2(player);
 		}
 
 		return null;
@@ -40,11 +59,22 @@ public enum ProjectEXGuiHandler implements IGuiHandler
 	@Nullable
 	private Object getClientGuiElement0(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-
-		if (tileEntity instanceof TileLink)
+		if (id == LINK)
 		{
-			return new GuiLink(new ContainerLink(player, (TileLink) tileEntity));
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+
+			if (tileEntity instanceof TileLink)
+			{
+				return new GuiLink(new ContainerLink(player, (TileLink) tileEntity));
+			}
+		}
+		else if (id == STONE_TABLE)
+		{
+			return new GuiStoneTable(new ContainerStoneTable(player));
+		}
+		else if (id == TABLET_MK2)
+		{
+			return new GuiTabletMK2(new ContainerTabletMK2(player));
 		}
 
 		return null;

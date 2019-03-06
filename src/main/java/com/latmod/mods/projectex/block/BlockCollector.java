@@ -39,7 +39,7 @@ public class BlockCollector extends BlockTier
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		ProjectEXConfig.MKBlock properties = EnumTier.byMeta(stack.getMetadata()).properties;
+		ProjectEXConfig.BlockTier properties = EnumTier.byMeta(stack.getMetadata()).properties;
 		tooltip.add(I18n.format("tile.projectex.collector.tooltip"));
 		tooltip.add(I18n.format("tile.projectex.collector.emc_produced", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.collector_output)));
 	}

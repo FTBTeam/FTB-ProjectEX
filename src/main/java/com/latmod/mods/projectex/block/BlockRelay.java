@@ -39,7 +39,7 @@ public class BlockRelay extends BlockTier
 	@SideOnly(Side.CLIENT)
 	public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
 	{
-		ProjectEXConfig.MKBlock properties = EnumTier.byMeta(stack.getMetadata()).properties;
+		ProjectEXConfig.BlockTier properties = EnumTier.byMeta(stack.getMetadata()).properties;
 		tooltip.add(I18n.format("tile.projectex.relay.tooltip"));
 
 		if (properties.relay_transfer != Double.MAX_VALUE)

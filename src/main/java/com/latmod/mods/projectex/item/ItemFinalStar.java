@@ -30,13 +30,13 @@ public class ItemFinalStar extends Item implements IItemEmc
 	@Override
 	public double getStoredEmc(ItemStack stack)
 	{
-		return 10000D;
+		return 1_000_000_000_000_000D;
 	}
 
 	@Override
 	public double getMaximumEmc(ItemStack stack)
 	{
-		return 10000D;
+		return Double.MAX_VALUE;
 	}
 
 	@Override

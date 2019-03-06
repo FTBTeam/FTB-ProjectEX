@@ -29,6 +29,7 @@ tile.projectex.relay.mk_final.name=The Final Relay
 tile.projectex.relay.tooltip=Server TPS friendly. Transfers EMC only once a second.
 tile.projectex.relay.max_transfer=Max EMC Transfer: %s/s
 tile.projectex.relay.relay_bonus=Relay Bonus: %s/s
+tile.projectex.stone_table.name=Stone Transmutation Table
 
 item.projectex.magnum_star_ein.name=Magnum Star Ein
 item.projectex.magnum_star_zwei.name=Magnum Star Zwei
@@ -52,14 +53,18 @@ item.projectex.matter.fading.name=Fading Matter
 item.projectex.final_star_shard.name=The Final Star Shard
 item.projectex.final_star.name=The Final Star
 item.projectex.knowledge_sharing_book.name=Knowledge Sharing Book
-item.projectex.transmutation_tablet_mk2.name=Transmutation Tablet MK2
+item.projectex.tablet_mk2.name=Transmutation Tablet MK2
 
-projectex.general.collector_output=Collector Output
-projectex.general.relay_bonus=Relay Bonus
-projectex.general.relay_transfer=Relay Transfer
+projectex.general.stone_table_whitelist=Stone Table Whitelist
+projectex.general.override_emc_formatter=Override EMC Formatter
+projectex.tiers.collector_output=Collector Output
+projectex.tiers.relay_bonus=Relay Bonus
+projectex.tiers.relay_transfer=Relay Transfer
 
 projectex.items=Items
 projectex.items.stars=Stars
 projectex.items.collectors=Collectors
 projectex.items.relays=Relays
 projectex.items.tome=Tome Recipe
+
+gui.stone_table.cant_use=Can't use this item in Stone Table!

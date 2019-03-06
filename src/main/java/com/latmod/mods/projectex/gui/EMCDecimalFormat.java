@@ -1,0 +1,114 @@
+package com.latmod.mods.projectex.gui;
+
+import com.latmod.mods.projectex.ProjectEXConfig;
+import net.minecraft.client.gui.GuiScreen;
+
+import java.text.DecimalFormat;
+import java.text.FieldPosition;
+
+/**
+ * @author LatvianModder
+ */
+public class EMCDecimalFormat extends DecimalFormat
+{
+	public EMCDecimalFormat()
+	{
+		super("#,###");
+	}
+
+	@Override
+	public StringBuffer format(double number, StringBuffer result, FieldPosition fieldPosition)
+	{
+		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000D && !GuiScreen.isShiftKeyDown())
+		{
+			double num;
+			char c;
+
+			if (number >= 1_000_000_000_000_000_000_000_000D)
+			{
+				num = number / 1_000_000_000_000_000_000_000_000D;
+				c = 'Y';
+			}
+			else if (number >= 1_000_000_000_000_000_000_000D)
+			{
+				num = number / 1_000_000_000_000_000_000_000D;
+				c = 'Z';
+			}
+			else if (number >= 1_000_000_000_000_000_000D)
+			{
+				num = number / 1_000_000_000_000_000_000D;
+				c = 'E';
+			}
+			else if (number >= 1_000_000_000_000_000D)
+			{
+				num = number / 1_000_000_000_000_000D;
+				c = 'P';
+			}
+			else if (number >= 1_000_000_000_000D)
+			{
+				num = number / 1_000_000_000_000D;
+				c = 'T';
+			}
+			else if (number >= 1_000_000_000D)
+			{
+				num = number / 1_000_000_000D;
+				c = 'G';
+			}
+			else
+			{
+				num = number / 1_000_000D;
+				c = 'M';
+			}
+
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(String.format("%.02f", num));
+			buffer.append(c);
+			return buffer;
+		}
+
+		return super.format(number, result, fieldPosition);
+	}
+
+	@Override
+	public StringBuffer format(long number, StringBuffer result, FieldPosition fieldPosition)
+	{
+		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000L && !GuiScreen.isShiftKeyDown())
+		{
+			double num;
+			char c;
+
+			if (number >= 1_000_000_000_000_000_000L)
+			{
+				num = number / 1_000_000_000_000_000_000D;
+				c = 'E';
+			}
+			else if (number >= 1_000_000_000_000_000L)
+			{
+				num = number / 1_000_000_000_000_000D;
+				c = 'P';
+			}
+			else if (number >= 1_000_000_000_000L)
+			{
+				num = number / 1_000_000_000_000D;
+				c = 'T';
+			}
+			else if (number >= 1_000_000_000L)
+			{
+				num = number / 1_000_000_000D;
+				c = 'G';
+			}
+			else
+			{
+				num = number / 1_000_000D;
+				c = 'M';
+			}
+
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(String.format("%.02f", num));
+			buffer.append(c);
+			return buffer;
+		}
+
+		return super.format(number, result, fieldPosition);
+	}
+}

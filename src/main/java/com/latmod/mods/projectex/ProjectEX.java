@@ -1,14 +1,22 @@
 package com.latmod.mods.projectex;
 
+import com.latmod.mods.projectex.gui.EMCDecimalFormat;
 import com.latmod.mods.projectex.gui.ProjectEXGuiHandler;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.PECore;
+import moze_intel.projecte.utils.Constants;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 @Mod(
 		modid = ProjectEX.MOD_ID,
@@ -38,6 +46,27 @@ public class ProjectEX
 	public void onPreInit(FMLPreInitializationEvent event)
 	{
 		ProjectEXNetHandler.init();
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, ProjectEXGuiHandler.INSTANCE);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new ProjectEXGuiHandler());
+	}
+
+	@Mod.EventHandler
+	public void onInit(FMLInitializationEvent event)
+	{
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT)
+		{
+			try
+			{
+				Field field = Constants.class.getDeclaredField("EMC_FORMATTER");
+				field.setAccessible(true);
+				Field modifiersField = Field.class.getDeclaredField("modifiers");
+				modifiersField.setAccessible(true);
+				modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+				field.set(null, new EMCDecimalFormat());
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+		}
 	}
 }

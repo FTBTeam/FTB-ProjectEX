@@ -69,6 +69,7 @@ public class ProjectEXConfig
 				"oredict:dust",
 				"oredict:nugget",
 				"oredict:block",
+				"oredict:ore",
 
 				"oredict:stone",
 				"oredict:cobblestone",

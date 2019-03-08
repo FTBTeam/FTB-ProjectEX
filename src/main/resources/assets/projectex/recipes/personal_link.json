@@ -1,6 +1,6 @@
 {
 	"type": "minecraft:crafting_shaped",
-	"group": "projectex:personal_link",
+	"group": "projectex:link",
 	"conditions": [
 		{
 			"type": "minecraft:item_exists",

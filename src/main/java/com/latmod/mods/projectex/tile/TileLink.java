@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -34,15 +35,17 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 {
 	public UUID owner = new UUID(0L, 0L);
 	public String name = "";
-	public ItemStack output = ItemStack.EMPTY;
 	private boolean isDirty = false;
-	public final ItemStack[] inputSlots = new ItemStack[18];
+	public final ItemStack[] inputSlots, outputSlots;
 	public double addEMC = 0D;
 	private boolean syncEMC = false;
 
-	public TileLink()
+	public TileLink(int in, int out)
 	{
+		inputSlots = new ItemStack[in];
+		outputSlots = new ItemStack[out];
 		Arrays.fill(inputSlots, ItemStack.EMPTY);
+		Arrays.fill(outputSlots, ItemStack.EMPTY);
 	}
 
 	@Override
@@ -50,20 +53,36 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		owner = nbt.getUniqueId("owner");
 		name = nbt.getString("name");
-		output = new ItemStack(nbt.getCompoundTag("output"));
 
-		if (output.isEmpty())
-		{
-			output = ItemStack.EMPTY;
-		}
+		Arrays.fill(inputSlots, ItemStack.EMPTY);
+		Arrays.fill(outputSlots, ItemStack.EMPTY);
 
 		NBTTagList inputList = nbt.getTagList("input", Constants.NBT.TAG_COMPOUND);
-		Arrays.fill(inputSlots, ItemStack.EMPTY);
 
 		for (int i = 0; i < inputList.tagCount(); i++)
 		{
 			NBTTagCompound nbt1 = inputList.getCompoundTagAt(i);
 			inputSlots[nbt1.getByte("Slot")] = new ItemStack(nbt1);
+		}
+
+		NBTTagList outputList = nbt.getTagList("output", Constants.NBT.TAG_COMPOUND);
+
+		if (outputList.isEmpty())
+		{
+			outputSlots[0] = new ItemStack(nbt.getCompoundTag("output"));
+
+			if (outputSlots[0].isEmpty())
+			{
+				outputSlots[0] = ItemStack.EMPTY;
+			}
+		}
+		else
+		{
+			for (int i = 0; i < outputList.tagCount(); i++)
+			{
+				NBTTagCompound nbt1 = outputList.getCompoundTagAt(i);
+				outputSlots[nbt1.getByte("Slot")] = new ItemStack(nbt1);
+			}
 		}
 
 		super.readFromNBT(nbt);
@@ -74,12 +93,22 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		nbt.setUniqueId("owner", owner);
 		nbt.setString("name", name);
-		output.setCount(1);
 
-		if (!output.isEmpty())
+		NBTTagList outputList = new NBTTagList();
+
+		for (int i = 0; i < outputSlots.length; i++)
 		{
-			nbt.setTag("output", output.serializeNBT());
+			outputSlots[i].setCount(1);
+
+			if (!outputSlots[i].isEmpty())
+			{
+				NBTTagCompound nbt1 = outputSlots[i].serializeNBT();
+				nbt1.setByte("Slot", (byte) i);
+				outputList.appendTag(nbt1);
+			}
 		}
+
+		nbt.setTag("output", outputList);
 
 		NBTTagList inputList = new NBTTagList();
 
@@ -100,7 +129,19 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public NBTTagCompound getUpdateTag()
 	{
-		return serializeNBT();
+		return writeToNBT(new NBTTagCompound());
+	}
+
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket()
+	{
+		return new SPacketUpdateTileEntity(pos, 0, writeToNBT(new NBTTagCompound()));
+	}
+
+	@Override
+	public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
+	{
+		readFromNBT(pkt.getNbtCompound());
 	}
 
 	@Override
@@ -119,7 +160,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public int getSlots()
 	{
-		return 19;
+		return inputSlots.length + outputSlots.length;
 	}
 
 	public boolean hasOwner()
@@ -130,39 +171,54 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public ItemStack getStackInSlot(int slot)
 	{
-		if (slot == 18)
+		if (slot < inputSlots.length)
 		{
-			if (world.isRemote || output.isEmpty() || !hasOwner())
+			return inputSlots[slot];
+		}
+
+		int index = slot - inputSlots.length;
+
+		if (world.isRemote || !hasOwner())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		outputSlots[index].setCount(1);
+
+		if (outputSlots[index].isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+
+		if (value > 0L)
+		{
+			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+
+			if (knowledgeProvider.getEmc() < value)
 			{
 				return ItemStack.EMPTY;
 			}
 
-			output.setCount(1);
-			long value = ProjectEAPI.getEMCProxy().getValue(output);
+			int c = getCount(knowledgeProvider, value, 2000000000);
 
-			if (value > 0L)
+			if (c <= 0)
 			{
-				IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-
-				if (knowledgeProvider.getEmc() < value)
-				{
-					return ItemStack.EMPTY;
-				}
-
-				output.setCount(getCount(knowledgeProvider, value, Integer.MAX_VALUE));
-				return output.getCount() <= 0 ? ItemStack.EMPTY : output;
+				return ItemStack.EMPTY;
 			}
 
-			return ItemStack.EMPTY;
+			outputSlots[index].setCount(c);
+			return outputSlots[index];
 		}
 
-		return inputSlots[slot];
+		return ItemStack.EMPTY;
 	}
 
 	@Override
 	public void setStackInSlot(int slot, ItemStack stack)
 	{
-		if (slot != 18)
+		if (slot < inputSlots.length)
 		{
 			inputSlots[slot] = stack;
 			markDirty();
@@ -228,41 +284,50 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public ItemStack extractItem(int slot, int amount, boolean simulate)
 	{
-		if (slot == 18 && amount > 0 && !world.isRemote && !output.isEmpty() && hasOwner())
+		if (slot < inputSlots.length || amount <= 0 || world.isRemote || !hasOwner())
 		{
-			output.setCount(1);
-			long value = ProjectEAPI.getEMCProxy().getValue(output);
+			return ItemStack.EMPTY;
+		}
 
-			if (value > 0L)
+		int index = slot - inputSlots.length;
+		outputSlots[index].setCount(1);
+
+		if (outputSlots[slot - inputSlots.length].isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+
+		if (value <= 0L)
+		{
+			return ItemStack.EMPTY;
+		}
+
+		IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+
+		if (knowledgeProvider.getEmc() < value)
+		{
+			return ItemStack.EMPTY;
+		}
+
+		ItemStack stack = outputSlots[index].copy();
+		stack.setCount(getCount(knowledgeProvider, value, Math.min(amount, outputSlots[index].getMaxStackSize())));
+
+		if (stack.getCount() >= 1)
+		{
+			if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
 			{
-				IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
-
-				if (knowledgeProvider.getEmc() < value)
-				{
-					return ItemStack.EMPTY;
-				}
-
-				ItemStack stack = output.copy();
-				stack.setCount(getCount(knowledgeProvider, value, Math.min(amount, output.getMaxStackSize())));
-
-				if (stack.getCount() >= 1)
-				{
-					if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
-					{
-						stack.setTagCompound(new NBTTagCompound());
-					}
-
-					if (!simulate)
-					{
-						knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
-						syncEMC = true;
-					}
-
-					return stack;
-				}
-
-				return ItemStack.EMPTY;
+				stack.setTagCompound(new NBTTagCompound());
 			}
+
+			if (!simulate)
+			{
+				knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
+				syncEMC = true;
+			}
+
+			return stack;
 		}
 
 		return ItemStack.EMPTY;
@@ -360,7 +425,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		return Double.MAX_VALUE;
 	}
 
-	public boolean setOutputStack(EntityPlayer player, ItemStack stack)
+	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack)
 	{
 		if (ProjectEAPI.getEMCProxy().hasValue(stack) && ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID()).hasKnowledge(stack))
 		{
@@ -368,7 +433,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 			if (!MinecraftForge.EVENT_BUS.post(new PlayerAttemptCondenserSetEvent(player, stack)))
 			{
-				output = stack;
+				outputSlots[slot] = stack;
 				markDirty();
 			}
 

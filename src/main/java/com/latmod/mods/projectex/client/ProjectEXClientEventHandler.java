@@ -27,6 +27,8 @@ public class ProjectEXClientEventHandler
 	public static void registerModels(ModelRegistryEvent event)
 	{
 		addModel(ProjectEXItems.PERSONAL_LINK, "normal");
+		addModel(ProjectEXItems.REFINED_LINK, "normal");
+		addModel(ProjectEXItems.COMPRESSED_REFINED_LINK, "normal");
 
 		for (EnumTier tier : EnumTier.VALUES)
 		{

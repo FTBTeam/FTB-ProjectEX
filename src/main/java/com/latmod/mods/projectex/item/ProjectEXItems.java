@@ -12,6 +12,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ProjectEXItems
 {
 	public static final Item PERSONAL_LINK = Items.AIR;
+	public static final Item REFINED_LINK = Items.AIR;
+	public static final Item COMPRESSED_REFINED_LINK = Items.AIR;
 	public static final Item COLLECTOR = Items.AIR;
 	public static final Item RELAY = Items.AIR;
 	public static final Item STONE_TABLE = Items.AIR;

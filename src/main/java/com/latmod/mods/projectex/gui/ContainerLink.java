@@ -1,6 +1,8 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.tile.TileLink;
+import com.latmod.mods.projectex.tile.TileLinkMK2;
+import com.latmod.mods.projectex.tile.TileLinkMK3;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -21,27 +23,64 @@ public class ContainerLink extends Container
 		player = ep;
 		link = p;
 
-		for (int i = 0; i < 18; i++)
+		if (link instanceof TileLinkMK3)
 		{
-			addSlotToContainer(new SlotItemHandler(link, i, 8 + (i % 6) * 18, 17 + (i / 6) * 18));
-		}
+			addSlotToContainer(new SlotItemHandler(link, 0, 8, 17));
 
-		for (int k = 0; k < 3; ++k)
-		{
-			for (int i1 = 0; i1 < 9; ++i1)
+			for (int k = 0; k < 3; ++k)
 			{
-				addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
+				for (int i1 = 0; i1 < 9; ++i1)
+				{
+					addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 162 + k * 18));
+				}
+			}
+
+			for (int l = 0; l < 9; ++l)
+			{
+				addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 220));
 			}
 		}
-
-		for (int l = 0; l < 9; ++l)
+		else if (link instanceof TileLinkMK2)
 		{
-			addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 142));
+			addSlotToContainer(new SlotItemHandler(link, 0, 35, 35));
+
+			for (int k = 0; k < 3; ++k)
+			{
+				for (int i1 = 0; i1 < 9; ++i1)
+				{
+					addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
+				}
+			}
+
+			for (int l = 0; l < 9; ++l)
+			{
+				addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 142));
+			}
+		}
+		else
+		{
+			for (int i = 0; i < 18; i++)
+			{
+				addSlotToContainer(new SlotItemHandler(link, i, 8 + (i % 6) * 18, 17 + (i / 6) * 18));
+			}
+
+			for (int k = 0; k < 3; ++k)
+			{
+				for (int i1 = 0; i1 < 9; ++i1)
+				{
+					addSlotToContainer(new Slot(player.inventory, i1 + k * 9 + 9, 8 + i1 * 18, 84 + k * 18));
+				}
+			}
+
+			for (int l = 0; l < 9; ++l)
+			{
+				addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 142));
+			}
 		}
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn)
+	public boolean canInteractWith(EntityPlayer player)
 	{
 		return true;
 	}
@@ -57,14 +96,14 @@ public class ContainerLink extends Container
 			ItemStack stack1 = slot.getStack();
 			stack = stack1.copy();
 
-			if (index < 18)
+			if (index < link.inputSlots.length)
 			{
-				if (!mergeItemStack(stack1, 18, inventorySlots.size(), true))
+				if (!mergeItemStack(stack1, link.inputSlots.length, inventorySlots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!mergeItemStack(stack1, 0, 18, false))
+			else if (!mergeItemStack(stack1, 0, link.inputSlots.length, false))
 			{
 				return ItemStack.EMPTY;
 			}
@@ -90,18 +129,22 @@ public class ContainerLink extends Container
 			return false;
 		}
 
+		int index = id % link.outputSlots.length;
+
 		if (player.inventory.getItemStack().isEmpty())
 		{
-			if (id == 1)
+			int type = id / link.outputSlots.length;
+
+			if (type == 1)
 			{
-				link.output = ItemStack.EMPTY;
+				link.outputSlots[index] = ItemStack.EMPTY;
 				link.markDirty();
 				return true;
 			}
 
 			if (!player.world.isRemote)
 			{
-				ItemStack stack = link.extractItem(18, id == 2 ? 1 : 64, false);
+				ItemStack stack = link.extractItem(link.inputSlots.length + index, type == 2 ? 1 : 64, false);
 
 				if (!stack.isEmpty())
 				{
@@ -112,6 +155,6 @@ public class ContainerLink extends Container
 			return true;
 		}
 
-		return link.setOutputStack(player, player.inventory.getItemStack());
+		return link.setOutputStack(player, index, player.inventory.getItemStack());
 	}
 }

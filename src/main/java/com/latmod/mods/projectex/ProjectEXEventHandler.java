@@ -1,7 +1,9 @@
 package com.latmod.mods.projectex;
 
 import com.latmod.mods.projectex.block.BlockCollector;
-import com.latmod.mods.projectex.block.BlockLink;
+import com.latmod.mods.projectex.block.BlockLinkMK1;
+import com.latmod.mods.projectex.block.BlockLinkMK2;
+import com.latmod.mods.projectex.block.BlockLinkMK3;
 import com.latmod.mods.projectex.block.BlockRelay;
 import com.latmod.mods.projectex.block.BlockStoneTable;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
@@ -13,7 +15,9 @@ import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
 import com.latmod.mods.projectex.item.ItemTabletMK2;
 import com.latmod.mods.projectex.tile.TileCollector;
-import com.latmod.mods.projectex.tile.TileLink;
+import com.latmod.mods.projectex.tile.TileLinkMK1;
+import com.latmod.mods.projectex.tile.TileLinkMK2;
+import com.latmod.mods.projectex.tile.TileLinkMK3;
 import com.latmod.mods.projectex.tile.TileRelay;
 import moze_intel.projecte.api.item.IItemEmc;
 import moze_intel.projecte.gameObjs.items.KleinStar;
@@ -58,8 +62,12 @@ public class ProjectEXEventHandler
 
 		if (ProjectEXConfig.items.link)
 		{
-			r.register(withName(new BlockLink(), "personal_link"));
-			GameRegistry.registerTileEntity(TileLink.class, new ResourceLocation(ProjectEX.MOD_ID, "personal_link"));
+			r.register(withName(new BlockLinkMK1(), "personal_link"));
+			r.register(withName(new BlockLinkMK2(), "refined_link"));
+			r.register(withName(new BlockLinkMK3(), "compressed_refined_link"));
+			GameRegistry.registerTileEntity(TileLinkMK1.class, new ResourceLocation(ProjectEX.MOD_ID, "personal_link"));
+			GameRegistry.registerTileEntity(TileLinkMK2.class, new ResourceLocation(ProjectEX.MOD_ID, "refined_link"));
+			GameRegistry.registerTileEntity(TileLinkMK3.class, new ResourceLocation(ProjectEX.MOD_ID, "compressed_refined_link"));
 		}
 
 		if (ProjectEXConfig.items.collectors)
@@ -88,6 +96,8 @@ public class ProjectEXEventHandler
 		if (ProjectEXConfig.items.link)
 		{
 			r.register(new ItemBlock(ProjectEXBlocks.PERSONAL_LINK).setRegistryName("personal_link"));
+			r.register(new ItemBlock(ProjectEXBlocks.REFINED_LINK).setRegistryName("refined_link"));
+			r.register(new ItemBlock(ProjectEXBlocks.COMPRESSED_REFINED_LINK).setRegistryName("compressed_refined_link"));
 		}
 
 		if (ProjectEXConfig.items.collectors)

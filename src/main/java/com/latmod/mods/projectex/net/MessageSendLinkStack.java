@@ -64,7 +64,7 @@ public class MessageSendLinkStack implements IMessage
 
 				if (tileEntity instanceof TileLink)
 				{
-					((TileLink) tileEntity).setOutputStack(player, message.stack);
+					((TileLink) tileEntity).setOutputStack(player, message.slot, message.stack);
 				}
 			});
 

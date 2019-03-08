@@ -36,7 +36,7 @@ public class BlockLink extends Block
 	@Override
 	public TileEntity createTileEntity(World world, IBlockState state)
 	{
-		return new TileLink();
+		return new TileLink(0, 0);
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package com.latmod.mods.projectex.client;
 
 import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.block.EnumMatter;
 import com.latmod.mods.projectex.block.EnumTier;
-import com.latmod.mods.projectex.item.ItemMatter;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -26,39 +27,73 @@ public class ProjectEXClientEventHandler
 	@SubscribeEvent
 	public static void registerModels(ModelRegistryEvent event)
 	{
-		addModel(ProjectEXItems.PERSONAL_LINK, "normal");
-		addModel(ProjectEXItems.REFINED_LINK, "normal");
-		addModel(ProjectEXItems.COMPRESSED_REFINED_LINK, "normal");
+		if (ProjectEXConfig.items.link)
+		{
+			addModel(ProjectEXItems.PERSONAL_LINK, "normal");
+			addModel(ProjectEXItems.REFINED_LINK, "normal");
+			addModel(ProjectEXItems.COMPRESSED_REFINED_LINK, "normal");
+		}
 
 		for (EnumTier tier : EnumTier.VALUES)
 		{
-			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.COLLECTOR, tier.metadata, new ModelResourceLocation(ProjectEXItems.COLLECTOR.getRegistryName(), "tier=" + tier.getName()));
-			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.RELAY, tier.metadata, new ModelResourceLocation(ProjectEXItems.RELAY.getRegistryName(), "tier=" + tier.getName()));
+			if (ProjectEXConfig.items.collectors)
+			{
+				ModelLoader.setCustomModelResourceLocation(ProjectEXItems.COLLECTOR, tier.ordinal(), new ModelResourceLocation(ProjectEXItems.COLLECTOR.getRegistryName(), "tier=" + tier.getName()));
+			}
+
+			if (ProjectEXConfig.items.relays)
+			{
+				ModelLoader.setCustomModelResourceLocation(ProjectEXItems.RELAY, tier.ordinal(), new ModelResourceLocation(ProjectEXItems.RELAY.getRegistryName(), "tier=" + tier.getName()));
+			}
+
+			if (ProjectEXConfig.items.power_flowers)
+			{
+				ModelLoader.setCustomModelResourceLocation(ProjectEXItems.COMPRESSED_COLLECTOR, tier.ordinal(), new ModelResourceLocation(ProjectEXItems.COLLECTOR.getRegistryName(), "tier=" + tier.getName()));
+				ModelLoader.setCustomModelResourceLocation(ProjectEXItems.POWER_FLOWER, tier.ordinal(), new ModelResourceLocation(ProjectEXItems.POWER_FLOWER.getRegistryName(), "tier=" + tier.getName()));
+			}
 		}
 
-		addModel(ProjectEXItems.STONE_TABLE, "normal");
-
-		addModel(ProjectEXItems.MAGNUM_STAR_EIN, "inventory");
-		addModel(ProjectEXItems.MAGNUM_STAR_ZWEI, "inventory");
-		addModel(ProjectEXItems.MAGNUM_STAR_DREI, "inventory");
-		addModel(ProjectEXItems.MAGNUM_STAR_VIER, "inventory");
-		addModel(ProjectEXItems.MAGNUM_STAR_SPHERE, "inventory");
-		addModel(ProjectEXItems.MAGNUM_STAR_OMEGA, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_EIN, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_ZWEI, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_DREI, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_VIER, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_SPHERE, "inventory");
-		addModel(ProjectEXItems.COLOSSAL_STAR_OMEGA, "inventory");
-
-		for (int i = 0; i < ItemMatter.NAMES.length; i++)
+		if (ProjectEXConfig.items.stone_table)
 		{
-			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.MATTER, i, new ModelResourceLocation(ProjectEX.MOD_ID + ":matter/" + ItemMatter.NAMES[i] + "#inventory"));
+			addModel(ProjectEXItems.STONE_TABLE, "normal");
+		}
+
+		if (ProjectEXConfig.items.stars)
+		{
+			addModel(ProjectEXItems.MAGNUM_STAR_EIN, "inventory");
+			addModel(ProjectEXItems.MAGNUM_STAR_ZWEI, "inventory");
+			addModel(ProjectEXItems.MAGNUM_STAR_DREI, "inventory");
+			addModel(ProjectEXItems.MAGNUM_STAR_VIER, "inventory");
+			addModel(ProjectEXItems.MAGNUM_STAR_SPHERE, "inventory");
+			addModel(ProjectEXItems.MAGNUM_STAR_OMEGA, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_EIN, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_ZWEI, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_DREI, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_VIER, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_SPHERE, "inventory");
+			addModel(ProjectEXItems.COLOSSAL_STAR_OMEGA, "inventory");
+		}
+
+		for (EnumMatter matter : EnumMatter.VALUES)
+		{
+			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.MATTER, matter.ordinal(), new ModelResourceLocation(ProjectEX.MOD_ID + ":matter/" + matter.getName() + "#inventory"));
 		}
 
 		addModel(ProjectEXItems.FINAL_STAR_SHARD, "inventory");
-		addModel(ProjectEXItems.FINAL_STAR, "inventory");
-		addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
-		addModel(ProjectEXItems.TABLET_MK2, "inventory");
+
+		if (ProjectEXConfig.items.final_star)
+		{
+			addModel(ProjectEXItems.FINAL_STAR, "inventory");
+		}
+
+		if (ProjectEXConfig.items.knowledge_sharing_book)
+		{
+			addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
+		}
+
+		if (ProjectEXConfig.items.tablet_mk2)
+		{
+			addModel(ProjectEXItems.TABLET_MK2, "inventory");
+		}
 	}
 }

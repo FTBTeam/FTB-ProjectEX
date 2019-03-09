@@ -1,14 +1,31 @@
 package com.latmod.mods.projectex.item;
 
+import com.latmod.mods.projectex.tile.TileRelay;
 import moze_intel.projecte.api.item.IItemEmc;
+import moze_intel.projecte.api.item.IPedestalItem;
+import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public class ItemFinalStar extends Item implements IItemEmc
+public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 {
 	public ItemFinalStar()
 	{
@@ -43,5 +60,43 @@ public class ItemFinalStar extends Item implements IItemEmc
 	public EnumRarity getRarity(ItemStack stack)
 	{
 		return EnumRarity.EPIC;
+	}
+
+	@Override
+	public void updateInPedestal(World world, BlockPos pos)
+	{
+		if (!world.isRemote && world.getTotalWorldTime() % 10L == TileRelay.mod(pos.hashCode(), 10))
+		{
+			List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, Block.FULL_BLOCK_AABB.offset(pos).expand(0D, 1D, 0D));
+
+			if (!items.isEmpty())
+			{
+				for (EnumFacing facing : EnumFacing.VALUES)
+				{
+					if (facing != EnumFacing.UP)
+					{
+						TileEntity tileEntity = world.getTileEntity(pos.offset(facing));
+						IItemHandler handler = tileEntity == null ? null : tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing.getOpposite());
+
+						if (handler != null)
+						{
+							for (EntityItem entityItem : items)
+							{
+								ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(entityItem.getItem(), entityItem.getItem().getMaxStackSize()), false);
+							}
+
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public List<String> getPedestalDescription()
+	{
+		return Collections.singletonList(I18n.format("item.projectex.final_star.description"));
 	}
 }

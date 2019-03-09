@@ -1,48 +1,51 @@
 package com.latmod.mods.projectex.block;
 
 import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.item.ProjectEXItems;
+import moze_intel.projecte.gameObjs.ObjHandler;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
+
+import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
  */
 public enum EnumTier implements IStringSerializable
 {
-	MK1("mk1", 0, ProjectEXConfig.tiers.mk1),
-	MK2("mk2", 1, ProjectEXConfig.tiers.mk2),
-	MK3("mk3", 2, ProjectEXConfig.tiers.mk3),
-	MK4("mk4", 3, ProjectEXConfig.tiers.mk4),
-	MK5("mk5", 4, ProjectEXConfig.tiers.mk5),
-	MK6("mk6", 5, ProjectEXConfig.tiers.mk6),
-	MK7("mk7", 6, ProjectEXConfig.tiers.mk7),
-	MK8("mk8", 7, ProjectEXConfig.tiers.mk8),
-	MK9("mk9", 8, ProjectEXConfig.tiers.mk9),
-	MK10("mk10", 9, ProjectEXConfig.tiers.mk10),
-	MK_FINAL("mk_final", 15, ProjectEXConfig.tiers.mk_final);
+	BASIC("basic", () -> new ItemStack(Blocks.DIAMOND_BLOCK), ProjectEXConfig.tiers.basic),
+	DARK("dark", () -> new ItemStack(ObjHandler.matter, 1, 0), ProjectEXConfig.tiers.dark),
+	RED("red", () -> new ItemStack(ObjHandler.matter, 1, 1), ProjectEXConfig.tiers.red),
+	MAGENTA("magenta", EnumMatter.MAGENTA, ProjectEXConfig.tiers.magenta),
+	PINK("pink", EnumMatter.PINK, ProjectEXConfig.tiers.pink),
+	PURPLE("purple", EnumMatter.PURPLE, ProjectEXConfig.tiers.purple),
+	VIOLET("violet", EnumMatter.VIOLET, ProjectEXConfig.tiers.violet),
+	BLUE("blue", EnumMatter.BLUE, ProjectEXConfig.tiers.blue),
+	CYAN("cyan", EnumMatter.CYAN, ProjectEXConfig.tiers.cyan),
+	GREEN("green", EnumMatter.GREEN, ProjectEXConfig.tiers.green),
+	LIME("lime", EnumMatter.LIME, ProjectEXConfig.tiers.lime),
+	YELLOW("yellow", EnumMatter.YELLOW, ProjectEXConfig.tiers.yellow),
+	ORANGE("orange", EnumMatter.ORANGE, ProjectEXConfig.tiers.orange),
+	WHITE("white", EnumMatter.WHITE, ProjectEXConfig.tiers.white),
+	FADING("fading", EnumMatter.FADING, ProjectEXConfig.tiers.fading),
+	FINAL("final", () -> new ItemStack(ProjectEXItems.FINAL_STAR_SHARD), ProjectEXConfig.tiers.final_tier);
 
 	public static final EnumTier[] VALUES = values();
 
 	public static EnumTier byMeta(int meta)
 	{
-		for (EnumTier tier : VALUES)
-		{
-			if (tier.metadata == meta)
-			{
-				return tier;
-			}
-		}
-
-		return MK1;
+		return meta < 0 || meta >= VALUES.length ? BASIC : VALUES[meta];
 	}
 
 	private final String name;
-	public final int metadata;
+	public final Supplier<ItemStack> matter;
 	public ProjectEXConfig.BlockTier properties;
 
-	EnumTier(String n, int m, ProjectEXConfig.BlockTier b)
+	EnumTier(String n, Supplier<ItemStack> ma, ProjectEXConfig.BlockTier b)
 	{
 		name = n;
-		metadata = m;
+		matter = ma;
 		properties = b;
 	}
 

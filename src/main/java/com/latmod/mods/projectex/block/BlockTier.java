@@ -38,7 +38,7 @@ public class BlockTier extends Block
 	@Override
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(TIER).metadata;
+		return state.getValue(TIER).ordinal();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class BlockTier extends Block
 	@Override
 	public int damageDropped(IBlockState state)
 	{
-		return state.getValue(TIER).metadata;
+		return state.getValue(TIER).ordinal();
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class BlockTier extends Block
 	{
 		for (EnumTier tier : EnumTier.VALUES)
 		{
-			items.add(new ItemStack(this, 1, tier.metadata));
+			items.add(new ItemStack(this, 1, tier.ordinal()));
 		}
 	}
 }

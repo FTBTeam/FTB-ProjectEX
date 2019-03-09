@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex.item;
 
+import com.latmod.mods.projectex.block.EnumMatter;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,16 +11,6 @@ import net.minecraft.util.NonNullList;
  */
 public class ItemMatter extends Item
 {
-	public static final String[] NAMES = {
-			"purple",
-			"blue",
-			"cyan",
-			"green",
-			"yellow",
-			"white",
-			"fading"
-	};
-
 	public ItemMatter()
 	{
 		setHasSubtypes(true);
@@ -28,7 +19,7 @@ public class ItemMatter extends Item
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		return getTranslationKey() + "." + NAMES[stack.getMetadata()];
+		return getTranslationKey() + "." + EnumMatter.byMeta(stack.getMetadata()).getName();
 	}
 
 	@Override
@@ -36,9 +27,9 @@ public class ItemMatter extends Item
 	{
 		if (isInCreativeTab(tab))
 		{
-			for (int i = 0; i < NAMES.length; i++)
+			for (EnumMatter matter : EnumMatter.VALUES)
 			{
-				items.add(new ItemStack(this, 1, i));
+				items.add(new ItemStack(this, 1, matter.ordinal()));
 			}
 		}
 	}

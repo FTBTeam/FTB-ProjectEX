@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"tier=basic": {"model": "projectex:power_flower/basic"},
+		"tier=dark": {"model": "projectex:power_flower/dark"},
+		"tier=red": {"model": "projectex:power_flower/red"},
+		"tier=pink": {"model": "projectex:power_flower/pink"},
+		"tier=magenta": {"model": "projectex:power_flower/magenta"},
+		"tier=purple": {"model": "projectex:power_flower/purple"},
+		"tier=violet": {"model": "projectex:power_flower/violet"},
+		"tier=blue": {"model": "projectex:power_flower/blue"},
+		"tier=cyan": {"model": "projectex:power_flower/cyan"},
+		"tier=green": {"model": "projectex:power_flower/green"},
+		"tier=lime": {"model": "projectex:power_flower/lime"},
+		"tier=yellow": {"model": "projectex:power_flower/yellow"},
+		"tier=orange": {"model": "projectex:power_flower/orange"},
+		"tier=white": {"model": "projectex:power_flower/white"},
+		"tier=fading": {"model": "projectex:power_flower/fading"},
+		"tier=final": {"model": "projectex:power_flower/final"}
+	}
+}

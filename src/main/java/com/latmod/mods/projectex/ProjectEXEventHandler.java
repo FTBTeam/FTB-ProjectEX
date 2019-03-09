@@ -4,27 +4,39 @@ import com.latmod.mods.projectex.block.BlockCollector;
 import com.latmod.mods.projectex.block.BlockLinkMK1;
 import com.latmod.mods.projectex.block.BlockLinkMK2;
 import com.latmod.mods.projectex.block.BlockLinkMK3;
+import com.latmod.mods.projectex.block.BlockPowerFlower;
 import com.latmod.mods.projectex.block.BlockRelay;
 import com.latmod.mods.projectex.block.BlockStoneTable;
+import com.latmod.mods.projectex.block.EnumMatter;
+import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
 import com.latmod.mods.projectex.item.ItemBlockTier;
 import com.latmod.mods.projectex.item.ItemColossalStar;
+import com.latmod.mods.projectex.item.ItemCompressedCollector;
 import com.latmod.mods.projectex.item.ItemFinalStar;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
 import com.latmod.mods.projectex.item.ItemTabletMK2;
+import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.tile.TileCollector;
 import com.latmod.mods.projectex.tile.TileLinkMK1;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
+import com.latmod.mods.projectex.tile.TilePowerFlower;
 import com.latmod.mods.projectex.tile.TileRelay;
 import moze_intel.projecte.api.item.IItemEmc;
+import moze_intel.projecte.gameObjs.ObjHandler;
 import moze_intel.projecte.gameObjs.items.KleinStar;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.ShapedRecipes;
+import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -82,6 +94,12 @@ public class ProjectEXEventHandler
 			GameRegistry.registerTileEntity(TileRelay.class, new ResourceLocation(ProjectEX.MOD_ID, "relay"));
 		}
 
+		if (ProjectEXConfig.items.power_flowers)
+		{
+			r.register(withName(new BlockPowerFlower(), "power_flower"));
+			GameRegistry.registerTileEntity(TilePowerFlower.class, new ResourceLocation(ProjectEX.MOD_ID, "power_flower"));
+		}
+
 		if (ProjectEXConfig.items.stone_table)
 		{
 			r.register(withName(new BlockStoneTable(), "stone_table"));
@@ -108,6 +126,12 @@ public class ProjectEXEventHandler
 		if (ProjectEXConfig.items.relays)
 		{
 			r.register(new ItemBlockTier(ProjectEXBlocks.RELAY).setRegistryName("relay"));
+		}
+
+		if (ProjectEXConfig.items.power_flowers)
+		{
+			r.register(new ItemCompressedCollector().setRegistryName("compressed_collector"));
+			r.register(new ItemBlockTier(ProjectEXBlocks.POWER_FLOWER).setRegistryName("power_flower"));
 		}
 
 		if (ProjectEXConfig.items.stone_table)
@@ -166,6 +190,98 @@ public class ProjectEXEventHandler
 					star.addEmc(event.crafting, ((IItemEmc) stack.getItem()).getStoredEmc(stack));
 				}
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void addRecipes(RegistryEvent.Register<IRecipe> event)
+	{
+		IForgeRegistry<IRecipe> r = event.getRegistry();
+
+		EnumMatter prevMatter = null;
+
+		Ingredient afuel = Ingredient.fromStacks(new ItemStack(ObjHandler.fuels, 1, 2));
+
+		for (EnumMatter matter : EnumMatter.VALUES)
+		{
+			if (prevMatter != null)
+			{
+				Ingredient prevMatterIngredient = Ingredient.fromStacks(prevMatter.get());
+
+				NonNullList<Ingredient> listh = NonNullList.create();
+				listh.add(afuel);
+				listh.add(afuel);
+				listh.add(afuel);
+				listh.add(prevMatterIngredient);
+				listh.add(prevMatterIngredient);
+				listh.add(prevMatterIngredient);
+				listh.add(afuel);
+				listh.add(afuel);
+				listh.add(afuel);
+				r.register(new ShapedRecipes("projectex:matter", 3, 3, listh, matter.get()).setRegistryName("matter/" + matter.getName() + "_h"));
+
+				NonNullList<Ingredient> listv = NonNullList.create();
+				listv.add(afuel);
+				listv.add(prevMatterIngredient);
+				listv.add(afuel);
+				listv.add(afuel);
+				listv.add(prevMatterIngredient);
+				listv.add(afuel);
+				listv.add(afuel);
+				listv.add(prevMatterIngredient);
+				listv.add(afuel);
+				r.register(new ShapedRecipes("projectex:matter", 3, 3, listv, matter.get()).setRegistryName("matter/" + matter.getName() + "_v"));
+			}
+
+			prevMatter = matter;
+		}
+
+		EnumTier prevTier = null;
+
+		for (EnumTier tier : EnumTier.VALUES)
+		{
+			if (ProjectEXConfig.items.power_flowers)
+			{
+				r.register(new ShapedRecipes("projectex:compressed_collector", 3, 3, NonNullList.withSize(9, Ingredient.fromStacks(new ItemStack(ProjectEXItems.COLLECTOR, 1, tier.ordinal()))), new ItemStack(ProjectEXItems.COMPRESSED_COLLECTOR, 1, tier.ordinal())).setRegistryName("compressed_collector/" + tier.getName()));
+
+				NonNullList<Ingredient> list = NonNullList.create();
+				Ingredient ccollector = Ingredient.fromStacks(new ItemStack(ProjectEXItems.COMPRESSED_COLLECTOR, 1, tier.ordinal()));
+				Ingredient relay = Ingredient.fromStacks(new ItemStack(ProjectEXItems.RELAY, 1, tier.ordinal()));
+
+				list.add(ccollector);
+				list.add(Ingredient.fromItem(ProjectEXItems.PERSONAL_LINK));
+				list.add(ccollector);
+				list.add(relay);
+				list.add(relay);
+				list.add(relay);
+				list.add(relay);
+				list.add(relay);
+				list.add(relay);
+				r.register(new ShapedRecipes("projectex:power_flower", 3, 3, list, new ItemStack(ProjectEXItems.POWER_FLOWER, 1, tier.ordinal())).setRegistryName("power_flower/" + tier.getName()));
+			}
+
+			if (prevTier != null)
+			{
+				Ingredient matterIngredient = Ingredient.fromStacks(tier.matter.get());
+
+				if (ProjectEXConfig.items.collectors)
+				{
+					NonNullList<Ingredient> list = NonNullList.create();
+					list.add(Ingredient.fromStacks(new ItemStack(ProjectEXItems.COLLECTOR, 1, prevTier.ordinal())));
+					list.add(matterIngredient);
+					r.register(new ShapelessRecipes("projectex:collector", new ItemStack(ProjectEXItems.COLLECTOR, 1, tier.ordinal()), list).setRegistryName("collector/" + tier.getName()));
+				}
+
+				if (ProjectEXConfig.items.relays)
+				{
+					NonNullList<Ingredient> list = NonNullList.create();
+					list.add(Ingredient.fromStacks(new ItemStack(ProjectEXItems.RELAY, 1, prevTier.ordinal())));
+					list.add(matterIngredient);
+					r.register(new ShapelessRecipes("projectex:relay", new ItemStack(ProjectEXItems.RELAY, 1, tier.ordinal()), list).setRegistryName("relay/" + tier.getName()));
+				}
+			}
+
+			prevTier = tier;
 		}
 	}
 }

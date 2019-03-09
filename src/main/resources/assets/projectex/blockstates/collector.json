@@ -1,15 +1,20 @@
 {
 	"variants": {
-		"tier=mk1": {"model": "projectex:collector/mk1"},
-		"tier=mk2": {"model": "projectex:collector/mk2"},
-		"tier=mk3": {"model": "projectex:collector/mk3"},
-		"tier=mk4": {"model": "projectex:collector/mk4"},
-		"tier=mk5": {"model": "projectex:collector/mk5"},
-		"tier=mk6": {"model": "projectex:collector/mk6"},
-		"tier=mk7": {"model": "projectex:collector/mk7"},
-		"tier=mk8": {"model": "projectex:collector/mk8"},
-		"tier=mk9": {"model": "projectex:collector/mk9"},
-		"tier=mk10": {"model": "projectex:collector/mk10"},
-		"tier=mk_final": {"model": "projectex:collector/mk_final"}
+		"tier=basic": {"model": "projectex:collector/basic"},
+		"tier=dark": {"model": "projectex:collector/dark"},
+		"tier=red": {"model": "projectex:collector/red"},
+		"tier=pink": {"model": "projectex:collector/pink"},
+		"tier=magenta": {"model": "projectex:collector/magenta"},
+		"tier=purple": {"model": "projectex:collector/purple"},
+		"tier=violet": {"model": "projectex:collector/violet"},
+		"tier=blue": {"model": "projectex:collector/blue"},
+		"tier=cyan": {"model": "projectex:collector/cyan"},
+		"tier=green": {"model": "projectex:collector/green"},
+		"tier=lime": {"model": "projectex:collector/lime"},
+		"tier=yellow": {"model": "projectex:collector/yellow"},
+		"tier=orange": {"model": "projectex:collector/orange"},
+		"tier=white": {"model": "projectex:collector/white"},
+		"tier=fading": {"model": "projectex:collector/fading"},
+		"tier=final": {"model": "projectex:collector/final"}
 	}
 }

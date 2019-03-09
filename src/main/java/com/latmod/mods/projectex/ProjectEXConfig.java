@@ -176,17 +176,22 @@ public class ProjectEXConfig
 
 	public static class Tiers
 	{
-		public final BlockTier mk1 = new BlockTier(4, 1, 64);
-		public final BlockTier mk2 = new BlockTier(12, 3, 192);
-		public final BlockTier mk3 = new BlockTier(40, 10, 640);
-		public final BlockTier mk4 = new BlockTier(160, 40, 2560);
-		public final BlockTier mk5 = new BlockTier(640, 150, 10240);
-		public final BlockTier mk6 = new BlockTier(2560, 750, 40960);
-		public final BlockTier mk7 = new BlockTier(10240, 3750, 163840);
-		public final BlockTier mk8 = new BlockTier(40960, 15000, 655360);
-		public final BlockTier mk9 = new BlockTier(163840, 60000, 2621440);
-		public final BlockTier mk10 = new BlockTier(655360, 240000, 10485760);
-		public final BlockTier mk_final = new BlockTier(1000000000000D, 1000000000000D, Double.MAX_VALUE);
+		public final BlockTier basic = new BlockTier(4, 1, 64);
+		public final BlockTier dark = new BlockTier(12, 3, 192);
+		public final BlockTier red = new BlockTier(40, 10, 640);
+		public final BlockTier pink = new BlockTier(160, 40, 2560);
+		public final BlockTier magenta = new BlockTier(640, 150, 10240);
+		public final BlockTier purple = new BlockTier(2560, 750, 40960);
+		public final BlockTier violet = new BlockTier(10240, 3750, 163840);
+		public final BlockTier blue = new BlockTier(40960, 15000, 655360);
+		public final BlockTier cyan = new BlockTier(163840, 60000, 2621440);
+		public final BlockTier green = new BlockTier(655360, 240000, 10485760);
+		public final BlockTier lime = new BlockTier(2621440, 960000, 41943040);
+		public final BlockTier yellow = new BlockTier(10485760, 3840000, 167772160);
+		public final BlockTier orange = new BlockTier(41943040, 15360000, 671088640);
+		public final BlockTier white = new BlockTier(167772160, 61440000, 2684354560D);
+		public final BlockTier fading = new BlockTier(671088640, 245760000, 10737418240D);
+		public final BlockTier final_tier = new BlockTier(1000000000000D, 1000000000000D, Double.MAX_VALUE);
 	}
 
 	public static class BlockTier
@@ -206,6 +211,11 @@ public class ProjectEXConfig
 			relay_bonus = rb;
 			relay_transfer = rt;
 		}
+
+		public double powerFlowerOutput()
+		{
+			return collector_output * 18D + relay_bonus * 30D;
+		}
 	}
 
 	public static class ItemsConfig
@@ -223,6 +233,7 @@ public class ProjectEXConfig
 
 		public boolean collectors = true;
 		public boolean relays = true;
+		public boolean power_flowers = true;
 		public boolean tome = true;
 
 		@Config.LangKey("tile.projectex.stone_table.name")

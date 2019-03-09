@@ -1,15 +1,20 @@
 {
 	"variants": {
-		"tier=mk1": {"model": "projectex:relay/mk1"},
-		"tier=mk2": {"model": "projectex:relay/mk2"},
-		"tier=mk3": {"model": "projectex:relay/mk3"},
-		"tier=mk4": {"model": "projectex:relay/mk4"},
-		"tier=mk5": {"model": "projectex:relay/mk5"},
-		"tier=mk6": {"model": "projectex:relay/mk6"},
-		"tier=mk7": {"model": "projectex:relay/mk7"},
-		"tier=mk8": {"model": "projectex:relay/mk8"},
-		"tier=mk9": {"model": "projectex:relay/mk9"},
-		"tier=mk10": {"model": "projectex:relay/mk10"},
-		"tier=mk_final": {"model": "projectex:relay/mk_final"}
+		"tier=basic": {"model": "projectex:relay/basic"},
+		"tier=dark": {"model": "projectex:relay/dark"},
+		"tier=red": {"model": "projectex:relay/red"},
+		"tier=pink": {"model": "projectex:relay/pink"},
+		"tier=magenta": {"model": "projectex:relay/magenta"},
+		"tier=purple": {"model": "projectex:relay/purple"},
+		"tier=violet": {"model": "projectex:relay/violet"},
+		"tier=blue": {"model": "projectex:relay/blue"},
+		"tier=cyan": {"model": "projectex:relay/cyan"},
+		"tier=green": {"model": "projectex:relay/green"},
+		"tier=lime": {"model": "projectex:relay/lime"},
+		"tier=yellow": {"model": "projectex:relay/yellow"},
+		"tier=orange": {"model": "projectex:relay/orange"},
+		"tier=white": {"model": "projectex:relay/white"},
+		"tier=fading": {"model": "projectex:relay/fading"},
+		"tier=final": {"model": "projectex:relay/final"}
 	}
 }

@@ -5,9 +5,14 @@ import com.latmod.mods.projectex.ProjectEXConfig;
 import com.latmod.mods.projectex.block.EnumMatter;
 import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.item.ProjectEXItems;
+import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.utils.Constants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -19,6 +24,11 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(modid = ProjectEX.MOD_ID, value = Side.CLIENT)
 public class ProjectEXClientEventHandler
 {
+	private static double lastEMC;
+	private static long lastUpdate;
+	private static double[] emcsa = new double[5];
+	public static double emcs = 0D;
+
 	private static void addModel(Item item, String variant)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), variant));
@@ -94,6 +104,45 @@ public class ProjectEXClientEventHandler
 		if (ProjectEXConfig.items.tablet_mk2)
 		{
 			addModel(ProjectEXItems.TABLET_MK2, "inventory");
+		}
+	}
+
+	@SubscribeEvent
+	public static void addInfoText(RenderGameOverlayEvent.Text event)
+	{
+		if (Minecraft.getMinecraft().player != null)
+		{
+			long now = System.currentTimeMillis();
+			double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).getEmc();
+
+			if ((now - lastUpdate) >= 1000L)
+			{
+				System.arraycopy(emcsa, 1, emcsa, 0, emcsa.length - 1);
+				emcsa[emcsa.length - 1] = emc - lastEMC;
+				lastEMC = emc;
+				lastUpdate = now;
+
+				emcs = 0D;
+
+				for (double d : emcsa)
+				{
+					emcs += d;
+				}
+
+				emcs /= (double) emcsa.length;
+			}
+
+			if (ProjectEXClientConfig.general.emc_on_screen != 0)
+			{
+				String s = Constants.EMC_FORMATTER.format(emc);
+
+				if (emcs != 0D)
+				{
+					s += (emcs > 0D ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
+				}
+
+				(ProjectEXClientConfig.general.emc_on_screen == 1 ? event.getLeft() : event.getRight()).add("EMC: " + s);
+			}
 		}
 	}
 }

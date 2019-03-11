@@ -4,6 +4,7 @@ import com.latmod.mods.projectex.gui.EMCDecimalFormat;
 import com.latmod.mods.projectex.gui.ProjectEXGuiHandler;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
+import com.latmod.mods.projectex.tile.TilePowerFlower;
 import moze_intel.projecte.PECore;
 import moze_intel.projecte.utils.Constants;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -67,6 +69,11 @@ public class ProjectEX
 			{
 				ex.printStackTrace();
 			}
+		}
+
+		if (ProjectEXConfig.general.blacklist_power_flower_from_watch)
+		{
+			FMLInterModComms.sendMessage(PECore.MODID, "timewatchblacklist", TilePowerFlower.class.getName());
 		}
 	}
 }

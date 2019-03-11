@@ -61,7 +61,17 @@ public class ProjectEXConfig
 
 	public static class General
 	{
+		@Config.Comment("Overrides default EMC formatter from ProjectE with custom one.")
 		public boolean override_emc_formatter = true;
+
+		@Config.Comment("With this enabled, Power Flowers will not be affected by Watch of Flowing Time.")
+		public boolean blacklist_power_flower_from_watch = true;
+
+		@Config.Comment("If set to false, it will only copy items with EMC value.")
+		public boolean final_star_copy_any_item = true;
+
+		@Config.Comment("If set to false, it will remove item NBT.")
+		public boolean final_star_copy_nbt = false;
 
 		public String[] stone_table_whitelist = {
 				"oredict:ingot",
@@ -179,8 +189,8 @@ public class ProjectEXConfig
 		public final BlockTier basic = new BlockTier(4, 1, 64);
 		public final BlockTier dark = new BlockTier(12, 3, 192);
 		public final BlockTier red = new BlockTier(40, 10, 640);
-		public final BlockTier pink = new BlockTier(160, 40, 2560);
-		public final BlockTier magenta = new BlockTier(640, 150, 10240);
+		public final BlockTier magenta = new BlockTier(160, 40, 2560);
+		public final BlockTier pink = new BlockTier(640, 150, 10240);
 		public final BlockTier purple = new BlockTier(2560, 750, 40960);
 		public final BlockTier violet = new BlockTier(10240, 3750, 163840);
 		public final BlockTier blue = new BlockTier(40960, 15000, 655360);

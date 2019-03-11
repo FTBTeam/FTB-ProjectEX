@@ -1,6 +1,7 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.client.ProjectEXClientEventHandler;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
 import moze_intel.projecte.api.ProjectEAPI;
@@ -66,17 +67,11 @@ public class GuiLink extends GuiContainer
 	}
 
 	public final ContainerLink container;
-	public double lastEMC;
-	public long lastUpdate;
-	public double emcs;
 
 	public GuiLink(ContainerLink c)
 	{
 		super(c);
 		container = c;
-		lastEMC = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
-		lastUpdate = System.currentTimeMillis();
-		emcs = 0D;
 
 		if (container.link instanceof TileLinkMK3)
 		{
@@ -172,23 +167,15 @@ public class GuiLink extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		long now = System.currentTimeMillis();
 		double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
-
-		if ((now - lastUpdate) >= 2000L)
-		{
-			emcs = (emc - lastEMC) / 2D;
-			lastEMC = emc;
-			lastUpdate = now;
-		}
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 
 		String s = Constants.EMC_FORMATTER.format(emc);
 
-		if (emcs != 0D)
+		if (ProjectEXClientEventHandler.emcs != 0D)
 		{
-			s += (emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
+			s += (ProjectEXClientEventHandler.emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(ProjectEXClientEventHandler.emcs)) + "/s";
 		}
 
 		if (container.link instanceof TileLinkMK3)

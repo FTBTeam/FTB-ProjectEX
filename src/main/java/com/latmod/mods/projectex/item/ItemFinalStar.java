@@ -1,14 +1,18 @@
 package com.latmod.mods.projectex.item;
 
+import com.latmod.mods.projectex.ProjectEXConfig;
 import com.latmod.mods.projectex.tile.TileRelay;
+import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.item.IItemEmc;
 import moze_intel.projecte.api.item.IPedestalItem;
+import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -80,12 +84,20 @@ public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 
 						if (handler != null)
 						{
-							for (EntityItem entityItem : items)
-							{
-								ItemHandlerHelper.insertItem(handler, ItemHandlerHelper.copyStackWithSize(entityItem.getItem(), entityItem.getItem().getMaxStackSize()), false);
-							}
+							ItemStack stack = items.get(world.rand.nextInt(items.size())).getItem().copy();
 
-							return;
+							if (ProjectEXConfig.general.final_star_copy_any_item || ProjectEAPI.getEMCProxy().hasValue(stack))
+							{
+								stack.setCount(stack.getMaxStackSize());
+
+								if (!ProjectEXConfig.general.final_star_copy_nbt && stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
+								{
+									stack.setTagCompound(new NBTTagCompound());
+								}
+
+								ItemHandlerHelper.insertItem(handler, stack, false);
+								return;
+							}
 						}
 					}
 				}

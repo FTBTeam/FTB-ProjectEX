@@ -130,7 +130,7 @@ public class ProjectEXEventHandler
 
 		if (ProjectEXConfig.items.power_flowers)
 		{
-			r.register(new ItemCompressedCollector().setRegistryName("compressed_collector"));
+			r.register(withName(new ItemCompressedCollector(), "compressed_collector"));
 			r.register(new ItemBlockTier(ProjectEXBlocks.POWER_FLOWER).setRegistryName("power_flower"));
 		}
 

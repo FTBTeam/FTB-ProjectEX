@@ -15,7 +15,7 @@ public class ProjectEXNetHandler
 	{
 		NET = new SimpleNetworkWrapper(ProjectEX.MOD_ID);
 		NET.registerMessage(new MessageSyncEMC.Handler(), MessageSyncEMC.class, 0, Side.CLIENT);
-		NET.registerMessage(new MessageSendSearch.Handler(), MessageSendSearch.class, 1, Side.SERVER);
-		NET.registerMessage(new MessageSendLinkStack.Handler(), MessageSendLinkStack.class, 2, Side.SERVER);
+		NET.registerMessage(new MessageSendLinkStack.Handler(), MessageSendLinkStack.class, 1, Side.SERVER);
+		NET.registerMessage(new MessageCreateItemButton.Handler(), MessageCreateItemButton.class, 2, Side.SERVER);
 	}
 }

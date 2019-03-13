@@ -2,7 +2,7 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.ProjectEXConfig;
-import com.latmod.mods.projectex.net.MessageSendSearch;
+import com.latmod.mods.projectex.net.MessageCreateItemButton;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.utils.Constants;
@@ -19,6 +19,8 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,19 +33,65 @@ public class GuiStoneTable extends GuiContainer
 	private static String staticSearch = "";
 	private static int staticPage = 0;
 
+	public ContainerStoneTable table;
 	private GuiTextField searchField;
-	private ContainerStoneTable table;
+
+	public final List<ItemStack> validItems;
+	public final List<ButtonCreateItem> itemButtons;
 
 	public GuiStoneTable(ContainerStoneTable c)
 	{
 		super(c);
 		table = c;
 		ySize = 217;
+		validItems = new ArrayList<>();
+		itemButtons = new ArrayList<>();
+		updateValidItemList();
+	}
+
+	private String trim(String s)
+	{
+		return TextFormatting.getTextWithoutFormattingCodes(s.trim()).toLowerCase();
+	}
+
+	public void updateValidItemList()
+	{
+		validItems.clear();
+		String s = trim(staticSearch);
+
+		for (ItemStack stack : table.playerData.getKnowledge())
+		{
+			if (table.isItemValid(stack) && (s.isEmpty() || trim(stack.getDisplayName()).contains(s)))
+			{
+				validItems.add(stack);
+			}
+		}
+
+		Collections.reverse(validItems);
+		updateCurrentItemList();
+	}
+
+	public void updateCurrentItemList()
+	{
+		for (int i = 0; i < itemButtons.size(); i++)
+		{
+			int index = i + staticPage * itemButtons.size();
+
+			if (index >= 0 && index < validItems.size())
+			{
+				itemButtons.get(i).type = validItems.get(index);
+			}
+			else
+			{
+				itemButtons.get(i).type = ItemStack.EMPTY;
+			}
+		}
 	}
 
 	@Override
 	public void initGui()
 	{
+		itemButtons.clear();
 		super.initGui();
 		Keyboard.enableRepeatEvents(true);
 		searchField = new GuiTextField(0, fontRenderer, guiLeft + 8, guiTop + 7, 160, 11);
@@ -55,6 +103,27 @@ public class GuiStoneTable extends GuiContainer
 
 		addButton(new GuiButton(1, guiLeft + 7, guiTop + 62, 12, 20, "<"));
 		addButton(new GuiButton(2, guiLeft + 157, guiTop + 62, 12, 20, ">"));
+		addButton(new ButtonBurnItem(this, 3, guiLeft + 80, guiTop + 64));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 80, guiTop + 24));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 111, guiTop + 33));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 120, guiTop + 64));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 111, guiTop + 95));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 80, guiTop + 104));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 49, guiTop + 95));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 40, guiTop + 64));
+		addButton(new ButtonCreateItem(this, 3, guiLeft + 49, guiTop + 33));
+		updateCurrentItemList();
+	}
+
+	@Override
+	protected <T extends GuiButton> T addButton(T button)
+	{
+		if (button instanceof ButtonCreateItem)
+		{
+			itemButtons.add((ButtonCreateItem) button);
+		}
+
+		return super.addButton(button);
 	}
 
 	@Override
@@ -71,19 +140,15 @@ public class GuiStoneTable extends GuiContainer
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
 		searchField.drawTextBox();
-		staticSearch = searchField.getText();
 
-		if (staticPage != table.page || !staticSearch.equals(table.search))
+		if (!staticSearch.equals(searchField.getText()))
 		{
-			if (!staticSearch.equals(table.search))
+			if (!staticSearch.equals(searchField.getText()))
 			{
 				staticPage = 0;
 			}
 
-			table.search = staticSearch;
-			table.page = staticPage;
-			table.updateCurrentItemList();
-			ProjectEXNetHandler.NET.sendToServer(new MessageSendSearch(table));
+			updateValidItemList();
 		}
 	}
 
@@ -107,13 +172,36 @@ public class GuiStoneTable extends GuiContainer
 	{
 		super.actionPerformed(button);
 
-		if (button.id == 1)
+		if (button instanceof ButtonBurnItem)
+		{
+			clickGuiSlot(ItemStack.EMPTY, ContainerTableBase.BURN);
+		}
+		else if (button instanceof ButtonCreateItem)
+		{
+			clickGuiSlot(((ButtonCreateItem) button).type, isShiftKeyDown() ? ContainerTableBase.TAKE_STACK : ContainerTableBase.TAKE_ONE);
+		}
+		else if (button.id == 1)
 		{
 			changePage(false);
 		}
 		else if (button.id == 2)
 		{
 			changePage(true);
+		}
+	}
+
+	private void clickGuiSlot(ItemStack stack, int mode)
+	{
+		int r = table.clickGuiSlot(stack, mode);
+
+		if (r > 0)
+		{
+			ProjectEXNetHandler.NET.sendToServer(new MessageCreateItemButton(stack, mode));
+		}
+
+		if (r > 1)
+		{
+			updateValidItemList();
 		}
 	}
 
@@ -159,14 +247,16 @@ public class GuiStoneTable extends GuiContainer
 	{
 		if (next)
 		{
-			if (staticPage < MathHelper.ceil(table.currentItems.size() / 8F))
+			if (staticPage < MathHelper.ceil(validItems.size() / (float) itemButtons.size()) - 1)
 			{
 				staticPage++;
+				updateCurrentItemList();
 			}
 		}
 		else if (staticPage > 0)
 		{
 			staticPage--;
+			updateCurrentItemList();
 		}
 	}
 

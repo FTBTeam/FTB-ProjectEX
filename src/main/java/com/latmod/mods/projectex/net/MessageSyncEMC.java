@@ -3,6 +3,7 @@ package com.latmod.mods.projectex.net;
 import io.netty.buffer.ByteBuf;
 import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -40,13 +41,13 @@ public class MessageSyncEMC implements IMessage
 		@Override
 		public IMessage onMessage(MessageSyncEMC message, MessageContext ctx)
 		{
-			setEMC(message.emc);
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> setEMC(message.emc));
 			return null;
 		}
 
 		private void setEMC(double emc)
 		{
-			Minecraft.getMinecraft().addScheduledTask(() -> ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).setEmc(emc));
+			ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).setEmc(emc);
 		}
 	}
 }

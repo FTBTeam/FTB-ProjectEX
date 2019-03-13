@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -59,7 +60,7 @@ public class MessageSendLinkStack implements IMessage
 		{
 			EntityPlayerMP player = ctx.getServerHandler().player;
 
-			player.server.addScheduledTask(() -> {
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> {
 				TileEntity tileEntity = player.world.getTileEntity(message.pos);
 
 				if (tileEntity instanceof TileLink)

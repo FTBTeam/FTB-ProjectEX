@@ -1,36 +1,34 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.net.MessageSyncEMC;
+import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
+import moze_intel.projecte.api.item.IItemEmc;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.items.IItemHandler;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
  * @author LatvianModder
  */
-public class ContainerTableBase extends Container implements IItemHandler
+public class ContainerTableBase extends Container
 {
+	public static final int BURN = 1;
+	public static final int TAKE_STACK = 2;
+	public static final int TAKE_ONE = 3;
+
 	public final EntityPlayer player;
 	public final IKnowledgeProvider playerData;
-	public String search = "";
-	public int page = 0;
-	public final List<ItemStack> validItems;
-	public final List<ItemStack> currentItems;
 
 	public ContainerTableBase(EntityPlayer p)
 	{
 		player = p;
 		playerData = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID());
-		validItems = new ArrayList<>();
-		currentItems = new ArrayList<>();
-		updateValidItemList();
 	}
 
 	@Override
@@ -40,7 +38,7 @@ public class ContainerTableBase extends Container implements IItemHandler
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer playerIn)
+	public boolean canInteractWith(EntityPlayer player)
 	{
 		return true;
 	}
@@ -50,91 +48,78 @@ public class ContainerTableBase extends Container implements IItemHandler
 		return true;
 	}
 
-	@Override
-	public int getSlots()
+	public int clickGuiSlot(ItemStack type, int mode)
 	{
-		return 1 + getCreateSlots();
-	}
+		if (mode == BURN)
+		{
+			ItemStack stack = player.inventory.getItemStack();
 
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return ItemStack.EMPTY;
-	}
+			if (stack.isEmpty() || stack.getItem() instanceof IItemEmc || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			{
+				return 0;
+			}
 
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-	{
-		return stack;
-	}
+			int r = 1;
 
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate)
-	{
-		return ItemStack.EMPTY;
-	}
+			if (!playerData.hasKnowledge(stack))
+			{
+				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))
+				{
+					return 0;
+				}
 
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 64;
-	}
+				playerData.addKnowledge(ItemHandlerHelper.copyStackWithSize(stack, 1));
+				r = 2;
+			}
 
-	@Override
-	public boolean isItemValid(int slot, ItemStack stack)
-	{
-		return true;
-	}
+			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
+			player.inventory.setItemStack(ItemStack.EMPTY);
+			return r;
+		}
+		else if (mode == TAKE_STACK || mode == TAKE_ONE)
+		{
+			if (!player.inventory.getItemStack().isEmpty())
+			{
+				return 0;
+			}
 
-	public int getCreateSlots()
-	{
+			int amount = mode == TAKE_STACK ? 64 : 1;
+
+			if (type.isEmpty())
+			{
+				return 0;
+			}
+
+			double value = ProjectEAPI.getEMCProxy().getValue(type);
+
+			if (value <= 0D)
+			{
+				return 0;
+			}
+
+			double max = playerData.getEmc() / value;
+
+			if (amount > max)
+			{
+				amount = (int) Math.min(amount, max);
+			}
+
+			if (amount <= 0)
+			{
+				return 0;
+			}
+
+			playerData.setEmc(playerData.getEmc() - value * amount);
+
+			if (player instanceof EntityPlayerMP)
+			{
+				ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(playerData.getEmc()), (EntityPlayerMP) player);
+			}
+
+			player.inventory.setItemStack(ItemHandlerHelper.copyStackWithSize(type, amount));
+			return 1;
+		}
+
 		return 0;
-	}
-
-	public final void updateCurrentItemList()
-	{
-		currentItems.clear();
-
-		String s = TextFormatting.getTextWithoutFormattingCodes(search.trim()).toLowerCase();
-
-		double d = playerData.getEmc();
-
-		for (ItemStack stack : validItems)
-		{
-			if (d >= ProjectEAPI.getEMCProxy().getValue(stack) && TextFormatting.getTextWithoutFormattingCodes(stack.getDisplayName().trim()).toLowerCase().contains(s))
-			{
-				currentItems.add(stack);
-			}
-		}
-
-		updateCurrentSlots();
-		detectAndSendChanges();
-	}
-
-	public void updateCurrentSlots()
-	{
-		for (int i = 0; i < getCreateSlots(); i++)
-		{
-			Slot slot = getSlot(i + 1);
-
-			if (slot instanceof SlotCreateItem)
-			{
-				int index = page * 8 + i;
-				((SlotCreateItem) slot).type = index >= 0 && index < currentItems.size() ? currentItems.get(index) : ItemStack.EMPTY;
-			}
-		}
-	}
-
-	public void updateValidItemList()
-	{
-		validItems.clear();
-
-		for (ItemStack stack : playerData.getKnowledge())
-		{
-			if (isItemValid(stack))
-			{
-				validItems.add(stack);
-			}
-		}
 	}
 }

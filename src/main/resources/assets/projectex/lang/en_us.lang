@@ -3,7 +3,6 @@ itemGroup.projectex=Project EX
 tile.projectex.personal_link.name=Personal EMC Link
 tile.projectex.refined_link.name=Refined EMC Link
 tile.projectex.compressed_refined_link.name=Compressed Refined EMC Link
-tile.projectex.transmutation_table_mk2.name=Transmutation Table MK2
 
 tile.projectex.collector.basic.name=Basic Collector [MK1]
 tile.projectex.collector.dark.name=Dark Matter Collector [MK2]

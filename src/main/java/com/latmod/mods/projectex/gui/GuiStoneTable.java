@@ -59,10 +59,16 @@ public class GuiStoneTable extends GuiContainer implements ContainerTableBase.Kn
 	{
 		validItems.clear();
 		String s = trim(staticSearch);
+		boolean mod = s.startsWith("@");
+
+		if (mod)
+		{
+			s = s.substring(1);
+		}
 
 		for (ItemStack stack : table.playerData.getKnowledge())
 		{
-			if (table.isItemValid(stack) && (s.isEmpty() || trim(stack.getDisplayName()).contains(s)))
+			if (table.isItemValid(stack) && (s.isEmpty() || mod ? stack.getItem().getRegistryName().getNamespace().startsWith(s) : trim(stack.getDisplayName()).contains(s)))
 			{
 				validItems.add(stack);
 			}

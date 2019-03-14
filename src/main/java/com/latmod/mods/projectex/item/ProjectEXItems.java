@@ -35,6 +35,6 @@ public class ProjectEXItems
 	public static final Item FINAL_STAR_SHARD = Items.AIR;
 	public static final Item FINAL_STAR = Items.AIR;
 	public static final Item KNOWLEDGE_SHARING_BOOK = Items.AIR;
-	public static final Item TABLET_MK2 = Items.AIR;
+	public static final Item ARCANE_TABLET = Items.AIR;
 	public static final Item COMPRESSED_COLLECTOR = Items.AIR;
 }

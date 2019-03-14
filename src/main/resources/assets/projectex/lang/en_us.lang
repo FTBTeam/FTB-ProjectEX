@@ -96,7 +96,7 @@ item.projectex.final_star_shard.name=The Final Star Shard
 item.projectex.final_star.name=The Final Star
 item.projectex.final_star.description=Place a chest next to Pedestal and drop item on top of it to clone it infinitely.
 item.projectex.knowledge_sharing_book.name=Knowledge Sharing Book
-item.projectex.tablet_mk2.name=Transmutation Tablet MK2
+item.projectex.arcane_tablet.name=Arcane Transmutation Tablet
 
 projectex=Project EX Common
 projectex.general.stone_table_whitelist=Stone Table Whitelist

@@ -1,11 +1,11 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"group": "projectex:tablet_mk2",
-	"result": {"item": "tablet_mk2"},
+	"result": {"item": "arcane_tablet"},
 	"conditions": [
 		{
 			"type": "minecraft:item_exists",
-			"item": "projectex:tablet_mk2"
+			"item": "projectex:arcane_tablet"
 		}
 	],
 	"pattern": [

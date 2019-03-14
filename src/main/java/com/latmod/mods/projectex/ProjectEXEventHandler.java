@@ -10,6 +10,7 @@ import com.latmod.mods.projectex.block.BlockStoneTable;
 import com.latmod.mods.projectex.block.EnumMatter;
 import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.block.ProjectEXBlocks;
+import com.latmod.mods.projectex.item.ItemArcaneTablet;
 import com.latmod.mods.projectex.item.ItemBlockTier;
 import com.latmod.mods.projectex.item.ItemColossalStar;
 import com.latmod.mods.projectex.item.ItemCompressedCollector;
@@ -17,7 +18,6 @@ import com.latmod.mods.projectex.item.ItemFinalStar;
 import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
-import com.latmod.mods.projectex.item.ItemTabletMK2;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.tile.TileCollector;
 import com.latmod.mods.projectex.tile.TileLinkMK1;
@@ -168,9 +168,9 @@ public class ProjectEXEventHandler
 			r.register(withName(new ItemKnowledgeSharingBook(), "knowledge_sharing_book"));
 		}
 
-		if (ProjectEXConfig.items.tablet_mk2)
+		if (ProjectEXConfig.items.arcane_tablet)
 		{
-			r.register(withName(new ItemTabletMK2(), "tablet_mk2"));
+			r.register(withName(new ItemArcaneTablet(), "arcane_tablet"));
 		}
 	}
 

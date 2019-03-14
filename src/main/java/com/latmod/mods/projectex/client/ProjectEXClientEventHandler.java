@@ -101,9 +101,9 @@ public class ProjectEXClientEventHandler
 			addModel(ProjectEXItems.KNOWLEDGE_SHARING_BOOK, "inventory");
 		}
 
-		if (ProjectEXConfig.items.tablet_mk2)
+		if (ProjectEXConfig.items.arcane_tablet)
 		{
-			addModel(ProjectEXItems.TABLET_MK2, "inventory");
+			addModel(ProjectEXItems.ARCANE_TABLET, "inventory");
 		}
 	}
 

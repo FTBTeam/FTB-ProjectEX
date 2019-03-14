@@ -17,7 +17,7 @@ public class ProjectEXGuiHandler implements IGuiHandler
 {
 	public static final int LINK = 1;
 	public static final int STONE_TABLE = 2;
-	public static final int TABLET_MK2 = 3;
+	public static final int ARCANE_TABLET = 3;
 
 	public static void open(EntityPlayer player, int id, int x, int y, int z)
 	{
@@ -41,9 +41,9 @@ public class ProjectEXGuiHandler implements IGuiHandler
 		{
 			return new ContainerStoneTable(player);
 		}
-		else if (id == TABLET_MK2)
+		else if (id == ARCANE_TABLET)
 		{
-			return new ContainerTabletMK2(player);
+			return new ContainerArcaneTablet(player);
 		}
 
 		return null;
@@ -72,9 +72,9 @@ public class ProjectEXGuiHandler implements IGuiHandler
 		{
 			return new GuiStoneTable(new ContainerStoneTable(player));
 		}
-		else if (id == TABLET_MK2)
+		else if (id == ARCANE_TABLET)
 		{
-			return new GuiTabletMK2(new ContainerTabletMK2(player));
+			return new GuiArcaneTable(new ContainerArcaneTablet(player));
 		}
 
 		return null;

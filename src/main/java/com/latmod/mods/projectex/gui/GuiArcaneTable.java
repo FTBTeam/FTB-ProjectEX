@@ -8,11 +8,11 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author LatvianModder
  */
-public class GuiTabletMK2 extends GuiContainer
+public class GuiArcaneTable extends GuiContainer
 {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/tablet_mk2.png");
+	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/arcane_tablet.png");
 
-	public GuiTabletMK2(ContainerTabletMK2 c)
+	public GuiArcaneTable(ContainerArcaneTablet c)
 	{
 		super(c);
 	}

@@ -278,8 +278,8 @@ public class ProjectEXConfig
 		@Config.LangKey("tile.projectex.stone_table.name")
 		public boolean stone_table = true;
 
-		@Config.LangKey("item.projectex.tablet_mk2.name")
-		public boolean tablet_mk2 = true;
+		@Config.LangKey("item.projectex.arcane_tablet.name")
+		public boolean arcane_tablet = true;
 	}
 
 	public static void sync()

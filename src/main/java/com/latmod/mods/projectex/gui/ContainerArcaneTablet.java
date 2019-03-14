@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 /**
  * @author LatvianModder
  */
-public class ContainerTabletMK2 extends ContainerTableBase
+public class ContainerArcaneTablet extends ContainerTableBase
 {
-	public ContainerTabletMK2(EntityPlayer p)
+	public ContainerArcaneTablet(EntityPlayer p)
 	{
 		super(p);
 

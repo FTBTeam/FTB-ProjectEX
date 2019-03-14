@@ -13,17 +13,11 @@ import net.minecraft.world.World;
 /**
  * @author LatvianModder
  */
-public class ItemTabletMK2 extends Item
+public class ItemArcaneTablet extends Item
 {
-	public ItemTabletMK2()
+	public ItemArcaneTablet()
 	{
 		setMaxStackSize(1);
-	}
-
-	@Override
-	public boolean hasEffect(ItemStack stack)
-	{
-		return true;
 	}
 
 	@Override
@@ -37,7 +31,7 @@ public class ItemTabletMK2 extends Item
 	{
 		if (!world.isRemote)
 		{
-			ProjectEXGuiHandler.open(player, ProjectEXGuiHandler.TABLET_MK2, 0, 0, 0);
+			ProjectEXGuiHandler.open(player, ProjectEXGuiHandler.ARCANE_TABLET, 0, 0, 0);
 		}
 
 		return new ActionResult<>(EnumActionResult.SUCCESS, player.getHeldItem(hand));

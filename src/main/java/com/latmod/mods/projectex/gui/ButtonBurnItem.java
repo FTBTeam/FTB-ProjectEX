@@ -10,12 +10,9 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class ButtonBurnItem extends GuiButton
 {
-	public final GuiStoneTable gui;
-
-	public ButtonBurnItem(GuiStoneTable g, int id, int x, int y)
+	public ButtonBurnItem(int id, int x, int y)
 	{
 		super(id, x, y, 16, 16, "");
-		gui = g;
 	}
 
 	@Override

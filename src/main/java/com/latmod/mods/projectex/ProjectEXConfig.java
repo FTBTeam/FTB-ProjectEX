@@ -37,7 +37,7 @@ public class ProjectEXConfig
 		@Override
 		public int hashCode()
 		{
-			return item.hashCode() * 31 + (metadata == OreDictionary.WILDCARD_VALUE ? 0 : metadata);
+			return item.hashCode() * 31 + metadata;
 		}
 
 		@Override
@@ -46,7 +46,7 @@ public class ProjectEXConfig
 			if (obj instanceof ItemKey)
 			{
 				ItemKey key = (ItemKey) obj;
-				return item == key.item && (metadata == key.metadata || metadata == OreDictionary.WILDCARD_VALUE || key.metadata == OreDictionary.WILDCARD_VALUE);
+				return item == key.item && metadata == key.metadata;
 			}
 
 			return false;
@@ -111,13 +111,19 @@ public class ProjectEXConfig
 				"minecraft:ghast_tear",
 		};
 
-		private HashSet<ItemKey> stoneTableCache = null;
+		private HashSet<ItemKey> stoneTableItemList = null;
+		private HashMap<ItemKey, Boolean> stoneTableCache = null;
 
 		public boolean isStoneTableWhitelisted(ItemStack stack)
 		{
-			if (stoneTableCache == null)
+			if (stone_table_whitelist.length == 1 && stone_table_whitelist[0].equals("*"))
 			{
-				stoneTableCache = new HashSet<>();
+				return true;
+			}
+
+			if (stoneTableItemList == null)
+			{
+				stoneTableItemList = new HashSet<>();
 				HashMap<String, HashSet<ItemKey>> oreDict = new HashMap<>();
 
 				for (String s : OreDictionary.getOreNames())
@@ -158,7 +164,7 @@ public class ProjectEXConfig
 						{
 							if (!entry.getValue().isEmpty() && entry.getKey().startsWith(s2))
 							{
-								stoneTableCache.addAll(entry.getValue());
+								stoneTableItemList.addAll(entry.getValue());
 							}
 						}
 					}
@@ -171,16 +177,39 @@ public class ProjectEXConfig
 							ItemKey key = new ItemKey();
 							key.item = item;
 							key.metadata = s1.length == 1 ? 0 : s1[1].equals("*") ? OreDictionary.WILDCARD_VALUE : Integer.parseInt(s1[1]);
-							stoneTableCache.add(key);
+							stoneTableItemList.add(key);
 						}
 					}
 				}
 			}
 
+			if (stoneTableCache == null)
+			{
+				stoneTableCache = new HashMap<>();
+			}
+
 			ItemKey key = new ItemKey();
 			key.item = stack.getItem();
 			key.metadata = stack.getMetadata();
-			return stoneTableCache.contains(key);
+			Boolean b = stoneTableCache.get(key);
+
+			if (b == null)
+			{
+				b = false;
+
+				for (ItemKey key1 : stoneTableItemList)
+				{
+					if (key.item == key1.item && (key.metadata == key1.metadata || key1.metadata == OreDictionary.WILDCARD_VALUE))
+					{
+						b = true;
+						break;
+					}
+				}
+
+				stoneTableCache.put(key, b);
+			}
+
+			return b;
 		}
 	}
 
@@ -256,6 +285,7 @@ public class ProjectEXConfig
 	public static void sync()
 	{
 		ConfigManager.sync(ProjectEX.MOD_ID, Config.Type.INSTANCE);
+		general.stoneTableItemList = null;
 		general.stoneTableCache = null;
 	}
 

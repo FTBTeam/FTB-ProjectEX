@@ -9,6 +9,7 @@ import moze_intel.projecte.api.item.IItemEmc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -18,12 +19,19 @@ import net.minecraftforge.items.ItemHandlerHelper;
  */
 public class ContainerTableBase extends Container
 {
+	public interface KnowledgeUpdate
+	{
+		void updateKnowledge();
+	}
+
 	public static final int BURN = 1;
 	public static final int TAKE_STACK = 2;
 	public static final int TAKE_ONE = 3;
+	public static final int UNLEARN = 4;
 
 	public final EntityPlayer player;
 	public final IKnowledgeProvider playerData;
+	public KnowledgeUpdate knowledgeUpdate;
 
 	public ContainerTableBase(EntityPlayer p)
 	{
@@ -34,6 +42,36 @@ public class ContainerTableBase extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
+		Slot slot = inventorySlots.get(index);
+		ItemStack stack = slot.getStack();
+
+		if (!stack.isEmpty())
+		{
+			if (stack.getItem() instanceof IItemEmc || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			{
+				return ItemStack.EMPTY;
+			}
+
+			if (!playerData.hasKnowledge(stack))
+			{
+				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))
+				{
+					return ItemStack.EMPTY;
+				}
+
+				playerData.addKnowledge(ItemHandlerHelper.copyStackWithSize(stack, 1));
+
+				if (knowledgeUpdate != null)
+				{
+					knowledgeUpdate.updateKnowledge();
+				}
+			}
+
+			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
+			slot.putStack(ItemStack.EMPTY);
+			return stack;
+		}
+
 		return ItemStack.EMPTY;
 	}
 
@@ -48,53 +86,50 @@ public class ContainerTableBase extends Container
 		return true;
 	}
 
-	public int clickGuiSlot(ItemStack type, int mode)
+	public boolean clickGuiSlot(ItemStack type, int mode)
 	{
+		ItemStack stack = player.inventory.getItemStack();
+
 		if (mode == BURN)
 		{
-			ItemStack stack = player.inventory.getItemStack();
-
 			if (stack.isEmpty() || stack.getItem() instanceof IItemEmc || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
-				return 0;
+				return false;
 			}
-
-			int r = 1;
 
 			if (!playerData.hasKnowledge(stack))
 			{
 				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))
 				{
-					return 0;
+					return false;
 				}
 
 				playerData.addKnowledge(ItemHandlerHelper.copyStackWithSize(stack, 1));
-				r = 2;
+
+				if (knowledgeUpdate != null)
+				{
+					knowledgeUpdate.updateKnowledge();
+				}
 			}
 
 			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
 			player.inventory.setItemStack(ItemStack.EMPTY);
-			return r;
+			return true;
 		}
-		else if (mode == TAKE_STACK || mode == TAKE_ONE)
+		else if (mode == TAKE_STACK)
 		{
-			if (!player.inventory.getItemStack().isEmpty())
-			{
-				return 0;
-			}
-
-			int amount = mode == TAKE_STACK ? 64 : 1;
-
 			if (type.isEmpty())
 			{
-				return 0;
+				return false;
 			}
+
+			int amount = type.getMaxStackSize();
 
 			double value = ProjectEAPI.getEMCProxy().getValue(type);
 
 			if (value <= 0D)
 			{
-				return 0;
+				return false;
 			}
 
 			double max = playerData.getEmc() / value;
@@ -106,7 +141,7 @@ public class ContainerTableBase extends Container
 
 			if (amount <= 0)
 			{
-				return 0;
+				return false;
 			}
 
 			playerData.setEmc(playerData.getEmc() - value * amount);
@@ -116,10 +151,52 @@ public class ContainerTableBase extends Container
 				ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(playerData.getEmc()), (EntityPlayerMP) player);
 			}
 
-			player.inventory.setItemStack(ItemHandlerHelper.copyStackWithSize(type, amount));
-			return 1;
+			ItemHandlerHelper.giveItemToPlayer(player, ItemHandlerHelper.copyStackWithSize(type, amount));
+			return true;
+		}
+		else if (mode == TAKE_ONE)
+		{
+			if (type.isEmpty())
+			{
+				return false;
+			}
+
+			if (!stack.isEmpty() && (!ItemHandlerHelper.canItemStacksStack(type, stack) || stack.getCount() >= stack.getMaxStackSize()))
+			{
+				return false;
+			}
+
+			double value = ProjectEAPI.getEMCProxy().getValue(type);
+
+			if (value <= 0D)
+			{
+				return false;
+			}
+
+			if (playerData.getEmc() < value)
+			{
+				return false;
+			}
+
+			playerData.setEmc(playerData.getEmc() - value);
+
+			if (player instanceof EntityPlayerMP)
+			{
+				ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(playerData.getEmc()), (EntityPlayerMP) player);
+			}
+
+			if (!stack.isEmpty())
+			{
+				stack.grow(1);
+			}
+			else
+			{
+				player.inventory.setItemStack(ItemHandlerHelper.copyStackWithSize(type, 1));
+			}
+
+			return true;
 		}
 
-		return 0;
+		return false;
 	}
 }

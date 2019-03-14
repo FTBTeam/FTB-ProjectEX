@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiStoneTable extends GuiContainer
+public class GuiStoneTable extends GuiContainer implements ContainerTableBase.KnowledgeUpdate
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/stone_table.png");
 
@@ -43,6 +43,7 @@ public class GuiStoneTable extends GuiContainer
 	{
 		super(c);
 		table = c;
+		table.knowledgeUpdate = this;
 		ySize = 217;
 		validItems = new ArrayList<>();
 		itemButtons = new ArrayList<>();
@@ -103,16 +104,16 @@ public class GuiStoneTable extends GuiContainer
 
 		addButton(new GuiButton(1, guiLeft + 7, guiTop + 62, 12, 20, "<"));
 		addButton(new GuiButton(2, guiLeft + 157, guiTop + 62, 12, 20, ">"));
-		addButton(new ButtonBurnItem(this, 3, guiLeft + 80, guiTop + 64));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 80, guiTop + 24));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 111, guiTop + 33));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 120, guiTop + 64));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 111, guiTop + 95));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 80, guiTop + 104));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 49, guiTop + 95));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 40, guiTop + 64));
-		addButton(new ButtonCreateItem(this, 3, guiLeft + 49, guiTop + 33));
-		updateCurrentItemList();
+		addButton(new ButtonBurnItem(3, guiLeft + 80, guiTop + 64));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 24));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 111, guiTop + 33));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 49, guiTop + 33));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 120, guiTop + 64));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 40, guiTop + 64));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 111, guiTop + 95));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 49, guiTop + 95));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 104));
+		updateValidItemList();
 	}
 
 	@Override
@@ -141,13 +142,18 @@ public class GuiStoneTable extends GuiContainer
 		renderHoveredToolTip(mouseX, mouseY);
 		searchField.drawTextBox();
 
+		for (ButtonCreateItem button : itemButtons)
+		{
+			if (button.isMouseOver() && !button.type.isEmpty())
+			{
+				renderToolTip(button.type, mouseX, mouseY);
+			}
+		}
+
 		if (!staticSearch.equals(searchField.getText()))
 		{
-			if (!staticSearch.equals(searchField.getText()))
-			{
-				staticPage = 0;
-			}
-
+			staticSearch = searchField.getText();
+			staticPage = 0;
 			updateValidItemList();
 		}
 	}
@@ -174,7 +180,7 @@ public class GuiStoneTable extends GuiContainer
 
 		if (button instanceof ButtonBurnItem)
 		{
-			clickGuiSlot(ItemStack.EMPTY, ContainerTableBase.BURN);
+			clickGuiSlot(ItemStack.EMPTY, isShiftKeyDown() ? ContainerTableBase.UNLEARN : ContainerTableBase.BURN);
 		}
 		else if (button instanceof ButtonCreateItem)
 		{
@@ -192,16 +198,9 @@ public class GuiStoneTable extends GuiContainer
 
 	private void clickGuiSlot(ItemStack stack, int mode)
 	{
-		int r = table.clickGuiSlot(stack, mode);
-
-		if (r > 0)
+		if (table.clickGuiSlot(stack, mode))
 		{
 			ProjectEXNetHandler.NET.sendToServer(new MessageCreateItemButton(stack, mode));
-		}
-
-		if (r > 1)
-		{
-			updateValidItemList();
 		}
 	}
 
@@ -271,5 +270,13 @@ public class GuiStoneTable extends GuiContainer
 		}
 
 		return list;
+	}
+
+	@Override
+	public void updateKnowledge()
+	{
+		staticPage = 0;
+		staticSearch = "";
+		updateValidItemList();
 	}
 }

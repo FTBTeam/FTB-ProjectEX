@@ -15,13 +15,13 @@ import net.minecraft.item.ItemStack;
  */
 public class ButtonCreateItem extends GuiButton
 {
-	public final GuiStoneTable gui;
+	public final ContainerTableBase table;
 	public ItemStack type;
 
-	public ButtonCreateItem(GuiStoneTable g, int id, int x, int y)
+	public ButtonCreateItem(ContainerTableBase t, int id, int x, int y)
 	{
 		super(id, x, y, 16, 16, "");
-		gui = g;
+		table = t;
 		type = ItemStack.EMPTY;
 	}
 
@@ -41,7 +41,7 @@ public class ButtonCreateItem extends GuiButton
 
 			String count = "";
 
-			int d = (int) Math.min(gui.table.playerData.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(type), type.getMaxStackSize());
+			int d = (int) Math.min(table.playerData.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(type), type.getMaxStackSize());
 
 			if (d > 0)
 			{

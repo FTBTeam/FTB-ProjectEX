@@ -50,7 +50,7 @@ public class MessageCreateItemButton implements IMessage
 			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> {
 				EntityPlayerMP player = ctx.getServerHandler().player;
 
-				if (player.openContainer instanceof ContainerTableBase && ((ContainerTableBase) player.openContainer).clickGuiSlot(message.stack, message.mode) > 0)
+				if (player.openContainer instanceof ContainerTableBase && ((ContainerTableBase) player.openContainer).clickGuiSlot(message.stack, message.mode))
 				{
 					player.openContainer.detectAndSendChanges();
 				}

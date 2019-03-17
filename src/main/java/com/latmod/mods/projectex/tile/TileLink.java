@@ -228,7 +228,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
 	{
-		if (slot == 18 || !ProjectEAPI.getEMCProxy().hasValue(stack))
+		if (slot >= inputSlots.length || !ProjectEAPI.getEMCProxy().hasValue(stack))
 		{
 			return stack;
 		}
@@ -278,7 +278,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public boolean isItemValid(int slot, ItemStack stack)
 	{
-		return slot != 18 && ProjectEAPI.getEMCProxy().hasValue(stack);
+		return slot < inputSlots.length && ProjectEAPI.getEMCProxy().hasValue(stack);
 	}
 
 	@Override

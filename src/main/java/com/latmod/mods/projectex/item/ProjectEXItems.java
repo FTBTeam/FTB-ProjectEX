@@ -32,6 +32,7 @@ public class ProjectEXItems
 	public static final Item COLOSSAL_STAR_SPHERE = Items.AIR;
 	public static final Item COLOSSAL_STAR_OMEGA = Items.AIR;
 	public static final Item MATTER = Items.AIR;
+	public static final Item CLAY_MATTER = Items.AIR;
 	public static final Item FINAL_STAR_SHARD = Items.AIR;
 	public static final Item FINAL_STAR = Items.AIR;
 	public static final Item KNOWLEDGE_SHARING_BOOK = Items.AIR;

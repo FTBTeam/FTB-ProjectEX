@@ -89,6 +89,11 @@ public class ProjectEXClientEventHandler
 			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.MATTER, matter.ordinal(), new ModelResourceLocation(ProjectEX.MOD_ID + ":matter/" + matter.getName() + "#inventory"));
 		}
 
+		if (ProjectEXConfig.items.clay_matter)
+		{
+			ModelLoader.setCustomModelResourceLocation(ProjectEXItems.CLAY_MATTER, 0, new ModelResourceLocation(ProjectEX.MOD_ID + ":matter/clay#inventory"));
+		}
+
 		addModel(ProjectEXItems.FINAL_STAR_SHARD, "inventory");
 
 		if (ProjectEXConfig.items.final_star)

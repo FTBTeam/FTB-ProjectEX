@@ -91,6 +91,7 @@ item.projectex.matter.orange.name=Orange Matter
 item.projectex.matter.white.name=White Matter
 item.projectex.matter.gray.name=Gray Matter
 item.projectex.matter.fading.name=Fading Matter
+item.projectex.matter.clay.name=Clay Matter
 item.projectex.final_star_shard.name=The Final Star Shard
 item.projectex.final_star.name=The Final Star
 item.projectex.final_star.description=Place a chest next to Pedestal and drop item on top of it to clone it infinitely.

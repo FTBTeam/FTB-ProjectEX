@@ -280,6 +280,9 @@ public class ProjectEXConfig
 
 		@Config.LangKey("item.projectex.arcane_tablet.name")
 		public boolean arcane_tablet = true;
+
+		@Config.LangKey("item.projectex.matter.clay.name")
+		public boolean clay_matter = false;
 	}
 
 	public static void sync()

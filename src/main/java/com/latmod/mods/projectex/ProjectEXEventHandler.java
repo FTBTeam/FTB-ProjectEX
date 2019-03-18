@@ -156,6 +156,12 @@ public class ProjectEXEventHandler
 		}
 
 		r.register(withName(new ItemMatter(), "matter"));
+
+		if (ProjectEXConfig.items.clay_matter)
+		{
+			r.register(withName(new Item(), "clay_matter").setTranslationKey(ProjectEX.MOD_ID + ".matter.clay"));
+		}
+
 		r.register(withName(new Item(), "final_star_shard"));
 
 		if (ProjectEXConfig.items.final_star)

@@ -218,6 +218,7 @@ public class GuiStoneTable extends GuiContainer implements ContainerTableBase.Kn
 		if (mouseButton == 1 && mouseX >= searchField.x && mouseX < searchField.x + searchField.width && mouseY >= searchField.y && mouseY < searchField.y + searchField.height)
 		{
 			searchField.setText("");
+			searchField.setFocused(true);
 		}
 		else
 		{

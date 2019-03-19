@@ -15,5 +15,6 @@ public class ProjectEXJEI implements IModPlugin
 	public void register(IModRegistry registry)
 	{
 		registry.addGhostIngredientHandler(GuiLink.class, new GuiLinkGhostIngredientHandler());
+		registry.addAdvancedGuiHandlers(new GuiTableAdvancedGuiHandler());
 	}
 }

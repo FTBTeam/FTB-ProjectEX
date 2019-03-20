@@ -9,17 +9,23 @@ import java.text.FieldPosition;
 /**
  * @author LatvianModder
  */
-public class EMCDecimalFormat extends DecimalFormat
+public class EMCFormat extends DecimalFormat
 {
-	public EMCDecimalFormat()
+	public static final EMCFormat INSTANCE = new EMCFormat(false);
+	public static final EMCFormat INSTANCE_IGNORE_SHIFT = new EMCFormat(true);
+
+	private final boolean ignoreShift;
+
+	private EMCFormat(boolean is)
 	{
 		super("#,###");
+		ignoreShift = is;
 	}
 
 	@Override
 	public StringBuffer format(double number, StringBuffer result, FieldPosition fieldPosition)
 	{
-		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000D && !GuiScreen.isShiftKeyDown())
+		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000D && (ignoreShift || !GuiScreen.isShiftKeyDown()))
 		{
 			double num;
 			char c;

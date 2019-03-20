@@ -4,9 +4,9 @@ import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.ProjectEXConfig;
 import com.latmod.mods.projectex.block.EnumMatter;
 import com.latmod.mods.projectex.block.EnumTier;
+import com.latmod.mods.projectex.gui.EMCFormat;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.utils.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -139,11 +139,11 @@ public class ProjectEXClientEventHandler
 
 			if (ProjectEXClientConfig.general.emc_on_screen != 0)
 			{
-				String s = Constants.EMC_FORMATTER.format(emc);
+				String s = EMCFormat.INSTANCE.format(emc);
 
 				if (emcs != 0D)
 				{
-					s += (emcs > 0D ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(emcs)) + "/s";
+					s += (emcs > 0D ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + EMCFormat.INSTANCE.format(Math.abs(emcs)) + "/s";
 				}
 
 				(ProjectEXClientConfig.general.emc_on_screen == 1 ? event.getLeft() : event.getRight()).add("EMC: " + s);

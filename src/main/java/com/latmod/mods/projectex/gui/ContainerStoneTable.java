@@ -1,6 +1,7 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEXConfig;
+import moze_intel.projecte.api.item.IItemEmc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,6 @@ public class ContainerStoneTable extends ContainerTableBase
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return ProjectEXConfig.general.isStoneTableWhitelisted(stack);
+		return stack.getItem() instanceof IItemEmc || ProjectEXConfig.general.isStoneTableWhitelisted(stack);
 	}
 }

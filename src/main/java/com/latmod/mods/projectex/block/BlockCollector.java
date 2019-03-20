@@ -1,8 +1,8 @@
 package com.latmod.mods.projectex.block;
 
 import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.gui.EMCFormat;
 import com.latmod.mods.projectex.tile.TileCollector;
-import moze_intel.projecte.utils.Constants;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -41,6 +41,6 @@ public class BlockCollector extends BlockTier
 	{
 		ProjectEXConfig.BlockTier properties = EnumTier.byMeta(stack.getMetadata()).properties;
 		tooltip.add(I18n.format("tile.projectex.collector.tooltip"));
-		tooltip.add(I18n.format("tile.projectex.collector.emc_produced", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.collector_output)));
+		tooltip.add(I18n.format("tile.projectex.collector.emc_produced", TextFormatting.GREEN + EMCFormat.INSTANCE.format(properties.collector_output)));
 	}
 }

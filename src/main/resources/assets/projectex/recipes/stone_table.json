@@ -10,11 +10,16 @@
 	],
 	"pattern": [
 		"SSS",
-		"SPS",
+		"STS",
 		"SSS"
 	],
 	"key": {
-		"S": {"type": "forge:ore_dict", "ore": "cobblestone"},
-		"P": {"item": "projecte:item.pe_philosophers_stone"}
+		"S": [
+			{"item": "minecraft:stonebrick", "data": 0},
+			{"item": "minecraft:stonebrick", "data": 1},
+			{"item": "minecraft:stonebrick", "data": 2},
+			{"item": "minecraft:stonebrick", "data": 3}
+		],
+		"T": {"item": "projecte:transmutation_table"}
 	}
 }

@@ -32,24 +32,31 @@ public class ButtonCreateItem extends GuiButton
 		{
 			hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
 
-			GlStateManager.color(1F, 1F, 1F, 1F);
-			GlStateManager.enableDepth();
-			RenderHelper.enableGUIStandardItemLighting();
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
-			RenderItem renderItem = mc.getRenderItem();
-			renderItem.renderItemAndEffectIntoGUI(mc.player, type, x, y);
-
-			String count = "";
-
-			int d = (int) Math.min(table.playerData.getEmc() / (double) ProjectEAPI.getEMCProxy().getValue(type), type.getMaxStackSize());
-
-			if (d > 0)
+			if (!type.isEmpty())
 			{
-				count = Integer.toString(d);
-			}
+				GlStateManager.color(1F, 1F, 1F, 1F);
+				GlStateManager.enableDepth();
+				RenderHelper.enableGUIStandardItemLighting();
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, 240.0F);
+				RenderItem renderItem = mc.getRenderItem();
+				renderItem.renderItemAndEffectIntoGUI(mc.player, type, x, y);
+				renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, type, x, y, null);
+				RenderHelper.disableStandardItemLighting();
 
-			renderItem.renderItemOverlayIntoGUI(mc.fontRenderer, type, x, y, count);
-			RenderHelper.disableStandardItemLighting();
+				double emc = ProjectEAPI.getEMCProxy().getValue(type);
+				String s = table.playerData.getEmc() >= emc ? EMCFormat.INSTANCE_IGNORE_SHIFT.format(table.playerData.getEmc() / emc) : "0";
+				GlStateManager.pushMatrix();
+				GlStateManager.translate(x + 17, y + 12, 0);
+				GlStateManager.scale(0.5F, 0.5F, 1F);
+				GlStateManager.disableLighting();
+				GlStateManager.disableDepth();
+				GlStateManager.disableBlend();
+				mc.fontRenderer.drawStringWithShadow(s, -mc.fontRenderer.getStringWidth(s), 0, 16777215);
+				GlStateManager.enableLighting();
+				GlStateManager.enableDepth();
+				GlStateManager.enableBlend();
+				GlStateManager.popMatrix();
+			}
 
 			if (hovered)
 			{

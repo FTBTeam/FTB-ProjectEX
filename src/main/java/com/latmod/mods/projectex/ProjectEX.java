@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex;
 
-import com.latmod.mods.projectex.gui.EMCDecimalFormat;
+import com.latmod.mods.projectex.gui.EMCFormat;
 import com.latmod.mods.projectex.gui.ProjectEXGuiHandler;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
@@ -63,7 +63,7 @@ public class ProjectEX
 				Field modifiersField = Field.class.getDeclaredField("modifiers");
 				modifiersField.setAccessible(true);
 				modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-				field.set(null, new EMCDecimalFormat());
+				field.set(null, EMCFormat.INSTANCE);
 			}
 			catch (Exception ex)
 			{

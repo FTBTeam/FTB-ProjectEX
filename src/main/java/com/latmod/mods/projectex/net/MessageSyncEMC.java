@@ -3,26 +3,31 @@ package com.latmod.mods.projectex.net;
 import io.netty.buffer.ByteBuf;
 import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
  */
 public class MessageSyncEMC implements IMessage
 {
+	public static void sync(@Nullable EntityPlayer player, double emc)
+	{
+		if (player instanceof EntityPlayerMP)
+		{
+			MessageSyncEMC message = new MessageSyncEMC();
+			message.emc = emc;
+			ProjectEXNetHandler.NET.sendTo(message, (EntityPlayerMP) player);
+		}
+	}
+
 	public double emc;
-
-	public MessageSyncEMC()
-	{
-	}
-
-	public MessageSyncEMC(double e)
-	{
-		emc = e;
-	}
 
 	@Override
 	public void fromBytes(ByteBuf buf)

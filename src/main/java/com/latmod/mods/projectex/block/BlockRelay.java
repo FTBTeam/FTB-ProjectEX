@@ -1,8 +1,8 @@
 package com.latmod.mods.projectex.block;
 
 import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.gui.EMCFormat;
 import com.latmod.mods.projectex.tile.TileRelay;
-import moze_intel.projecte.utils.Constants;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -44,9 +44,9 @@ public class BlockRelay extends BlockTier
 
 		if (properties.relay_transfer != Double.MAX_VALUE)
 		{
-			tooltip.add(I18n.format("tile.projectex.relay.max_transfer", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.relay_transfer)));
+			tooltip.add(I18n.format("tile.projectex.relay.max_transfer", TextFormatting.GREEN + EMCFormat.INSTANCE.format(properties.relay_transfer)));
 		}
 
-		tooltip.add(I18n.format("tile.projectex.relay.relay_bonus", TextFormatting.GREEN + Constants.EMC_FORMATTER.format(properties.relay_bonus)));
+		tooltip.add(I18n.format("tile.projectex.relay.relay_bonus", TextFormatting.GREEN + EMCFormat.INSTANCE.format(properties.relay_bonus)));
 	}
 }

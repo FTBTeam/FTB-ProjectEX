@@ -5,7 +5,6 @@ import com.latmod.mods.projectex.client.ProjectEXClientEventHandler;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.utils.Constants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -171,11 +170,11 @@ public class GuiLink extends GuiContainer
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 
-		String s = Constants.EMC_FORMATTER.format(emc);
+		String s = EMCFormat.INSTANCE.format(emc);
 
 		if (ProjectEXClientEventHandler.emcs != 0D)
 		{
-			s += (ProjectEXClientEventHandler.emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + Constants.EMC_FORMATTER.format(Math.abs(ProjectEXClientEventHandler.emcs)) + "/s";
+			s += (ProjectEXClientEventHandler.emcs > 0D ? (TextFormatting.DARK_GREEN + "+") : (TextFormatting.RED + "-")) + EMCFormat.INSTANCE.format(Math.abs(ProjectEXClientEventHandler.emcs)) + "/s";
 		}
 
 		if (container.link instanceof TileLinkMK3)

@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.net.MessageSyncEMC;
-import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -46,12 +45,7 @@ public class TilePowerFlower extends TileEntity implements ITickable
 
 		IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
 		knowledgeProvider.setEmc(knowledgeProvider.getEmc() + EnumTier.byMeta(getBlockMetadata()).properties.powerFlowerOutput());
-
 		EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-		if (player != null)
-		{
-			ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
-		}
+		MessageSyncEMC.sync(player, knowledgeProvider.getEmc());
 	}
 }

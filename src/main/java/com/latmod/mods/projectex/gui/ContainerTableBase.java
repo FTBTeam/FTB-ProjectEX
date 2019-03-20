@@ -1,13 +1,11 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.net.MessageSyncEMC;
-import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
 import moze_intel.projecte.api.item.IItemEmc;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -27,7 +25,7 @@ public class ContainerTableBase extends Container
 	public static final int BURN = 1;
 	public static final int TAKE_STACK = 2;
 	public static final int TAKE_ONE = 3;
-	public static final int UNLEARN = 4;
+	public static final int BURN_ALT = 4;
 
 	public final EntityPlayer player;
 	public final IKnowledgeProvider playerData;
@@ -47,19 +45,26 @@ public class ContainerTableBase extends Container
 
 		if (!stack.isEmpty())
 		{
-			if (stack.getItem() instanceof IItemEmc || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			if (!isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
 				return ItemStack.EMPTY;
 			}
 
-			if (!playerData.hasKnowledge(stack))
+			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(stack, 1);
+
+			if (!stack1.getHasSubtypes() && stack1.isItemStackDamageable())
 			{
-				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))
+				stack1.setItemDamage(0);
+			}
+
+			if (!playerData.hasKnowledge(stack1))
+			{
+				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack1)))
 				{
 					return ItemStack.EMPTY;
 				}
 
-				playerData.addKnowledge(ItemHandlerHelper.copyStackWithSize(stack, 1));
+				playerData.addKnowledge(stack1);
 
 				if (knowledgeUpdate != null)
 				{
@@ -69,7 +74,7 @@ public class ContainerTableBase extends Container
 
 			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
 			slot.putStack(ItemStack.EMPTY);
-			return stack;
+			return stack1;
 		}
 
 		return ItemStack.EMPTY;
@@ -92,19 +97,26 @@ public class ContainerTableBase extends Container
 
 		if (mode == BURN)
 		{
-			if (stack.isEmpty() || stack.getItem() instanceof IItemEmc || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			if (stack.isEmpty() || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
 				return false;
 			}
 
-			if (!playerData.hasKnowledge(stack))
+			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(stack, 1);
+
+			if (!stack1.getHasSubtypes() && stack1.isItemStackDamageable())
 			{
-				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))
+				stack1.setItemDamage(0);
+			}
+
+			if (!playerData.hasKnowledge(stack1))
+			{
+				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack1)))
 				{
 					return false;
 				}
 
-				playerData.addKnowledge(ItemHandlerHelper.copyStackWithSize(stack, 1));
+				playerData.addKnowledge(stack1);
 
 				if (knowledgeUpdate != null)
 				{
@@ -145,12 +157,7 @@ public class ContainerTableBase extends Container
 			}
 
 			playerData.setEmc(playerData.getEmc() - value * amount);
-
-			if (player instanceof EntityPlayerMP)
-			{
-				ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(playerData.getEmc()), (EntityPlayerMP) player);
-			}
-
+			MessageSyncEMC.sync(player, playerData.getEmc());
 			ItemHandlerHelper.giveItemToPlayer(player, ItemHandlerHelper.copyStackWithSize(type, amount));
 			return true;
 		}
@@ -179,11 +186,7 @@ public class ContainerTableBase extends Container
 			}
 
 			playerData.setEmc(playerData.getEmc() - value);
-
-			if (player instanceof EntityPlayerMP)
-			{
-				ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(playerData.getEmc()), (EntityPlayerMP) player);
-			}
+			MessageSyncEMC.sync(player, playerData.getEmc());
 
 			if (!stack.isEmpty())
 			{
@@ -194,6 +197,29 @@ public class ContainerTableBase extends Container
 				player.inventory.setItemStack(ItemHandlerHelper.copyStackWithSize(type, 1));
 			}
 
+			return true;
+		}
+		else if (mode == BURN_ALT)
+		{
+			if (!(stack.getItem() instanceof IItemEmc))
+			{
+				return false;
+			}
+
+			IItemEmc emcItem = (IItemEmc) stack.getItem();
+			double stored = emcItem.getStoredEmc(stack);
+
+			if (stored > 0D)
+			{
+				playerData.setEmc(playerData.getEmc() + emcItem.extractEmc(stack, stored));
+			}
+			else
+			{
+				playerData.setEmc(playerData.getEmc() - emcItem.addEmc(stack, Math.min(playerData.getEmc(), emcItem.getMaximumEmc(stack))));
+			}
+
+			player.inventory.setItemStack(stack);
+			MessageSyncEMC.sync(player, playerData.getEmc());
 			return true;
 		}
 

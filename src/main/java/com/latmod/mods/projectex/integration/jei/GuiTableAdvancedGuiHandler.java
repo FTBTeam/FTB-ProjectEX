@@ -1,7 +1,7 @@
 package com.latmod.mods.projectex.integration.jei;
 
 import com.latmod.mods.projectex.gui.ButtonCreateItem;
-import com.latmod.mods.projectex.gui.GuiStoneTable;
+import com.latmod.mods.projectex.gui.GuiTableBase;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 
 import javax.annotation.Nullable;
@@ -9,17 +9,17 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public class GuiTableAdvancedGuiHandler implements IAdvancedGuiHandler<GuiStoneTable>
+public class GuiTableAdvancedGuiHandler implements IAdvancedGuiHandler<GuiTableBase>
 {
 	@Override
-	public Class<GuiStoneTable> getGuiContainerClass()
+	public Class<GuiTableBase> getGuiContainerClass()
 	{
-		return GuiStoneTable.class;
+		return GuiTableBase.class;
 	}
 
 	@Override
 	@Nullable
-	public Object getIngredientUnderMouse(GuiStoneTable gui, int x, int y)
+	public Object getIngredientUnderMouse(GuiTableBase gui, int x, int y)
 	{
 		for (ButtonCreateItem button : gui.itemButtons)
 		{

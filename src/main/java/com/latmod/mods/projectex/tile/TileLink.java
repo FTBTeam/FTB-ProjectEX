@@ -1,7 +1,6 @@
 package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.net.MessageSyncEMC;
-import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
@@ -375,12 +374,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 				knowledgeProvider.setEmc(emc);
 
 				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-				if (player != null)
-				{
-					ProjectEXNetHandler.NET.sendTo(new MessageSyncEMC(knowledgeProvider.getEmc()), player);
-				}
-
+				MessageSyncEMC.sync(player, knowledgeProvider.getEmc());
 				syncEMC = false;
 			}
 		}

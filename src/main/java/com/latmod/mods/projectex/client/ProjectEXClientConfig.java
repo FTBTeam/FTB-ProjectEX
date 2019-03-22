@@ -17,6 +17,6 @@ public class ProjectEXClientConfig
 	{
 		@Config.RangeInt(min = 0, max = 2)
 		@Config.Comment({"0 - Disabled", "1 - Top Left", "2 - Top Right"})
-		public int emc_on_screen = 0;
+		public int emc_on_screen = 1;
 	}
 }

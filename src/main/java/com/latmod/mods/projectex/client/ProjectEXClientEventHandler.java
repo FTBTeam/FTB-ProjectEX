@@ -137,7 +137,7 @@ public class ProjectEXClientEventHandler
 				emcs /= (double) emcsa.length;
 			}
 
-			if (ProjectEXClientConfig.general.emc_on_screen != 0)
+			if (ProjectEXClientConfig.general.emc_on_screen != 0 && emc > 0D)
 			{
 				String s = EMCFormat.INSTANCE.format(emc);
 

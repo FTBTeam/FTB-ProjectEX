@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex.gui;
 
-import com.latmod.mods.projectex.net.MessageSyncEMC;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
@@ -34,7 +34,7 @@ public class ContainerTableBase extends Container
 	public ContainerTableBase(EntityPlayer p)
 	{
 		player = p;
-		playerData = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID());
+		playerData = PersonalEMC.get(player);
 	}
 
 	@Override
@@ -157,7 +157,6 @@ public class ContainerTableBase extends Container
 			}
 
 			playerData.setEmc(playerData.getEmc() - value * amount);
-			MessageSyncEMC.sync(player, playerData.getEmc());
 			ItemHandlerHelper.giveItemToPlayer(player, ItemHandlerHelper.copyStackWithSize(type, amount));
 			return true;
 		}
@@ -186,7 +185,6 @@ public class ContainerTableBase extends Container
 			}
 
 			playerData.setEmc(playerData.getEmc() - value);
-			MessageSyncEMC.sync(player, playerData.getEmc());
 
 			if (!stack.isEmpty())
 			{
@@ -219,7 +217,6 @@ public class ContainerTableBase extends Container
 			}
 
 			player.inventory.setItemStack(stack);
-			MessageSyncEMC.sync(player, playerData.getEmc());
 			return true;
 		}
 

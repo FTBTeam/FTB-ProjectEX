@@ -40,6 +40,17 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 	}
 
 	@Override
+	public void onLoad()
+	{
+		if (world.isRemote)
+		{
+			world.tickableTileEntities.remove(this);
+		}
+
+		validate();
+	}
+
+	@Override
 	public void update()
 	{
 		if (world.isRemote || stored <= 0D || world.getTotalWorldTime() % 20L != mod(hashCode(), 20))

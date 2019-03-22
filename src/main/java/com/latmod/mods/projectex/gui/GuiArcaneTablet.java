@@ -1,7 +1,7 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
-import moze_intel.projecte.api.ProjectEAPI;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
@@ -10,11 +10,11 @@ import java.awt.*;
 /**
  * @author LatvianModder
  */
-public class GuiArcaneTable extends GuiTableBase
+public class GuiArcaneTablet extends GuiTableBase
 {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(ProjectEX.MOD_ID, "textures/gui/arcane_tablet.png");
 
-	public GuiArcaneTable(ContainerArcaneTablet c)
+	public GuiArcaneTablet(ContainerArcaneTablet c)
 	{
 		super(c);
 		ySize = 217;
@@ -51,7 +51,8 @@ public class GuiArcaneTable extends GuiTableBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = EMCFormat.INSTANCE.format(ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(mc.player.getUniqueID()).getEmc());
+		String s = EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
 		fontRenderer.drawStringWithShadow(s, (xSize - fontRenderer.getStringWidth(s)) / 2F, 124F, 0xFFB5B5B5);
+		fontRenderer.drawStringWithShadow("Work in Progress! Will have crafting table and favorite item slots later!", -guiLeft + 4F, -guiTop + 4F, -1);
 	}
 }

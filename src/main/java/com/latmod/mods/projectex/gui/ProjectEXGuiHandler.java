@@ -74,7 +74,7 @@ public class ProjectEXGuiHandler implements IGuiHandler
 		}
 		else if (id == ARCANE_TABLET)
 		{
-			return new GuiArcaneTable(new ContainerArcaneTablet(player));
+			return new GuiArcaneTablet(new ContainerArcaneTablet(player));
 		}
 
 		return null;

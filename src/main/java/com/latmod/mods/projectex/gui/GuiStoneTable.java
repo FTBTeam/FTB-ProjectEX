@@ -2,6 +2,7 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -56,7 +57,7 @@ public class GuiStoneTable extends GuiTableBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = EMCFormat.INSTANCE.format(ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(mc.player.getUniqueID()).getEmc());
+		String s = EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
 		fontRenderer.drawStringWithShadow(s, (xSize - fontRenderer.getStringWidth(s)) / 2F, 124F, 0xFFB5B5B5);
 	}
 

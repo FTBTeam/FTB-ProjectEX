@@ -1,10 +1,8 @@
 package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.block.EnumTier;
-import com.latmod.mods.projectex.net.MessageSyncEMC;
-import moze_intel.projecte.api.ProjectEAPI;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -36,6 +34,17 @@ public class TilePowerFlower extends TileEntity implements ITickable
 	}
 
 	@Override
+	public void onLoad()
+	{
+		if (world.isRemote)
+		{
+			world.tickableTileEntities.remove(this);
+		}
+
+		validate();
+	}
+
+	@Override
 	public void update()
 	{
 		if (world.isRemote || world.getTotalWorldTime() % 20L != TileRelay.mod(hashCode(), 20))
@@ -43,9 +52,7 @@ public class TilePowerFlower extends TileEntity implements ITickable
 			return;
 		}
 
-		IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+		IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
 		knowledgeProvider.setEmc(knowledgeProvider.getEmc() + EnumTier.byMeta(getBlockMetadata()).properties.powerFlowerOutput());
-		EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-		MessageSyncEMC.sync(player, knowledgeProvider.getEmc());
 	}
 }

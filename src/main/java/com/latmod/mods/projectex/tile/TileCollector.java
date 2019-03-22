@@ -16,6 +16,17 @@ import net.minecraft.util.ITickable;
 public class TileCollector extends TileEntity implements ITickable, IEmcProvider
 {
 	@Override
+	public void onLoad()
+	{
+		if (world.isRemote)
+		{
+			world.tickableTileEntities.remove(this);
+		}
+
+		validate();
+	}
+
+	@Override
 	public void update()
 	{
 		if (world.isRemote || world.getTotalWorldTime() % 20L != TileRelay.mod(hashCode(), 20))

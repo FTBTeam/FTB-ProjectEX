@@ -1,7 +1,7 @@
 package com.latmod.mods.projectex.net;
 
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import io.netty.buffer.ByteBuf;
-import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -52,7 +52,7 @@ public class MessageSyncEMC implements IMessage
 
 		private void setEMC(double emc)
 		{
-			ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).setEmc(emc);
+			PersonalEMC.get(Minecraft.getMinecraft().player).setEmc(emc);
 		}
 	}
 }

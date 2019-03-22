@@ -2,9 +2,9 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.client.ProjectEXClientEventHandler;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
-import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -166,7 +166,7 @@ public class GuiLink extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(container.link.owner).getEmc();
+		double emc = PersonalEMC.get(container.link.getWorld(), container.link.owner).getEmc();
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 

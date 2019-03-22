@@ -5,8 +5,8 @@ import com.latmod.mods.projectex.ProjectEXConfig;
 import com.latmod.mods.projectex.block.EnumMatter;
 import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.gui.EMCFormat;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.latmod.mods.projectex.item.ProjectEXItems;
-import moze_intel.projecte.api.ProjectEAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -118,7 +118,7 @@ public class ProjectEXClientEventHandler
 		if (Minecraft.getMinecraft().player != null)
 		{
 			long now = System.currentTimeMillis();
-			double emc = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(Minecraft.getMinecraft().player.getUniqueID()).getEmc();
+			double emc = PersonalEMC.get(Minecraft.getMinecraft().player).getEmc();
 
 			if ((now - lastUpdate) >= 1000L)
 			{

@@ -16,5 +16,8 @@ public class ProjectEXJEI implements IModPlugin
 	{
 		registry.addGhostIngredientHandler(GuiLink.class, new GuiLinkGhostIngredientHandler());
 		registry.addAdvancedGuiHandlers(new GuiTableAdvancedGuiHandler());
+		//registry.addRecipeClickArea(GuiArcaneTablet.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
+		//registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerArcaneTablet.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+		//registry.addRecipeCatalyst(new ItemStack(ProjectEXItems.ARCANE_TABLET), VanillaRecipeCategoryUid.CRAFTING);
 	}
 }

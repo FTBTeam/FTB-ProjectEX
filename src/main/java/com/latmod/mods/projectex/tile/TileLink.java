@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex.tile;
 
-import com.latmod.mods.projectex.net.MessageSyncEMC;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
@@ -8,7 +8,6 @@ import moze_intel.projecte.api.tile.IEmcAcceptor;
 import moze_intel.projecte.config.ProjectEConfig;
 import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -37,7 +36,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots, outputSlots;
 	public double addEMC = 0D;
-	private boolean syncEMC = false;
 
 	public TileLink(int in, int out)
 	{
@@ -193,7 +191,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 		if (value > 0L)
 		{
-			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+			IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
 
 			if (knowledgeProvider.getEmc() < value)
 			{
@@ -291,7 +289,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		int index = slot - inputSlots.length;
 		outputSlots[index].setCount(1);
 
-		if (outputSlots[slot - inputSlots.length].isEmpty())
+		if (outputSlots[index].isEmpty())
 		{
 			return ItemStack.EMPTY;
 		}
@@ -303,7 +301,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+		IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
 
 		if (knowledgeProvider.getEmc() < value)
 		{
@@ -323,7 +321,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			if (!simulate)
 			{
 				knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
-				syncEMC = true;
 			}
 
 			return stack;
@@ -339,18 +336,33 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	}
 
 	@Override
+	public void onLoad()
+	{
+		if (world.isRemote)
+		{
+			world.tickableTileEntities.remove(this);
+		}
+
+		validate();
+	}
+
+	@Override
 	public void update()
 	{
-		if (!world.isRemote && hasOwner())
+		if (world.isRemote)
 		{
-			IKnowledgeProvider knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owner);
+			return;
+		}
+
+		if (hasOwner())
+		{
+			IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
 			double emc = knowledgeProvider.getEmc();
 
 			if (addEMC > 0D)
 			{
 				emc += addEMC;
 				addEMC = 0D;
-				syncEMC = true;
 			}
 
 			for (int i = 0; i < inputSlots.length; i++)
@@ -362,21 +374,13 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 					if (value > 0L)
 					{
 						emc += (double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
-						syncEMC = true;
 						inputSlots[i] = ItemStack.EMPTY;
 						markDirty();
 					}
 				}
 			}
 
-			if (syncEMC)
-			{
-				knowledgeProvider.setEmc(emc);
-
-				EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-				MessageSyncEMC.sync(player, knowledgeProvider.getEmc());
-				syncEMC = false;
-			}
+			knowledgeProvider.setEmc(emc);
 		}
 
 		if (isDirty)
@@ -421,7 +425,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack)
 	{
-		if (ProjectEAPI.getEMCProxy().hasValue(stack) && ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID()).hasKnowledge(stack))
+		if (ProjectEAPI.getEMCProxy().hasValue(stack) && PersonalEMC.get(player).hasKnowledge(stack))
 		{
 			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
 

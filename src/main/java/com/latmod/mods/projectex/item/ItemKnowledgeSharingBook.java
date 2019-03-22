@@ -1,7 +1,7 @@
 package com.latmod.mods.projectex.item;
 
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.mojang.util.UUIDTypeAdapter;
-import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,8 +65,8 @@ public class ItemKnowledgeSharingBook extends Item
 
 		if (!world.isRemote)
 		{
-			IKnowledgeProvider playerKnowledge = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(player.getUniqueID());
-			IKnowledgeProvider otherKnowledge = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(id);
+			IKnowledgeProvider playerKnowledge = PersonalEMC.get(player);
+			IKnowledgeProvider otherKnowledge = PersonalEMC.get(world, id);
 
 			for (ItemStack stack1 : otherKnowledge.getKnowledge())
 			{
@@ -95,6 +95,7 @@ public class ItemKnowledgeSharingBook extends Item
 			}
 		}
 
+		stack.shrink(1);
 		return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 	}
 

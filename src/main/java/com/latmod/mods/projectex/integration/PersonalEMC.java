@@ -202,7 +202,6 @@ public class PersonalEMC
 					});
 				}
 			}
-			//save player files
 		}
 	}
 

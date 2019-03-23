@@ -65,7 +65,7 @@ public class ProjectEXClientEventHandler
 
 		if (ProjectEXConfig.items.stone_table)
 		{
-			addModel(ProjectEXItems.STONE_TABLE, "normal");
+			addModel(ProjectEXItems.STONE_TABLE, "facing=down");
 		}
 
 		if (ProjectEXConfig.items.stars)

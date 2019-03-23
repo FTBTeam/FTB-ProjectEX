@@ -11,6 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -43,6 +44,9 @@ public class ProjectEX
 
 	@Mod.Instance(MOD_ID)
 	public static ProjectEX INSTANCE;
+
+	@SidedProxy(serverSide = "com.latmod.mods.projectex.ProjectEXCommon", clientSide = "com.latmod.mods.projectex.client.ProjectEXClient")
+	public static ProjectEXCommon PROXY;
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)

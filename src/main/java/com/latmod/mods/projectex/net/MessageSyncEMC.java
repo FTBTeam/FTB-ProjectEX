@@ -1,8 +1,7 @@
 package com.latmod.mods.projectex.net;
 
-import com.latmod.mods.projectex.integration.PersonalEMC;
+import com.latmod.mods.projectex.ProjectEX;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -46,13 +45,8 @@ public class MessageSyncEMC implements IMessage
 		@Override
 		public IMessage onMessage(MessageSyncEMC message, MessageContext ctx)
 		{
-			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> setEMC(message.emc));
+			FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> ProjectEX.PROXY.updateEMC(message.emc));
 			return null;
-		}
-
-		private void setEMC(double emc)
-		{
-			PersonalEMC.get(Minecraft.getMinecraft().player).setEmc(emc);
 		}
 	}
 }

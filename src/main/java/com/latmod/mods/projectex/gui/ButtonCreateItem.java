@@ -44,7 +44,23 @@ public class ButtonCreateItem extends GuiButton
 				RenderHelper.disableStandardItemLighting();
 
 				double emc = ProjectEAPI.getEMCProxy().getValue(type);
-				String s = table.playerData.getEmc() >= emc ? EMCFormat.INSTANCE_IGNORE_SHIFT.format(table.playerData.getEmc() / emc) : "0";
+				String s;
+
+				double d = table.playerData.getEmc() / emc;
+
+				if (d >= 1D)
+				{
+					s = EMCFormat.INSTANCE_IGNORE_SHIFT.format(d);
+				}
+				else if (d >= 0.1D)
+				{
+					s = Double.toString(((int) (d * 10D)) / 10D);
+				}
+				else
+				{
+					s = "";
+				}
+
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(x + 17, y + 12, 0);
 				GlStateManager.scale(0.5F, 0.5F, 1F);

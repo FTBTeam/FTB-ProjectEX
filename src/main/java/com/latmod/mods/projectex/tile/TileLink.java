@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex.tile;
 
+import com.latmod.mods.projectex.ProjectEXConfig;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
@@ -173,6 +174,11 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return inputSlots[slot];
 		}
 
+		if (ProjectEXConfig.general.emc_link_max_out <= 0)
+		{
+			return ItemStack.EMPTY;
+		}
+
 		int index = slot - inputSlots.length;
 
 		if (world.isRemote || !hasOwner())
@@ -198,7 +204,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 				return ItemStack.EMPTY;
 			}
 
-			int c = getCount(knowledgeProvider, value, 2000000000);
+			int c = getCount(knowledgeProvider, value, ProjectEXConfig.general.emc_link_max_out);
 
 			if (c <= 0)
 			{

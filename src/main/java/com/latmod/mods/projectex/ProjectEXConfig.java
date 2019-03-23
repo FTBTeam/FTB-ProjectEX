@@ -73,6 +73,13 @@ public class ProjectEXConfig
 		@Config.Comment("If set to false, it will remove item NBT.")
 		public boolean final_star_copy_nbt = false;
 
+		@Config.Comment({
+				"Max item that will be displayed.",
+				"0 disables item exporting from links and makes refined ones useless.",
+				"Reduce this if you are having problems with auto-crafting or similar things."
+		})
+		public int emc_link_max_out = 2000000000;
+
 		public String[] stone_table_whitelist = {
 				"oredict:ingot",
 				"oredict:gem",

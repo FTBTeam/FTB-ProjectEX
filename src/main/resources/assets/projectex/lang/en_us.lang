@@ -104,6 +104,7 @@ projectex.general.override_emc_formatter=Override EMC Formatter
 projectex.general.blacklist_power_flower_from_watch=Blacklist Power Flower from Watch
 projectex.general.final_star_copy_any_item=Final Star Can Copy Any Item
 projectex.general.final_star_copy_nbt=Final Star Can Copy NBT
+projectex.general.emc_link_max_out=EMC Link Max Item Output
 
 projectex.tiers.collector_output=Collector Output
 projectex.tiers.relay_bonus=Relay Bonus

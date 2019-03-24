@@ -24,6 +24,11 @@ import java.util.UUID;
  */
 public class OfflineKnowledgeProvider implements IKnowledgeProvider
 {
+	public static void copy(IKnowledgeProvider from, IKnowledgeProvider to)
+	{
+		to.deserializeNBT(from.serializeNBT());
+	}
+
 	public final UUID playerId;
 	private final List<ItemStack> knowledge;
 	private final IItemHandlerModifiable inputLocks;

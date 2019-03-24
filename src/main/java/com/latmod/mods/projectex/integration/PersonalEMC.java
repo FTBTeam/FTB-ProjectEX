@@ -11,8 +11,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -34,30 +32,35 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = ProjectEX.MOD_ID)
 public class PersonalEMC
 {
-	@CapabilityInject(IKnowledgeProvider.class)
-	public static Capability<IKnowledgeProvider> CAP;
-
-	private static final Map<UUID, IKnowledgeProvider> MAP = new HashMap<>();
+	private static final Map<UUID, OfflineKnowledgeProvider> OFFLINE_MAP = new HashMap<>();
+	private static final Map<UUID, Double> EMC_MAP = new HashMap<>();
 
 	public static IKnowledgeProvider get(World world, UUID id)
 	{
 		if (world.isRemote)
 		{
-			return ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(id);
+			return get(ProjectEX.PROXY.getClientPlayer());
 		}
 
-		IKnowledgeProvider provider = MAP.get(id);
+		EntityPlayer player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(id);
+
+		if (player != null)
+		{
+			return get(player);
+		}
+
+		OfflineKnowledgeProvider provider = OFFLINE_MAP.get(id);
 
 		if (provider == null)
 		{
 			provider = new OfflineKnowledgeProvider(id);
-			MAP.put(id, provider);
+			OFFLINE_MAP.put(provider.playerId, provider);
 
 			File playerDataFolder = new File(world.getSaveHandler().getWorldDirectory(), "playerdata");
 
 			if (playerDataFolder.exists())
 			{
-				File playerFile = new File(playerDataFolder, id + ".dat");
+				File playerFile = new File(playerDataFolder, provider.playerId + ".dat");
 
 				if (playerFile.exists() && playerFile.isFile())
 				{
@@ -83,7 +86,7 @@ public class PersonalEMC
 
 	public static IKnowledgeProvider get(EntityPlayer player)
 	{
-		return Objects.requireNonNull(player.getCapability(CAP, null));
+		return Objects.requireNonNull(player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY, null));
 	}
 
 	@SubscribeEvent
@@ -91,18 +94,14 @@ public class PersonalEMC
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			IKnowledgeProvider knowledgeProvider = MAP.get(event.player.getUniqueID());
+			OfflineKnowledgeProvider knowledgeProvider = OFFLINE_MAP.get(event.player.getUniqueID());
 
 			if (knowledgeProvider != null)
 			{
-				IKnowledgeProvider provider = event.player.getCapability(CAP, null);
-
-				if (provider != null)
-				{
-					provider.deserializeNBT(knowledgeProvider.serializeNBT());
-					MAP.put(event.player.getUniqueID(), provider);
-					provider.sync((EntityPlayerMP) event.player);
-				}
+				IKnowledgeProvider provider = get(event.player);
+				OfflineKnowledgeProvider.copy(knowledgeProvider, provider);
+				OFFLINE_MAP.remove(knowledgeProvider.playerId);
+				provider.sync((EntityPlayerMP) event.player);
 			}
 		}
 	}
@@ -112,14 +111,11 @@ public class PersonalEMC
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			IKnowledgeProvider provider = event.player.getCapability(CAP, null);
-
-			if (provider != null)
-			{
-				OfflineKnowledgeProvider knowledgeProvider = new OfflineKnowledgeProvider(event.player.getUniqueID());
-				knowledgeProvider.deserializeNBT(provider.serializeNBT());
-				MAP.put(knowledgeProvider.playerId, knowledgeProvider);
-			}
+			IKnowledgeProvider provider = get(event.player);
+			OfflineKnowledgeProvider knowledgeProvider = new OfflineKnowledgeProvider(event.player.getUniqueID());
+			OfflineKnowledgeProvider.copy(provider, knowledgeProvider);
+			OFFLINE_MAP.put(knowledgeProvider.playerId, knowledgeProvider);
+			EMC_MAP.remove(knowledgeProvider.playerId);
 		}
 	}
 
@@ -128,12 +124,12 @@ public class PersonalEMC
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			double prev = event.player.getEntityData().getDouble("PEX_EMC");
+			Double prev = EMC_MAP.get(event.player.getUniqueID());
 			double emc = get(event.player).getEmc();
 
-			if (prev != emc)
+			if (prev == null || prev != emc)
 			{
-				event.player.getEntityData().setDouble("PEX_EMC", emc);
+				EMC_MAP.put(event.player.getUniqueID(), emc);
 				MessageSyncEMC.sync(event.player, emc);
 			}
 		}
@@ -144,13 +140,13 @@ public class PersonalEMC
 	{
 		if (!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
 		{
-			for (IKnowledgeProvider provider : MAP.values())
+			for (OfflineKnowledgeProvider provider : OFFLINE_MAP.values())
 			{
-				if (provider instanceof OfflineKnowledgeProvider && ((OfflineKnowledgeProvider) provider).shouldSave)
+				if (provider.shouldSave)
 				{
-					((OfflineKnowledgeProvider) provider).shouldSave = false;
+					provider.shouldSave = false;
 					final NBTTagCompound nbt = provider.serializeNBT();
-					final UUID id = ((OfflineKnowledgeProvider) provider).playerId;
+					final UUID id = provider.playerId;
 
 					ThreadedFileIOBase.getThreadedIOInstance().queueIO(() -> {
 						File playerDataFolder = new File(event.getWorld().getSaveHandler().getWorldDirectory(), "playerdata");
@@ -210,7 +206,8 @@ public class PersonalEMC
 	{
 		if (!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
 		{
-			MAP.clear();
+			OFFLINE_MAP.clear();
+			EMC_MAP.clear();
 		}
 	}
 }

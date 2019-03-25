@@ -118,6 +118,6 @@ projectex.items.power_flowers=Power Flowers
 projectex.items.tome=Tome Recipe
 
 projectex_client=Project EX Client
-projectex.general.emc_on_screen=EMC on Screen
+projectex.general.emc_screen_position=EMC Screen Position
 
 gui.stone_table.cant_use=Can't use this item in Stone Table!

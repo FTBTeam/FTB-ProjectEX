@@ -137,7 +137,7 @@ public class ProjectEXClientEventHandler
 				emcs /= (double) emcsa.length;
 			}
 
-			if (ProjectEXClientConfig.general.emc_on_screen != 0 && emc > 0D)
+			if (ProjectEXClientConfig.general.emc_screen_position != EnumScreenPosition.DISABLED && emc > 0D)
 			{
 				String s = EMCFormat.INSTANCE.format(emc);
 
@@ -146,7 +146,7 @@ public class ProjectEXClientEventHandler
 					s += (emcs > 0D ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + EMCFormat.INSTANCE.format(Math.abs(emcs)) + "/s";
 				}
 
-				(ProjectEXClientConfig.general.emc_on_screen == 1 ? event.getLeft() : event.getRight()).add("EMC: " + s);
+				(ProjectEXClientConfig.general.emc_screen_position == EnumScreenPosition.TOP_LEFT ? event.getLeft() : event.getRight()).add("EMC: " + s);
 			}
 		}
 	}

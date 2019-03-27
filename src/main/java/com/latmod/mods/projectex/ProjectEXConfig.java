@@ -73,6 +73,10 @@ public class ProjectEXConfig
 		@Config.Comment("If set to false, it will remove item NBT.")
 		public boolean final_star_copy_nbt = false;
 
+		@Config.Comment("Set to 0 to completely disable itemc copying.")
+		@Config.RangeInt(min = 0)
+		public int final_star_update_interval = 20;
+
 		@Config.Comment({
 				"Max item that will be displayed.",
 				"0 disables item exporting from links and makes refined ones useless.",

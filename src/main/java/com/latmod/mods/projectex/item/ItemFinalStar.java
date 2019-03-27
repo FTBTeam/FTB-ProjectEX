@@ -69,7 +69,12 @@ public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 	@Override
 	public void updateInPedestal(World world, BlockPos pos)
 	{
-		if (!world.isRemote && world.getTotalWorldTime() % 10L == TileRelay.mod(pos.hashCode(), 10))
+		if (ProjectEXConfig.general.final_star_update_interval <= 0)
+		{
+			return;
+		}
+
+		if (!world.isRemote && world.getTotalWorldTime() % (long) ProjectEXConfig.general.final_star_update_interval == TileRelay.mod(pos.hashCode(), ProjectEXConfig.general.final_star_update_interval))
 		{
 			List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, Block.FULL_BLOCK_AABB.offset(pos).expand(0D, 1D, 0D));
 
@@ -89,6 +94,11 @@ public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 							if (ProjectEXConfig.general.final_star_copy_any_item || ProjectEAPI.getEMCProxy().hasValue(stack))
 							{
 								stack.setCount(stack.getMaxStackSize());
+
+								if (!stack.getHasSubtypes() && stack.isItemStackDamageable())
+								{
+									stack.setItemDamage(0);
+								}
 
 								if (!ProjectEXConfig.general.final_star_copy_nbt && stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
 								{

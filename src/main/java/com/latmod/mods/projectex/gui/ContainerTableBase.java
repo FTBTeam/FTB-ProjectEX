@@ -1,16 +1,15 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
 import moze_intel.projecte.api.item.IItemEmc;
-import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -47,16 +46,16 @@ public class ContainerTableBase extends Container
 
 		if (!stack.isEmpty())
 		{
-			if (!isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			if (!ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
 				return ItemStack.EMPTY;
 			}
 
-			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			ItemStack stack1 = ProjectEXUtils.fixOutput(stack);
 
-			if (!stack1.getHasSubtypes() && stack1.isItemStackDamageable())
+			if (!isItemValid(stack1))
 			{
-				stack1.setItemDamage(0);
+				return ItemStack.EMPTY;
 			}
 
 			if (!playerData.hasKnowledge(stack1))
@@ -99,21 +98,16 @@ public class ContainerTableBase extends Container
 
 		if (mode == BURN)
 		{
-			if (stack.isEmpty() || !isItemValid(stack) || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			if (stack.isEmpty() || !ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
 				return false;
 			}
 
-			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(stack, 1);
+			ItemStack stack1 = ProjectEXUtils.fixOutput(stack);
 
-			if (!stack1.getHasSubtypes() && stack1.isItemStackDamageable())
+			if (!isItemValid(stack1))
 			{
-				stack1.setItemDamage(0);
-			}
-
-			if (stack1.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack1))
-			{
-				stack1.setTagCompound(new NBTTagCompound());
+				return false;
 			}
 
 			if (!playerData.hasKnowledge(stack1))

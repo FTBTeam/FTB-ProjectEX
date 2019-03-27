@@ -1,14 +1,13 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.net.MessageCreateItemButton;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
-import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -66,20 +65,7 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		{
 			if (table.isItemValid(stack) && (s.isEmpty() || mod ? stack.getItem().getRegistryName().getNamespace().startsWith(s) : trim(stack.getDisplayName()).contains(s)))
 			{
-				ItemStack stack1 = stack.copy();
-				stack1.setCount(1);
-
-				if (!stack1.getHasSubtypes() && stack1.isItemStackDamageable())
-				{
-					stack1.setItemDamage(0);
-				}
-
-				if (stack1.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack1))
-				{
-					stack1.setTagCompound(new NBTTagCompound());
-				}
-
-				validItems.add(stack1);
+				validItems.add(ProjectEXUtils.fixOutput(stack));
 			}
 		}
 

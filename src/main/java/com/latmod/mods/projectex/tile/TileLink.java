@@ -1,13 +1,13 @@
 package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.ProjectEXConfig;
+import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import moze_intel.projecte.config.ProjectEConfig;
-import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -67,19 +67,14 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 		if (outputList.isEmpty())
 		{
-			outputSlots[0] = new ItemStack(nbt.getCompoundTag("output"));
-
-			if (outputSlots[0].isEmpty())
-			{
-				outputSlots[0] = ItemStack.EMPTY;
-			}
+			outputSlots[0] = ProjectEXUtils.fixOutput(new ItemStack(nbt.getCompoundTag("output")));
 		}
 		else
 		{
 			for (int i = 0; i < outputList.tagCount(); i++)
 			{
 				NBTTagCompound nbt1 = outputList.getCompoundTagAt(i);
-				outputSlots[nbt1.getByte("Slot")] = new ItemStack(nbt1);
+				outputSlots[nbt1.getByte("Slot")] = ProjectEXUtils.fixOutput(new ItemStack(nbt1));
 			}
 		}
 
@@ -319,11 +314,6 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 		if (stack.getCount() >= 1)
 		{
-			if (stack.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack))
-			{
-				stack.setTagCompound(new NBTTagCompound());
-			}
-
 			if (!simulate)
 			{
 				knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
@@ -431,10 +421,10 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack)
 	{
+		stack = ProjectEXUtils.fixOutput(stack);
+
 		if (ProjectEAPI.getEMCProxy().hasValue(stack) && PersonalEMC.get(player).hasKnowledge(stack))
 		{
-			stack = ItemHandlerHelper.copyStackWithSize(stack, 1);
-
 			if (!MinecraftForge.EVENT_BUS.post(new PlayerAttemptCondenserSetEvent(player, stack)))
 			{
 				outputSlots[slot] = stack;

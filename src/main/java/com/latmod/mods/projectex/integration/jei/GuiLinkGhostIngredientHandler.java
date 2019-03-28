@@ -39,7 +39,7 @@ public class GuiLinkGhostIngredientHandler implements IGhostIngredientHandler<Gu
 						@Override
 						public void accept(I ingredient)
 						{
-							if (gui.container.link.setOutputStack(gui.container.player, button.id, (ItemStack) ingredient))
+							if (gui.container.link.setOutputStack(gui.container.player, button.id, (ItemStack) ingredient, false))
 							{
 								ProjectEXNetHandler.NET.sendToServer(new MessageSendLinkStack(gui.container.link.getPos(), button.id, (ItemStack) ingredient));
 							}

@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex.item;
 
+import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.mojang.util.UUIDTypeAdapter;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
@@ -70,10 +71,7 @@ public class ItemKnowledgeSharingBook extends Item
 
 			for (ItemStack stack1 : otherKnowledge.getKnowledge())
 			{
-				if (!playerKnowledge.hasKnowledge(stack1))
-				{
-					playerKnowledge.addKnowledge(stack1);
-				}
+				ProjectEXUtils.addKnowledge(player, playerKnowledge, stack1);
 			}
 
 			playerKnowledge.sync((EntityPlayerMP) player);

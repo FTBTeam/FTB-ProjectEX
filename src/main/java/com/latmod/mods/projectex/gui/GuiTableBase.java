@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -139,13 +140,30 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		renderHoveredToolTip(mouseX, mouseY);
 		searchField.drawTextBox();
 
-		for (ButtonCreateItem button : itemButtons)
+		for (GuiButton button : buttonList)
 		{
-			if (button.isMouseOver() && !button.type.isEmpty())
+			if (button.isMouseOver())
 			{
-				renderToolTip(button.type, mouseX, mouseY);
+				if (button instanceof ButtonLearnItem)
+				{
+					drawHoveringText(Collections.singletonList(I18n.format("tile.projectex.stone_table.learn")), mouseX, mouseY, fontRenderer);
+				}
+				else if (button instanceof ButtonUnlearnItem)
+				{
+					drawHoveringText(Collections.singletonList(I18n.format("tile.projectex.stone_table.unlearn")), mouseX, mouseY, fontRenderer);
+				}
+				else if (button instanceof ButtonWithStack)
+				{
+					ItemStack stack = ((ButtonWithStack) button).getStack();
+
+					if (!stack.isEmpty())
+					{
+						renderToolTip(stack, mouseX, mouseY);
+					}
+				}
 			}
 		}
+
 
 		if (!staticSearch.equals(searchField.getText()))
 		{
@@ -175,6 +193,14 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		else if (button instanceof ButtonCreateItem)
 		{
 			clickGuiSlot(((ButtonCreateItem) button).type, isShiftKeyDown() ? ContainerTableBase.TAKE_STACK : ContainerTableBase.TAKE_ONE);
+		}
+		if (button instanceof ButtonLearnItem)
+		{
+			clickGuiSlot(ItemStack.EMPTY, ContainerTableBase.LEARN);
+		}
+		if (button instanceof ButtonUnlearnItem)
+		{
+			clickGuiSlot(ItemStack.EMPTY, ContainerTableBase.UNLEARN);
 		}
 		else if (button.id == 1)
 		{
@@ -261,6 +287,12 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 	{
 		staticPage = 0;
 		staticSearch = "";
+		searchField.setText("");
 		updateValidItemList();
+	}
+
+	public List<GuiButton> getButtons()
+	{
+		return buttonList;
 	}
 }

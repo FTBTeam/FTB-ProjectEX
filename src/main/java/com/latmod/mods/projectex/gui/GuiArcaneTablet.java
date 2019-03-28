@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.integration.PersonalEMC;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
@@ -29,17 +28,19 @@ public class GuiArcaneTablet extends GuiTableBase
 	@Override
 	public void addButtons()
 	{
-		addButton(new GuiButton(1, guiLeft + 7, guiTop + 62, 12, 20, "<"));
-		addButton(new GuiButton(2, guiLeft + 157, guiTop + 62, 12, 20, ">"));
-		addButton(new ButtonBurnItem(3, guiLeft + 80, guiTop + 64));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 24));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 111, guiTop + 33));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 49, guiTop + 33));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 120, guiTop + 64));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 40, guiTop + 64));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 111, guiTop + 95));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 49, guiTop + 95));
-		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 104));
+		addButton(new ButtonArrow(this, 1, guiLeft + 7, guiTop + 20, 196, 0));
+		addButton(new ButtonArrow(this, 2, guiLeft + 151, guiTop + 20, 215, 0));
+		addButton(new ButtonBurnItem(table, 3, guiLeft + 80, guiTop + 68));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 28));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 110, guiTop + 38));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 50, guiTop + 38));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 120, guiTop + 68));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 40, guiTop + 68));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 110, guiTop + 98));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 50, guiTop + 98));
+		addButton(new ButtonCreateItem(table, 3, guiLeft + 80, guiTop + 108));
+		addButton(new ButtonLearnItem(table, 4, guiLeft + 8, guiTop + 115));
+		addButton(new ButtonUnlearnItem(table, 5, guiLeft + 152, guiTop + 115));
 	}
 
 	@Override
@@ -51,8 +52,7 @@ public class GuiArcaneTablet extends GuiTableBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
-		fontRenderer.drawStringWithShadow(s, (xSize - fontRenderer.getStringWidth(s)) / 2F, 124F, 0xFFB5B5B5);
-		fontRenderer.drawStringWithShadow("Work in Progress! Will have crafting table and favorite item slots later!", -guiLeft + 4F, -guiTop + 4F, -1);
+		String s = "WIP! " + EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
+		fontRenderer.drawStringWithShadow(s, (xSize - fontRenderer.getStringWidth(s)) / 2F, -9F, 0xFFB5B5B5);
 	}
 }

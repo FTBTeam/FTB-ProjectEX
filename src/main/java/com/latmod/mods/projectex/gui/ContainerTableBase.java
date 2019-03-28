@@ -4,13 +4,11 @@ import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
-import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
 import moze_intel.projecte.api.item.IItemEmc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 /**
@@ -27,6 +25,8 @@ public class ContainerTableBase extends Container
 	public static final int TAKE_STACK = 2;
 	public static final int TAKE_ONE = 3;
 	public static final int BURN_ALT = 4;
+	public static final int LEARN = 5;
+	public static final int UNLEARN = 6;
 
 	public final EntityPlayer player;
 	public final IKnowledgeProvider playerData;
@@ -58,19 +58,15 @@ public class ContainerTableBase extends Container
 				return ItemStack.EMPTY;
 			}
 
-			if (!playerData.hasKnowledge(stack1))
+			int k = ProjectEXUtils.addKnowledge(player, playerData, stack1);
+
+			if (k == 0)
 			{
-				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack1)))
-				{
-					return ItemStack.EMPTY;
-				}
-
-				playerData.addKnowledge(stack1);
-
-				if (knowledgeUpdate != null)
-				{
-					knowledgeUpdate.updateKnowledge();
-				}
+				return ItemStack.EMPTY;
+			}
+			else if (k == 2 && knowledgeUpdate != null)
+			{
+				knowledgeUpdate.updateKnowledge();
 			}
 
 			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
@@ -110,19 +106,15 @@ public class ContainerTableBase extends Container
 				return false;
 			}
 
-			if (!playerData.hasKnowledge(stack1))
+			int k = ProjectEXUtils.addKnowledge(player, playerData, stack1);
+
+			if (k == 0)
 			{
-				if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack1)))
-				{
-					return false;
-				}
-
-				playerData.addKnowledge(stack1);
-
-				if (knowledgeUpdate != null)
-				{
-					knowledgeUpdate.updateKnowledge();
-				}
+				return false;
+			}
+			else if (k == 2 && knowledgeUpdate != null)
+			{
+				knowledgeUpdate.updateKnowledge();
 			}
 
 			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
@@ -222,6 +214,52 @@ public class ContainerTableBase extends Container
 
 			player.inventory.setItemStack(stack);
 			return true;
+		}
+		else if (mode == LEARN)
+		{
+			if (stack.isEmpty() || !ProjectEAPI.getEMCProxy().hasValue(stack))
+			{
+				return false;
+			}
+
+			ItemStack stack1 = ProjectEXUtils.fixOutput(stack);
+
+			if (!isItemValid(stack1))
+			{
+				return false;
+			}
+
+			int k = ProjectEXUtils.addKnowledge(player, playerData, stack1);
+
+			if (k == 0)
+			{
+				return false;
+			}
+			else if (k == 2 && knowledgeUpdate != null)
+			{
+				knowledgeUpdate.updateKnowledge();
+			}
+
+			return true;
+		}
+		else if (mode == UNLEARN)
+		{
+			if (stack.isEmpty())
+			{
+				return false;
+			}
+
+			if (playerData.removeKnowledge(ProjectEXUtils.fixOutput(stack)))
+			{
+				if (knowledgeUpdate != null)
+				{
+					knowledgeUpdate.updateKnowledge();
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 		return false;

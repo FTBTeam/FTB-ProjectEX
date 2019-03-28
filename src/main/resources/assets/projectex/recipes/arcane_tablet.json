@@ -14,7 +14,7 @@
 		"TCT"
 	],
 	"key": {
-		"T": {"item": "projecte:item.pe_transmutation_tablet"},
+		"T": {"item": "stone_table"},
 		"M": {"item": "matter", "data": 2},
 		"W": {"type": "forge:ore_dict", "ore": "workbench"},
 		"C": {"type": "forge:ore_dict", "ore": "chest"},

@@ -328,7 +328,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public int getSlotLimit(int slot)
 	{
-		return 64;
+		return slot < inputSlots.length ? 64 : ProjectEXConfig.general.emc_link_max_out;
 	}
 
 	@Override
@@ -419,11 +419,17 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		return Double.MAX_VALUE;
 	}
 
-	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack)
+	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack, boolean addKnowledge)
 	{
 		stack = ProjectEXUtils.fixOutput(stack);
+		IKnowledgeProvider knowledgeProvider = PersonalEMC.get(player);
 
-		if (ProjectEAPI.getEMCProxy().hasValue(stack) && PersonalEMC.get(player).hasKnowledge(stack))
+		if (addKnowledge)
+		{
+			ProjectEXUtils.addKnowledge(player, knowledgeProvider, stack);
+		}
+
+		if (ProjectEAPI.getEMCProxy().hasValue(stack) && (addKnowledge || knowledgeProvider.hasKnowledge(stack)))
 		{
 			if (!MinecraftForge.EVENT_BUS.post(new PlayerAttemptCondenserSetEvent(player, stack)))
 			{

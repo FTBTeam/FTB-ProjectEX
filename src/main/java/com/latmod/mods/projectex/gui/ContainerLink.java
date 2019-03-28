@@ -155,6 +155,6 @@ public class ContainerLink extends Container
 			return true;
 		}
 
-		return link.setOutputStack(player, index, player.inventory.getItemStack());
+		return link.setOutputStack(player, index, player.inventory.getItemStack(), true);
 	}
 }

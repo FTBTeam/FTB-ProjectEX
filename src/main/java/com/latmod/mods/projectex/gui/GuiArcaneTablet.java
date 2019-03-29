@@ -50,6 +50,13 @@ public class GuiArcaneTablet extends GuiTableBase
 	}
 
 	@Override
+	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+	{
+		super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
+		drawTexturedModalRect(guiLeft - 67, guiTop + 10, 176, 19, 68, 89);
+	}
+
+	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		String s = "WIP! " + EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());

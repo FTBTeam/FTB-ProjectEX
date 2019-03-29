@@ -1,13 +1,16 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.ProjectEXUtils;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.latmod.mods.projectex.tile.TileLink;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
+import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.SlotItemHandler;
 
 /**
@@ -88,37 +91,48 @@ public class ContainerLink extends Container
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index)
 	{
-		ItemStack stack = ItemStack.EMPTY;
 		Slot slot = inventorySlots.get(index);
 
 		if (slot != null && slot.getHasStack())
 		{
-			ItemStack stack1 = slot.getStack();
-			stack = stack1.copy();
+			ItemStack stack = slot.getStack();
+			ItemStack oldStack = stack.copy();
 
-			if (index < link.inputSlots.length)
+			long value = ProjectEAPI.getEMCProxy().getValue(stack);
+
+			if (value > 0L)
 			{
-				if (!mergeItemStack(stack1, link.inputSlots.length, inventorySlots.size(), true))
-				{
-					return ItemStack.EMPTY;
-				}
-			}
-			else if (!mergeItemStack(stack1, 0, link.inputSlots.length, false))
-			{
-				return ItemStack.EMPTY;
+				PersonalEMC.get(player).addKnowledge(ProjectEXUtils.fixOutput(stack));
+				addItemToOutput(ProjectEXUtils.fixOutput(stack));
+				link.addEMC += (double) stack.getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
+				link.markDirty();
 			}
 
-			if (stack1.isEmpty())
+			slot.putStack(ItemStack.EMPTY);
+			return oldStack;
+		}
+
+		return ItemStack.EMPTY;
+	}
+
+	private void addItemToOutput(ItemStack stack)
+	{
+		for (int i = 0; i < link.outputSlots.length; i++)
+		{
+			if (link.outputSlots[i].getItem() == stack.getItem() && link.outputSlots[i].getMetadata() == stack.getMetadata())
 			{
-				slot.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				slot.onSlotChanged();
+				return;
 			}
 		}
 
-		return stack;
+		for (int i = 0; i < link.outputSlots.length; i++)
+		{
+			if (link.outputSlots[i].isEmpty())
+			{
+				link.outputSlots[i] = stack;
+				return;
+			}
+		}
 	}
 
 	@Override
@@ -148,7 +162,7 @@ public class ContainerLink extends Container
 
 				if (!stack.isEmpty())
 				{
-					ItemHandlerHelper.giveItemToPlayer(player, stack);
+					player.inventory.placeItemBackInInventory(player.world, stack);
 				}
 			}
 

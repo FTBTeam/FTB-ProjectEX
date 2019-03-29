@@ -138,6 +138,8 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		renderHoveredToolTip(mouseX, mouseY);
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.disableLighting();
 		searchField.drawTextBox();
 
 		for (GuiButton button : buttonList)
@@ -163,7 +165,6 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 				}
 			}
 		}
-
 
 		if (!staticSearch.equals(searchField.getText()))
 		{

@@ -20,6 +20,9 @@
 			{"item": "minecraft:stonebrick", "data": 2},
 			{"item": "minecraft:stonebrick", "data": 3}
 		],
-		"T": {"item": "projecte:transmutation_table"}
+		"T": [
+			{"item": "projecte:transmutation_table"},
+			{"item": "projecte:item.pe_philosophers_stone"}
+		]
 	}
 }

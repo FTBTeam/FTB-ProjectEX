@@ -15,7 +15,10 @@
 	],
 	"key": {
 		"T": {"item": "stone_table"},
-		"M": {"item": "matter", "data": 2},
+		"M": [
+			{"item": "matter", "data": 0},
+			{"item": "projecte:item.pe_transmutation_tablet", "data": 0}
+		],
 		"W": {"type": "forge:ore_dict", "ore": "workbench"},
 		"C": {"type": "forge:ore_dict", "ore": "chest"},
 		"S": {"item": "magnum_star_ein"}

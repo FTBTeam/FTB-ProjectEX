@@ -6,6 +6,7 @@ import com.latmod.mods.projectex.integration.PersonalEMC;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -62,6 +63,11 @@ public class GuiLink extends GuiContainer
 
 				mouseDragged(mc, mouseX, mouseY);
 			}
+		}
+
+		@Override
+		public void playPressSound(SoundHandler soundHandlerIn)
+		{
 		}
 	}
 

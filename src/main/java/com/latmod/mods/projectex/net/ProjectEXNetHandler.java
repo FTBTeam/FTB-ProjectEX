@@ -17,5 +17,6 @@ public class ProjectEXNetHandler
 		NET.registerMessage(new MessageSyncEMC.Handler(), MessageSyncEMC.class, 0, Side.CLIENT);
 		NET.registerMessage(new MessageSendLinkStack.Handler(), MessageSendLinkStack.class, 1, Side.SERVER);
 		NET.registerMessage(new MessageCreateItemButton.Handler(), MessageCreateItemButton.class, 2, Side.SERVER);
+		NET.registerMessage(new MessageArcaneTableRecipeTransfer.Handler(), MessageArcaneTableRecipeTransfer.class, 3, Side.SERVER);
 	}
 }

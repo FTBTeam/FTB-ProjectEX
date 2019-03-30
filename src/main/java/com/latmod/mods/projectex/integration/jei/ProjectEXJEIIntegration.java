@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex.integration.jei;
 
-import com.latmod.mods.projectex.gui.ContainerArcaneTablet;
+import com.latmod.mods.projectex.gui.GuiArcaneTablet;
 import com.latmod.mods.projectex.gui.GuiLink;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import mezz.jei.api.IModPlugin;
@@ -20,8 +20,8 @@ public class ProjectEXJEIIntegration implements IModPlugin
 	{
 		registry.addGhostIngredientHandler(GuiLink.class, new GuiLinkGhostIngredientHandler());
 		registry.addAdvancedGuiHandlers(new GuiTableAdvancedGuiHandler(), new GuiLinkAdvancedGuiHandler());
-		//registry.addRecipeClickArea(GuiArcaneTablet.class, 88, 32, 28, 23, VanillaRecipeCategoryUid.CRAFTING);
-		registry.getRecipeTransferRegistry().addRecipeTransferHandler(ContainerArcaneTablet.class, VanillaRecipeCategoryUid.CRAFTING, 1, 9, 10, 36);
+		registry.addRecipeClickArea(GuiArcaneTablet.class, -60, 75, 33, 17, VanillaRecipeCategoryUid.CRAFTING);
+		registry.getRecipeTransferRegistry().addRecipeTransferHandler(new ArcaneTabletRecipeTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(new ItemStack(ProjectEXItems.ARCANE_TABLET), VanillaRecipeCategoryUid.CRAFTING);
 	}
 }

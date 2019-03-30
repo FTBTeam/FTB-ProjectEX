@@ -59,7 +59,7 @@ public class GuiArcaneTablet extends GuiTableBase
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = "WIP! " + EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
+		String s = EMCFormat.INSTANCE.format(PersonalEMC.get(mc.player).getEmc());
 		fontRenderer.drawStringWithShadow(s, (xSize - fontRenderer.getStringWidth(s)) / 2F, -9F, 0xFFB5B5B5);
 	}
 }

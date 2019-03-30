@@ -38,6 +38,11 @@ public class ProjectEXUtils
 
 	public static int addKnowledge(EntityPlayer player, IKnowledgeProvider knowledgeProvider, ItemStack stack)
 	{
+		if (stack.isEmpty())
+		{
+			return 0;
+		}
+
 		if (!knowledgeProvider.hasKnowledge(stack))
 		{
 			if (MinecraftForge.EVENT_BUS.post(new PlayerAttemptLearnEvent(player, stack)))

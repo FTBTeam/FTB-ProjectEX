@@ -5,6 +5,7 @@ import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.item.IItemEmc;
+import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -69,7 +70,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
+			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss);
 			slot.putStack(ItemStack.EMPTY);
 			return stack1;
 		}
@@ -117,7 +118,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
+			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss);
 			player.inventory.setItemStack(ItemStack.EMPTY);
 			return true;
 		}

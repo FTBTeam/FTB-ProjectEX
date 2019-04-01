@@ -62,7 +62,14 @@ public class ContainerArcaneTablet extends ContainerTableBase
 
 		for (int l = 0; l < 9; ++l)
 		{
-			addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 193));
+			addSlotToContainer(new Slot(player.inventory, l, 8 + l * 18, 193)
+			{
+				@Override
+				public boolean canTakeStack(EntityPlayer player)
+				{
+					return getSlotIndex() != player.inventory.currentItem;
+				}
+			});
 		}
 
 		slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);

@@ -93,8 +93,26 @@ public class ContainerTableBase extends Container
 	{
 		ItemStack stack = player.inventory.getItemStack();
 
-		if (mode == BURN)
+		if (mode == BURN || mode == BURN_ALT)
 		{
+			if (mode == BURN_ALT && stack.getItem() instanceof IItemEmc)
+			{
+				IItemEmc emcItem = (IItemEmc) stack.getItem();
+				double stored = emcItem.getStoredEmc(stack);
+
+				if (stored > 0D)
+				{
+					playerData.setEmc(playerData.getEmc() + emcItem.extractEmc(stack, stored));
+				}
+				else
+				{
+					playerData.setEmc(playerData.getEmc() - emcItem.addEmc(stack, Math.min(playerData.getEmc(), emcItem.getMaximumEmc(stack))));
+				}
+
+				player.inventory.setItemStack(stack);
+				return true;
+			}
+
 			if (stack.isEmpty() || !ProjectEAPI.getEMCProxy().hasValue(stack))
 			{
 				return false;
@@ -153,7 +171,16 @@ public class ContainerTableBase extends Container
 
 			playerData.setEmc(playerData.getEmc() - value * amount);
 			stack1.setCount(amount);
-			player.inventory.placeItemBackInInventory(player.world, stack1);
+
+			if (stack.isEmpty())
+			{
+				player.inventory.setItemStack(stack1);
+			}
+			else
+			{
+				player.inventory.placeItemBackInInventory(player.world, stack1);
+			}
+
 			return true;
 		}
 		else if (mode == TAKE_ONE)
@@ -192,28 +219,6 @@ public class ContainerTableBase extends Container
 				player.inventory.setItemStack(stack1);
 			}
 
-			return true;
-		}
-		else if (mode == BURN_ALT)
-		{
-			if (!(stack.getItem() instanceof IItemEmc))
-			{
-				return false;
-			}
-
-			IItemEmc emcItem = (IItemEmc) stack.getItem();
-			double stored = emcItem.getStoredEmc(stack);
-
-			if (stored > 0D)
-			{
-				playerData.setEmc(playerData.getEmc() + emcItem.extractEmc(stack, stored));
-			}
-			else
-			{
-				playerData.setEmc(playerData.getEmc() - emcItem.addEmc(stack, Math.min(playerData.getEmc(), emcItem.getMaximumEmc(stack))));
-			}
-
-			player.inventory.setItemStack(stack);
 			return true;
 		}
 		else if (mode == LEARN)

@@ -37,7 +37,7 @@ minecraft {
 
 repositories {
 	maven { url "https://minecraft.curseforge.com/api/maven/" } //ProjectE
-	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
+	maven { url "https://dvs1.progwml6.com/files/maven" } //JEI
 }
 
 dependencies {

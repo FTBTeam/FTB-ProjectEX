@@ -5,7 +5,6 @@ import moze_intel.projecte.api.event.PlayerAttemptLearnEvent;
 import moze_intel.projecte.utils.NBTWhitelist;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -28,9 +27,19 @@ public class ProjectEXUtils
 			stack1.setItemDamage(0);
 		}
 
-		if (stack1.hasTagCompound() && !NBTWhitelist.shouldDupeWithNBT(stack1))
+		if (!NBTWhitelist.shouldDupeWithNBT(stack1))
 		{
-			stack1.setTagCompound(new NBTTagCompound());
+			stack1.setTagCompound(null);
+
+			try
+			{
+				stack1.getItem().readNBTShareTag(stack1, null);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+				//Catch exception if readNBTShareTag fails
+			}
 		}
 
 		return stack1;

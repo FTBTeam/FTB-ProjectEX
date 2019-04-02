@@ -22,6 +22,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 {
 	public final InventoryCrafting craftMatrix;
 	public final InventoryCraftResult craftResult;
+	public boolean skipRefill = false;
 
 	public ContainerArcaneTablet(EntityPlayer p)
 	{
@@ -41,6 +42,39 @@ public class ContainerArcaneTablet extends ContainerTableBase
 				{
 					knowledgeUpdate.updateKnowledge();
 				}
+			}
+
+			@Override
+			public ItemStack onTake(EntityPlayer player, ItemStack stack)
+			{
+				if (skipRefill)
+				{
+					return super.onTake(player, stack);
+				}
+
+				ItemStack[] prevItems = new ItemStack[craftMatrix.getSizeInventory()];
+
+				for (int i = 0; i < prevItems.length; i++)
+				{
+					prevItems[i] = craftMatrix.getStackInSlot(i);
+
+					if (!prevItems[i].isEmpty())
+					{
+						prevItems[i] = ItemHandlerHelper.copyStackWithSize(prevItems[i], 1);
+					}
+				}
+
+				ItemStack is = super.onTake(player, stack);
+
+				for (int i = 0; i < prevItems.length; i++)
+				{
+					if (!prevItems[i].isEmpty() && craftMatrix.getStackInSlot(i).isEmpty())
+					{
+						transferFromTablet(i, new ItemStack[] {prevItems[i]});
+					}
+				}
+
+				return is;
 			}
 		});
 
@@ -86,57 +120,10 @@ public class ContainerArcaneTablet extends ContainerTableBase
 	{
 		if (index == 0)
 		{
-			Slot slot = inventorySlots.get(index);
-			ItemStack stack = slot.getStack();
-			ItemStack old = stack.copy();
-			stack.getItem().onCreated(stack, player.world, player);
-
-			if (!mergeItemStack(stack, 10, 46, true))
-			{
-				return ItemStack.EMPTY;
-			}
-
-			slot.onSlotChange(stack, old);
-
-			if (stack.isEmpty())
-			{
-				slot.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				slot.onSlotChanged();
-			}
-
-			if (stack.getCount() == old.getCount())
-			{
-				return ItemStack.EMPTY;
-			}
-
-			player.dropItem(slot.onTake(player, stack), false);
-			return old;
-		}
-		else if (index >= 1 && index <= 9)
-		{
-			Slot slot = inventorySlots.get(index);
-			ItemStack stack = slot.getStack();
-			ItemStack old = stack.copy();
-
-			if (!mergeItemStack(stack, 10, 46, true))
-			{
-				return ItemStack.EMPTY;
-			}
-
-			if (stack.isEmpty())
-			{
-				slot.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				slot.onSlotChanged();
-			}
-
-			slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);
-			return old;
+			skipRefill = true;
+			ItemStack stack = super.transferStackInSlot(player, index);
+			skipRefill = false;
+			return stack;
 		}
 
 		return super.transferStackInSlot(player, index);
@@ -157,20 +144,6 @@ public class ContainerArcaneTablet extends ContainerTableBase
 
 		int max = Math.min(recipe.length, craftMatrix.getSizeInventory());
 		transferItems(recipe, max);
-
-		/*
-		slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);
-
-		if (transferAll && !craftResult.getStackInSlot(0).isEmpty())
-		{
-			int times = craftResult.getStackInSlot(0).getMaxStackSize() - 1;
-
-			for (int i = 0; i < times; i++)
-			{
-				transferItems(recipe, max);
-			}
-		}
-		*/
 
 		slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);
 		detectAndSendChanges();

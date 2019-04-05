@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "projecte:blocks/transmutation_stone/top"
+		"all": "projectex:blocks/personal_link"
 	}
 }

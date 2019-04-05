@@ -18,10 +18,10 @@ public class ProjectEXJEIIntegration implements IModPlugin
 	@Override
 	public void register(IModRegistry registry)
 	{
-		registry.addGhostIngredientHandler(GuiLink.class, new GuiLinkGhostIngredientHandler());
-		registry.addAdvancedGuiHandlers(new GuiTableAdvancedGuiHandler(), new GuiLinkAdvancedGuiHandler());
+		registry.addGhostIngredientHandler(GuiLink.class, EMCLinkJEI.INSTANCE);
+		registry.addAdvancedGuiHandlers(StoneTableJEI.INSTANCE, ArcaneTabletJEI.INSTANCE, EMCLinkJEI.INSTANCE);
 		registry.addRecipeClickArea(GuiArcaneTablet.class, -60, 75, 33, 17, VanillaRecipeCategoryUid.CRAFTING);
-		registry.getRecipeTransferRegistry().addRecipeTransferHandler(new ArcaneTabletRecipeTransferHandler(), VanillaRecipeCategoryUid.CRAFTING);
+		registry.getRecipeTransferRegistry().addRecipeTransferHandler(ArcaneTabletJEI.INSTANCE, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(new ItemStack(ProjectEXItems.ARCANE_TABLET), VanillaRecipeCategoryUid.CRAFTING);
 	}
 }

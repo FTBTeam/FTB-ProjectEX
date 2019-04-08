@@ -121,5 +121,13 @@ projectex.items.tome=Tome Recipe
 
 projectex_client=Project EX Client
 projectex.general.emc_screen_position=EMC Screen Position
+projectex.general.search_type=Search Type
+projectex.general.search_type.normal=Normal
+projectex.general.search_type.autoselected=Auto-selected
+projectex.general.search_type.normal_jei_sync=Normal (JEI Sync)
+projectex.general.search_type.autoselected_jei_sync=Auto-selected (JEI Sync)
 
 gui.stone_table.cant_use=Can't use this item in Stone Table!
+gui.arcane_tablet.rotate=Rotate
+gui.arcane_tablet.balance=Balance / Spread
+gui.arcane_tablet.clear=Clear

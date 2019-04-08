@@ -1,6 +1,8 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEXUtils;
+import com.latmod.mods.projectex.client.ProjectEXClientConfig;
+import com.latmod.mods.projectex.integration.jei.ProjectEXJEIIntegration;
 import com.latmod.mods.projectex.net.MessageCreateItemButton;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
 import net.minecraft.client.gui.GuiButton;
@@ -12,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -111,6 +114,7 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		searchField.setEnableBackgroundDrawing(false);
 		searchField.setMaxStringLength(35);
 		searchField.setText(staticSearch);
+		searchField.setFocused(ProjectEXClientConfig.general.search_type.autoselected);
 		addButtons();
 		updateValidItemList();
 	}
@@ -160,6 +164,13 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 					if (!((ButtonCreateItem) button).type.isEmpty())
 					{
 						renderToolTip(((ButtonCreateItem) button).type, mouseX, mouseY);
+					}
+				}
+				else if (button instanceof ButtonSmall)
+				{
+					if (!button.displayString.isEmpty())
+					{
+						drawHoveringText(Collections.singletonList(button.displayString), mouseX, mouseY, fontRenderer);
 					}
 				}
 			}
@@ -241,6 +252,11 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 	{
 		if (searchField.textboxKeyTyped(typedChar, keyCode))
 		{
+			if (ProjectEXClientConfig.general.search_type.jeiSync && Loader.isModLoaded("jei"))
+			{
+				syncJEITextbox();
+			}
+
 			return;
 		}
 
@@ -251,6 +267,14 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		}
 
 		super.keyTyped(typedChar, keyCode);
+	}
+
+	private void syncJEITextbox()
+	{
+		if (ProjectEXJEIIntegration.RUNTIME != null)
+		{
+			ProjectEXJEIIntegration.RUNTIME.getIngredientFilter().setFilterText(searchField.getText());
+		}
 	}
 
 	@Override

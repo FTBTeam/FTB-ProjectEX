@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.GlStateManager;
  */
 public class ButtonSmall extends GuiButton
 {
-	public ButtonSmall(int id, int x, int y)
+	public ButtonSmall(int id, int x, int y, String s)
 	{
-		super(id, x, y, 9, 9, "");
+		super(id, x, y, 9, 9, s);
 	}
 
 	@Override

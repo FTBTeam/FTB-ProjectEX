@@ -1,9 +1,13 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.client.EnumSearchType;
+import com.latmod.mods.projectex.client.ProjectEXClientConfig;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import java.awt.*;
 import java.io.IOException;
@@ -49,9 +53,10 @@ public class GuiArcaneTablet extends GuiTableBase
 		addButton(new ButtonLearnItem(table, 4, guiLeft + 8, guiTop + 115));
 		addButton(new ButtonUnlearnItem(table, 5, guiLeft + 152, guiTop + 115));
 
-		addButton(new ButtonSmall(6, guiLeft - 71, guiTop + 16));
-		addButton(new ButtonSmall(7, guiLeft - 71, guiTop + 26));
-		addButton(new ButtonSmall(8, guiLeft - 71, guiTop + 36));
+		addButton(new ButtonSmall(6, guiLeft - 71, guiTop + 16, I18n.format("gui.arcane_tablet.rotate")));
+		addButton(new ButtonSmall(7, guiLeft - 71, guiTop + 26, I18n.format("gui.arcane_tablet.balance")));
+		addButton(new ButtonSmall(8, guiLeft - 71, guiTop + 36, I18n.format("projectex.general.search_type") + ": " + TextFormatting.GRAY + I18n.format(ProjectEXClientConfig.general.search_type.translationKey)));
+		addButton(new ButtonSmall(9, guiLeft - 71, guiTop + 61, I18n.format("gui.arcane_tablet.clear")));
 	}
 
 	@Override
@@ -66,6 +71,11 @@ public class GuiArcaneTablet extends GuiTableBase
 			handleButton(isShiftKeyDown() ? 44 : 43);
 		}
 		else if (button.id == 8)
+		{
+			ProjectEXClientConfig.general.search_type = EnumSearchType.VALUES[(ProjectEXClientConfig.general.search_type.ordinal() + 1) % EnumSearchType.VALUES.length];
+			button.displayString = I18n.format("projectex.general.search_type") + ": " + TextFormatting.GRAY + I18n.format(ProjectEXClientConfig.general.search_type.translationKey);
+		}
+		else if (button.id == 9)
 		{
 			handleButton(40);
 		}

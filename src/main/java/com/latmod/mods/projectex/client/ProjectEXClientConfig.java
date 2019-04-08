@@ -16,5 +16,7 @@ public class ProjectEXClientConfig
 	public static class General
 	{
 		public EnumScreenPosition emc_screen_position = EnumScreenPosition.TOP_LEFT;
+
+		public EnumSearchType search_type = EnumSearchType.NORMAL;
 	}
 }

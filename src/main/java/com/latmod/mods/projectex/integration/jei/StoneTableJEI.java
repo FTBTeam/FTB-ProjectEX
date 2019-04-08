@@ -1,10 +1,9 @@
 package com.latmod.mods.projectex.integration.jei;
 
-import com.latmod.mods.projectex.gui.ButtonWithStack;
+import com.latmod.mods.projectex.gui.ButtonCreateItem;
 import com.latmod.mods.projectex.gui.GuiStoneTable;
 import mezz.jei.api.gui.IAdvancedGuiHandler;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
@@ -27,13 +26,11 @@ public enum StoneTableJEI implements IAdvancedGuiHandler<GuiStoneTable>
 	{
 		for (GuiButton button : gui.getButtons())
 		{
-			if (button instanceof ButtonWithStack && x >= button.x && x < button.x + button.width && y >= button.y && y < button.y + button.height)
+			if (button instanceof ButtonCreateItem && x >= button.x && x < button.x + button.width && y >= button.y && y < button.y + button.height)
 			{
-				ItemStack stack = ((ButtonWithStack) button).getStack();
-
-				if (!stack.isEmpty())
+				if (!((ButtonCreateItem) button).type.isEmpty())
 				{
-					return stack;
+					return ((ButtonCreateItem) button).type;
 				}
 			}
 		}

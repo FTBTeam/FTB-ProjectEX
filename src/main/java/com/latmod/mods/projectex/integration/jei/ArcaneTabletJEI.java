@@ -1,6 +1,6 @@
 package com.latmod.mods.projectex.integration.jei;
 
-import com.latmod.mods.projectex.gui.ButtonWithStack;
+import com.latmod.mods.projectex.gui.ButtonCreateItem;
 import com.latmod.mods.projectex.gui.ContainerArcaneTablet;
 import com.latmod.mods.projectex.gui.GuiArcaneTablet;
 import com.latmod.mods.projectex.net.MessageArcaneTableRecipeTransfer;
@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -74,7 +73,7 @@ public enum ArcaneTabletJEI implements IAdvancedGuiHandler<GuiArcaneTablet>, IRe
 	@Override
 	public List<Rectangle> getGuiExtraAreas(GuiArcaneTablet gui)
 	{
-		return Collections.singletonList(new Rectangle(gui.getGuiLeft() - 67, gui.getGuiTop() + 10, 68, 89));
+		return Collections.singletonList(new Rectangle(gui.getGuiLeft() - 75, gui.getGuiTop() + 10, 76, 89));
 	}
 
 	@Override
@@ -83,13 +82,11 @@ public enum ArcaneTabletJEI implements IAdvancedGuiHandler<GuiArcaneTablet>, IRe
 	{
 		for (GuiButton button : gui.getButtons())
 		{
-			if (button instanceof ButtonWithStack && x >= button.x && x < button.x + button.width && y >= button.y && y < button.y + button.height)
+			if (button instanceof ButtonCreateItem && x >= button.x && x < button.x + button.width && y >= button.y && y < button.y + button.height)
 			{
-				ItemStack stack = ((ButtonWithStack) button).getStack();
-
-				if (!stack.isEmpty())
+				if (!((ButtonCreateItem) button).type.isEmpty())
 				{
-					return stack;
+					return ((ButtonCreateItem) button).type;
 				}
 			}
 		}

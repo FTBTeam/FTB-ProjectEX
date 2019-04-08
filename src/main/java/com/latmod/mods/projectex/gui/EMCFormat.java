@@ -3,6 +3,7 @@ package com.latmod.mods.projectex.gui;
 import com.latmod.mods.projectex.ProjectEXConfig;
 import net.minecraft.client.gui.GuiScreen;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.FieldPosition;
 
@@ -19,6 +20,7 @@ public class EMCFormat extends DecimalFormat
 	private EMCFormat(boolean is)
 	{
 		super("#,###");
+		setRoundingMode(RoundingMode.DOWN);
 		ignoreShift = is;
 	}
 

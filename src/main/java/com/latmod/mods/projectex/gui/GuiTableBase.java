@@ -40,6 +40,7 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 		super(c);
 		table = c;
 		table.knowledgeUpdate = this;
+		xSize = 176;
 		ySize = 217;
 		validItems = new ArrayList<>();
 		itemButtons = new ArrayList<>();
@@ -154,13 +155,11 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 				{
 					drawHoveringText(Collections.singletonList(I18n.format("tile.projectex.stone_table.unlearn")), mouseX, mouseY, fontRenderer);
 				}
-				else if (button instanceof ButtonWithStack)
+				else if (button instanceof ButtonCreateItem)
 				{
-					ItemStack stack = ((ButtonWithStack) button).getStack();
-
-					if (!stack.isEmpty())
+					if (!((ButtonCreateItem) button).type.isEmpty())
 					{
-						renderToolTip(stack, mouseX, mouseY);
+						renderToolTip(((ButtonCreateItem) button).type, mouseX, mouseY);
 					}
 				}
 			}

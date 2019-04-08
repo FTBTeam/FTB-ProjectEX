@@ -171,16 +171,7 @@ public class ContainerTableBase extends Container
 
 			playerData.setEmc(playerData.getEmc() - value * amount);
 			stack1.setCount(amount);
-
-			if (stack.isEmpty())
-			{
-				player.inventory.setItemStack(stack1);
-			}
-			else
-			{
-				player.inventory.placeItemBackInInventory(player.world, stack1);
-			}
-
+			player.inventory.placeItemBackInInventory(player.world, stack1);
 			return true;
 		}
 		else if (mode == TAKE_ONE)

@@ -107,6 +107,10 @@ public class ContainerLink extends Container
 				link.addEMC += (double) stack.getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
 				link.markDirty();
 			}
+			else
+			{
+				return ItemStack.EMPTY;
+			}
 
 			slot.putStack(ItemStack.EMPTY);
 			return oldStack;

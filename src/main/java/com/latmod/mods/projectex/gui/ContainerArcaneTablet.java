@@ -7,6 +7,7 @@ import com.latmod.mods.projectex.ProjectEXUtils;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
@@ -129,13 +130,62 @@ public class ContainerArcaneTablet extends ContainerTableBase
 	{
 		if (index == 0)
 		{
-			skipRefill = true;
-			ItemStack stack = super.transferStackInSlot(player, index);
-			skipRefill = false;
-			return stack;
+			Slot slot = inventorySlots.get(index);
+
+			if (slot != null && slot.getHasStack())
+			{
+				ItemStack stack = slot.getStack();
+				ItemStack oldStack = stack.copy();
+
+				stack.getItem().onCreated(stack, player.world, player);
+
+				if (!mergeItemStack(stack, 10, 46, true))
+				{
+					return ItemStack.EMPTY;
+				}
+
+				slot.onSlotChange(stack, oldStack);
+
+				if (stack.isEmpty())
+				{
+					slot.putStack(ItemStack.EMPTY);
+				}
+				else
+				{
+					slot.onSlotChanged();
+				}
+
+				if (stack.getCount() == oldStack.getCount())
+				{
+					return ItemStack.EMPTY;
+				}
+
+				player.dropItem(slot.onTake(player, stack), false);
+				return oldStack;
+			}
+
+			return ItemStack.EMPTY;
 		}
 
 		return super.transferStackInSlot(player, index);
+	}
+
+	@Override
+	public ItemStack slotClick(int slot, int dragType, ClickType clickType, EntityPlayer player)
+	{
+		if (clickType == ClickType.QUICK_MOVE)
+		{
+			skipRefill = true;
+		}
+
+		ItemStack stack = super.slotClick(slot, dragType, clickType, player);
+
+		if (clickType == ClickType.QUICK_MOVE)
+		{
+			skipRefill = false;
+		}
+
+		return stack;
 	}
 
 	@Override
@@ -151,6 +201,14 @@ public class ContainerArcaneTablet extends ContainerTableBase
 		int max = Math.min(recipe.length, craftMatrix.getSizeInventory());
 		transferItems(recipe, max);
 
+		if (transferAll)
+		{
+			for (int i = 0; i < 63; i++)
+			{
+				transferItems(recipe, max);
+			}
+		}
+
 		slotChangedCraftingGrid(player.world, player, craftMatrix, craftResult);
 		detectAndSendChanges();
 	}
@@ -161,9 +219,9 @@ public class ContainerArcaneTablet extends ContainerTableBase
 		{
 			if (recipe[i] != null && recipe[i].length > 0)
 			{
-				if (transferFromTablet(i, recipe[i]))
+				if (transferFromInventory(i, recipe[i], false) || transferFromInventory(i, recipe[i], true))
 				{
-					recipe[i] = null;
+					//recipe[i] = null;
 				}
 			}
 		}
@@ -172,9 +230,9 @@ public class ContainerArcaneTablet extends ContainerTableBase
 		{
 			if (recipe[i] != null && recipe[i].length > 0)
 			{
-				if (transferFromInventory(i, recipe[i], false) || transferFromInventory(i, recipe[i], true))
+				if (transferFromTablet(i, recipe[i]))
 				{
-					recipe[i] = null;
+					//recipe[i] = null;
 				}
 			}
 		}
@@ -197,18 +255,22 @@ public class ContainerArcaneTablet extends ContainerTableBase
 
 				if (value > 0L && playerData.getEmc() >= value)
 				{
-					playerData.setEmc(playerData.getEmc() - value);
 					ItemStack slotItem = craftMatrix.getStackInSlot(i);
 
 					if (slotItem.isEmpty())
 					{
 						craftMatrix.setInventorySlotContents(i, stack1);
 					}
-					else if (slotItem.getCount() < slotItem.getMaxStackSize())
+					else if (slotItem.getCount() < slotItem.getMaxStackSize() && slotItem.getItem() == stack1.getItem() && slotItem.getMetadata() == stack1.getMetadata() && Objects.equals(slotItem.getItem().getNBTShareTag(slotItem), stack1.getItem().getNBTShareTag(stack1)))
 					{
 						slotItem.grow(1);
 					}
+					else
+					{
+						continue;
+					}
 
+					playerData.setEmc(playerData.getEmc() - value);
 					return true;
 				}
 			}
@@ -235,9 +297,13 @@ public class ContainerArcaneTablet extends ContainerTableBase
 					{
 						craftMatrix.setInventorySlotContents(i, ItemHandlerHelper.copyStackWithSize(stack, 1));
 					}
-					else if (slotItem.getCount() < slotItem.getMaxStackSize())
+					else if (slotItem.getCount() < slotItem.getMaxStackSize() && slotItem.getItem() == stack.getItem() && slotItem.getMetadata() == stack.getMetadata() && Objects.equals(slotItem.getItem().getNBTShareTag(slotItem), stack.getItem().getNBTShareTag(stack)))
 					{
 						slotItem.grow(1);
+					}
+					else
+					{
+						continue;
 					}
 
 					stack.shrink(1);

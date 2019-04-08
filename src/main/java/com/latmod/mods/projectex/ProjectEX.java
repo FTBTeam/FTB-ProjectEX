@@ -38,7 +38,7 @@ public class ProjectEX
 		@Override
 		public ItemStack createIcon()
 		{
-			return new ItemStack(ProjectEXItems.FINAL_STAR);
+			return new ItemStack(ProjectEXItems.PERSONAL_LINK);
 		}
 	};
 

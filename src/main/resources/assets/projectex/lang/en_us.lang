@@ -1,5 +1,6 @@
 itemGroup.projectex=Project EX
 
+tile.projectex.energy_link.name=Basic Energy EMC Link
 tile.projectex.personal_link.name=Personal EMC Link
 tile.projectex.refined_link.name=Refined EMC Link
 tile.projectex.compressed_refined_link.name=Compressed Refined EMC Link

@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "projectex:blocks/energy_link"
+	}
+}

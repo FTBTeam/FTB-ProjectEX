@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 @GameRegistry.ObjectHolder(ProjectEX.MOD_ID)
 public class ProjectEXItems
 {
+	public static final Item ENERGY_LINK = Items.AIR;
 	public static final Item PERSONAL_LINK = Items.AIR;
 	public static final Item REFINED_LINK = Items.AIR;
 	public static final Item COMPRESSED_REFINED_LINK = Items.AIR;

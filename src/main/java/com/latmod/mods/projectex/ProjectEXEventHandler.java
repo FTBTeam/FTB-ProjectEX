@@ -1,6 +1,7 @@
 package com.latmod.mods.projectex;
 
 import com.latmod.mods.projectex.block.BlockCollector;
+import com.latmod.mods.projectex.block.BlockEnergyLink;
 import com.latmod.mods.projectex.block.BlockLinkMK1;
 import com.latmod.mods.projectex.block.BlockLinkMK2;
 import com.latmod.mods.projectex.block.BlockLinkMK3;
@@ -20,6 +21,7 @@ import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.tile.TileCollector;
+import com.latmod.mods.projectex.tile.TileEnergyLink;
 import com.latmod.mods.projectex.tile.TileLinkMK1;
 import com.latmod.mods.projectex.tile.TileLinkMK2;
 import com.latmod.mods.projectex.tile.TileLinkMK3;
@@ -74,9 +76,11 @@ public class ProjectEXEventHandler
 
 		if (ProjectEXConfig.items.link)
 		{
+			r.register(withName(new BlockEnergyLink(), "energy_link"));
 			r.register(withName(new BlockLinkMK1(), "personal_link"));
 			r.register(withName(new BlockLinkMK2(), "refined_link"));
 			r.register(withName(new BlockLinkMK3(), "compressed_refined_link"));
+			GameRegistry.registerTileEntity(TileEnergyLink.class, new ResourceLocation(ProjectEX.MOD_ID, "energy_link"));
 			GameRegistry.registerTileEntity(TileLinkMK1.class, new ResourceLocation(ProjectEX.MOD_ID, "personal_link"));
 			GameRegistry.registerTileEntity(TileLinkMK2.class, new ResourceLocation(ProjectEX.MOD_ID, "refined_link"));
 			GameRegistry.registerTileEntity(TileLinkMK3.class, new ResourceLocation(ProjectEX.MOD_ID, "compressed_refined_link"));
@@ -113,6 +117,7 @@ public class ProjectEXEventHandler
 
 		if (ProjectEXConfig.items.link)
 		{
+			r.register(new ItemBlock(ProjectEXBlocks.ENERGY_LINK).setRegistryName("energy_link"));
 			r.register(new ItemBlock(ProjectEXBlocks.PERSONAL_LINK).setRegistryName("personal_link"));
 			r.register(new ItemBlock(ProjectEXBlocks.REFINED_LINK).setRegistryName("refined_link"));
 			r.register(new ItemBlock(ProjectEXBlocks.COMPRESSED_REFINED_LINK).setRegistryName("compressed_refined_link"));

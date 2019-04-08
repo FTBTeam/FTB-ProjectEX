@@ -39,6 +39,7 @@ public class ProjectEXClientEventHandler
 	{
 		if (ProjectEXConfig.items.link)
 		{
+			addModel(ProjectEXItems.ENERGY_LINK, "normal");
 			addModel(ProjectEXItems.PERSONAL_LINK, "normal");
 			addModel(ProjectEXItems.REFINED_LINK, "normal");
 			addModel(ProjectEXItems.COMPRESSED_REFINED_LINK, "normal");

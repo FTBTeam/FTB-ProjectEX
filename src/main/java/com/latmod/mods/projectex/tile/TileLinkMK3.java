@@ -9,4 +9,10 @@ public class TileLinkMK3 extends TileLink
 	{
 		super(1, 54);
 	}
+
+	@Override
+	public boolean learnItems()
+	{
+		return true;
+	}
 }

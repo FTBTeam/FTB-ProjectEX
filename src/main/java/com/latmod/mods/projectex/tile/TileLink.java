@@ -9,6 +9,7 @@ import moze_intel.projecte.api.event.PlayerAttemptCondenserSetEvent;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -44,6 +45,11 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		outputSlots = new ItemStack[out];
 		Arrays.fill(inputSlots, ItemStack.EMPTY);
 		Arrays.fill(outputSlots, ItemStack.EMPTY);
+	}
+
+	public boolean learnItems()
+	{
+		return false;
 	}
 
 	@Override
@@ -369,6 +375,16 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 
 					if (value > 0L)
 					{
+						if (learnItems() && knowledgeProvider.addKnowledge(ProjectEXUtils.fixOutput(inputSlots[i])))
+						{
+							EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+
+							if (player != null)
+							{
+								knowledgeProvider.sync(player);
+							}
+						}
+
 						emc += (double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
 						inputSlots[i] = ItemStack.EMPTY;
 						markDirty();

@@ -69,6 +69,11 @@ public class ItemKnowledgeSharingBook extends Item
 			IKnowledgeProvider playerKnowledge = PersonalEMC.get(player);
 			IKnowledgeProvider otherKnowledge = PersonalEMC.get(world, id);
 
+			if (otherKnowledge == null)
+			{
+				return new ActionResult<>(EnumActionResult.FAIL, stack);
+			}
+
 			for (ItemStack stack1 : otherKnowledge.getKnowledge())
 			{
 				ProjectEXUtils.addKnowledge(player, playerKnowledge, stack1);

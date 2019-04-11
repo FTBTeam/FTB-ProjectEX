@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.apache.commons.io.IOUtils;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -35,11 +36,18 @@ public class PersonalEMC
 	private static final Map<UUID, OfflineKnowledgeProvider> OFFLINE_MAP = new HashMap<>();
 	private static final Map<UUID, Double> EMC_MAP = new HashMap<>();
 
-	public static IKnowledgeProvider get(World world, UUID id)
+	@Nullable
+	public static IKnowledgeProvider get(@Nullable World world, @Nullable UUID id)
 	{
+		if (world == null || id == null || id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L)
+		{
+			return null;
+		}
+
 		if (world.isRemote)
 		{
-			return get(ProjectEX.PROXY.getClientPlayer());
+			EntityPlayer player = ProjectEX.PROXY.getClientPlayer();
+			return player == null ? null : get(player);
 		}
 
 		EntityPlayer player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(id);

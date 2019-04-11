@@ -98,13 +98,13 @@ public class ContainerLink extends Container
 			ItemStack stack = slot.getStack();
 			ItemStack oldStack = stack.copy();
 
-			long value = ProjectEAPI.getEMCProxy().getValue(stack);
+			double value = ProjectEAPI.getEMCProxy().getValue(stack);
 
-			if (value > 0L)
+			if (value > 0D)
 			{
 				PersonalEMC.get(player).addKnowledge(ProjectEXUtils.fixOutput(stack));
 				addItemToOutput(ProjectEXUtils.fixOutput(stack));
-				link.addEMC += (double) stack.getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
+				link.storedEMC += (double) stack.getCount() * value * ProjectEConfig.difficulty.covalenceLoss;
 				link.markDirty();
 			}
 			else

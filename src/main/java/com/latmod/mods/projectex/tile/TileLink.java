@@ -37,7 +37,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	public String name = "";
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots, outputSlots;
-	public double addEMC = 0D;
+	public double storedEMC = 0D;
 
 	public TileLink(int in, int out)
 	{
@@ -57,6 +57,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		owner = nbt.getUniqueId("owner");
 		name = nbt.getString("name");
+		storedEMC = nbt.getDouble("emc");
 
 		Arrays.fill(inputSlots, ItemStack.EMPTY);
 		Arrays.fill(outputSlots, ItemStack.EMPTY);
@@ -92,6 +93,11 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		nbt.setUniqueId("owner", owner);
 		nbt.setString("name", name);
+
+		if (storedEMC > 0D)
+		{
+			nbt.setDouble("emc", storedEMC);
+		}
 
 		NBTTagList outputList = new NBTTagList();
 
@@ -194,18 +200,11 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+		double value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
 
-		if (value > 0L)
+		if (value > 0D)
 		{
-			IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
-
-			if (knowledgeProvider.getEmc() < value)
-			{
-				return ItemStack.EMPTY;
-			}
-
-			int c = getCount(knowledgeProvider, value, ProjectEXConfig.general.emc_link_max_out);
+			int c = getCount(PersonalEMC.get(world, owner), value, ProjectEXConfig.general.emc_link_max_out);
 
 			if (c <= 0)
 			{
@@ -301,16 +300,16 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+		double value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
 
-		if (value <= 0L)
+		if (value <= 0D)
 		{
 			return ItemStack.EMPTY;
 		}
 
 		IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
 
-		if (knowledgeProvider.getEmc() < value)
+		if ((knowledgeProvider == null ? storedEMC : knowledgeProvider.getEmc()) < value)
 		{
 			return ItemStack.EMPTY;
 		}
@@ -322,7 +321,15 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		{
 			if (!simulate)
 			{
-				knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
+				if (knowledgeProvider == null)
+				{
+					storedEMC -= value * stack.getCount();
+					markDirty();
+				}
+				else
+				{
+					knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
+				}
 			}
 
 			return stack;
@@ -359,40 +366,48 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		if (hasOwner())
 		{
 			IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
-			double emc = knowledgeProvider.getEmc();
-
-			if (addEMC > 0D)
-			{
-				emc += addEMC;
-				addEMC = 0D;
-			}
+			boolean syncKnowledge = false;
 
 			for (int i = 0; i < inputSlots.length; i++)
 			{
 				if (!inputSlots[i].isEmpty())
 				{
-					long value = ProjectEAPI.getEMCProxy().getValue(inputSlots[i]);
+					double value = ProjectEAPI.getEMCProxy().getValue(inputSlots[i]);
 
-					if (value > 0L)
+					if (value > 0D)
 					{
-						if (learnItems() && knowledgeProvider.addKnowledge(ProjectEXUtils.fixOutput(inputSlots[i])))
+						if (knowledgeProvider != null && learnItems())
 						{
-							EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
-
-							if (player != null)
-							{
-								knowledgeProvider.sync(player);
-							}
+							knowledgeProvider.addKnowledge(ProjectEXUtils.fixOutput(inputSlots[i]));
+							syncKnowledge = true;
 						}
 
-						emc += (double) inputSlots[i].getCount() * (double) value * ProjectEConfig.difficulty.covalenceLoss;
+						storedEMC += (double) inputSlots[i].getCount() * value * ProjectEConfig.difficulty.covalenceLoss;
 						inputSlots[i] = ItemStack.EMPTY;
 						markDirty();
 					}
 				}
 			}
 
-			knowledgeProvider.setEmc(emc);
+			if (knowledgeProvider != null)
+			{
+				if (storedEMC > 0D)
+				{
+					knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
+					storedEMC = 0D;
+					markDirty();
+				}
+
+				if (syncKnowledge)
+				{
+					EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+
+					if (player != null)
+					{
+						knowledgeProvider.sync(player);
+					}
+				}
+			}
 		}
 
 		if (isDirty)
@@ -402,14 +417,16 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		}
 	}
 
-	public int getCount(IKnowledgeProvider knowledgeProvider, long value, int limit)
+	public int getCount(@Nullable IKnowledgeProvider knowledgeProvider, double value, int limit)
 	{
-		if (knowledgeProvider.getEmc() < value)
+		double emc = knowledgeProvider == null ? storedEMC : knowledgeProvider.getEmc();
+
+		if (emc < value)
 		{
 			return 0;
 		}
 
-		return (int) (Math.min(limit, knowledgeProvider.getEmc() / (double) value));
+		return (int) (Math.min(limit, emc / value));
 	}
 
 	@Override
@@ -417,7 +434,8 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		if (!world.isRemote)
 		{
-			addEMC += v;
+			storedEMC += v;
+			markDirty();
 		}
 
 		return v;
@@ -426,7 +444,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	@Override
 	public double getStoredEmc()
 	{
-		return 0D;
+		return storedEMC;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package com.latmod.mods.projectex.tile;
 import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -17,14 +18,14 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 {
 	public UUID owner = new UUID(0L, 0L);
 	public String name = "";
-	private boolean isDirty = false;
-	public double addEMC = 0D;
+	public double storedEMC = 0D;
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		owner = nbt.getUniqueId("owner");
 		name = nbt.getString("name");
+		storedEMC = nbt.getDouble("emc");
 		super.readFromNBT(nbt);
 	}
 
@@ -33,18 +34,22 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 	{
 		nbt.setUniqueId("owner", owner);
 		nbt.setString("name", name);
-		return super.writeToNBT(nbt);
-	}
 
-	public boolean hasOwner()
-	{
-		return owner.getLeastSignificantBits() != 0L || owner.getMostSignificantBits() != 0L;
+		if (storedEMC > 0D)
+		{
+			nbt.setDouble("emc", storedEMC);
+		}
+
+		return super.writeToNBT(nbt);
 	}
 
 	@Override
 	public void markDirty()
 	{
-		isDirty = true;
+		if (world != null)
+		{
+			world.markChunkDirty(pos, this);
+		}
 	}
 
 	@Override
@@ -61,26 +66,22 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 	@Override
 	public void update()
 	{
-		if (world.isRemote)
+		if (world.isRemote || world.getTotalWorldTime() % 20L != TileRelay.mod(hashCode(), 20))
 		{
 			return;
 		}
 
-		if (hasOwner())
+		if (storedEMC > 0D)
 		{
-			if (addEMC > 0D)
+			EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
+
+			if (player != null)
 			{
-				IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
-				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + addEMC);
-				addEMC = 0D;
+				IKnowledgeProvider knowledgeProvider = PersonalEMC.get(player);
+				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
+				storedEMC = 0D;
 				markDirty();
 			}
-		}
-
-		if (isDirty)
-		{
-			isDirty = false;
-			world.markChunkDirty(pos, this);
 		}
 	}
 
@@ -89,7 +90,7 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 	{
 		if (!world.isRemote)
 		{
-			addEMC += v;
+			storedEMC += v;
 		}
 
 		return v;
@@ -98,7 +99,7 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 	@Override
 	public double getStoredEmc()
 	{
-		return 0D;
+		return storedEMC;
 	}
 
 	@Override

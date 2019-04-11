@@ -172,7 +172,7 @@ public class GuiLink extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		double emc = PersonalEMC.get(container.link.getWorld(), container.link.owner).getEmc();
+		double emc = PersonalEMC.get(container.player).getEmc();
 
 		fontRenderer.drawString(container.link.name, 8, 6, 4210752);
 

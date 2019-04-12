@@ -84,6 +84,9 @@ public class ProjectEXConfig
 		})
 		public int emc_link_max_out = 2000000000;
 
+		@Config.Comment("The whitelist for Stone Table will be ignored unless this is set to true.")
+		public boolean enable_stone_table_whitelist = false;
+
 		public String[] stone_table_whitelist = {
 				"oredict:ingot",
 				"oredict:gem",
@@ -127,7 +130,7 @@ public class ProjectEXConfig
 
 		public boolean isStoneTableWhitelisted(ItemStack stack)
 		{
-			if (stone_table_whitelist.length == 1 && stone_table_whitelist[0].equals("*"))
+			if (!enable_stone_table_whitelist)
 			{
 				return true;
 			}

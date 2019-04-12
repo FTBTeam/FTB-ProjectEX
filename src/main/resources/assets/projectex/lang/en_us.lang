@@ -102,6 +102,7 @@ item.projectex.knowledge_sharing_book.name=Knowledge Sharing Book
 item.projectex.arcane_tablet.name=Arcane Transmutation Tablet
 
 projectex=Project EX Common
+projectex.general.enable_stone_table_whitelist=Enable Stone Table Whitelist
 projectex.general.stone_table_whitelist=Stone Table Whitelist
 projectex.general.override_emc_formatter=Override EMC Formatter
 projectex.general.blacklist_power_flower_from_watch=Blacklist Power Flower from Watch

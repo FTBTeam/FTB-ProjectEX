@@ -18,6 +18,7 @@ public class ProjectEXGuiHandler implements IGuiHandler
 	public static final int LINK = 1;
 	public static final int STONE_TABLE = 2;
 	public static final int ARCANE_TABLET = 3;
+	public static final int ALCHEMY_TABLE = 4;
 
 	public static void open(EntityPlayer player, int id, int x, int y, int z)
 	{

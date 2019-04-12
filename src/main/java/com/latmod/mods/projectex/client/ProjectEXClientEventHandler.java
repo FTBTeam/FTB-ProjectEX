@@ -69,6 +69,11 @@ public class ProjectEXClientEventHandler
 			addModel(ProjectEXItems.STONE_TABLE, "facing=down");
 		}
 
+		if (ProjectEXConfig.items.alchemy_table)
+		{
+			addModel(ProjectEXItems.ALCHEMY_TABLE, "normal");
+		}
+
 		if (ProjectEXConfig.items.stars)
 		{
 			addModel(ProjectEXItems.MAGNUM_STAR_EIN, "inventory");

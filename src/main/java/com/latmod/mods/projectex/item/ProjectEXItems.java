@@ -19,6 +19,7 @@ public class ProjectEXItems
 	public static final Item RELAY = Items.AIR;
 	public static final Item POWER_FLOWER = Items.AIR;
 	public static final Item STONE_TABLE = Items.AIR;
+	public static final Item ALCHEMY_TABLE = Items.AIR;
 
 	public static final Item MAGNUM_STAR_EIN = Items.AIR;
 	public static final Item MAGNUM_STAR_ZWEI = Items.AIR;

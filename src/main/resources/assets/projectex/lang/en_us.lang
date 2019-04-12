@@ -68,6 +68,7 @@ tile.projectex.power_flower.final.name=The Final Power Flower Bonsai Pot
 tile.projectex.stone_table.name=Stone Transmutation Table
 tile.projectex.stone_table.learn=Learn
 tile.projectex.stone_table.unlearn=Unlearn
+tile.projectex.alchemy_table.name=Alchemy Table
 
 item.projectex.magnum_star_ein.name=Magnum Star Ein
 item.projectex.magnum_star_zwei.name=Magnum Star Zwei

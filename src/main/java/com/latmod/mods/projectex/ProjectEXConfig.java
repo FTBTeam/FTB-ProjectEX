@@ -297,6 +297,9 @@ public class ProjectEXConfig
 
 		@Config.LangKey("item.projectex.matter.clay.name")
 		public boolean clay_matter = false;
+
+		@Config.LangKey("tile.projectex.alchemy_table.name")
+		public boolean alchemy_table = true;
 	}
 
 	public static void sync()

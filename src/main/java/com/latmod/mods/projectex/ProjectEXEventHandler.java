@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex;
 
+import com.latmod.mods.projectex.block.BlockAlchemyTable;
 import com.latmod.mods.projectex.block.BlockCollector;
 import com.latmod.mods.projectex.block.BlockEnergyLink;
 import com.latmod.mods.projectex.block.BlockLinkMK1;
@@ -20,6 +21,7 @@ import com.latmod.mods.projectex.item.ItemKnowledgeSharingBook;
 import com.latmod.mods.projectex.item.ItemMagnumStar;
 import com.latmod.mods.projectex.item.ItemMatter;
 import com.latmod.mods.projectex.item.ProjectEXItems;
+import com.latmod.mods.projectex.tile.TileAlchemyTable;
 import com.latmod.mods.projectex.tile.TileCollector;
 import com.latmod.mods.projectex.tile.TileEnergyLink;
 import com.latmod.mods.projectex.tile.TileLinkMK1;
@@ -108,6 +110,12 @@ public class ProjectEXEventHandler
 		{
 			r.register(withName(new BlockStoneTable(), "stone_table"));
 		}
+
+		if (ProjectEXConfig.items.alchemy_table)
+		{
+			r.register(withName(new BlockAlchemyTable(), "alchemy_table"));
+			GameRegistry.registerTileEntity(TileAlchemyTable.class, new ResourceLocation(ProjectEX.MOD_ID, "alchemy_table"));
+		}
 	}
 
 	@SubscribeEvent
@@ -142,6 +150,11 @@ public class ProjectEXEventHandler
 		if (ProjectEXConfig.items.stone_table)
 		{
 			r.register(withName(new ItemBlock(ProjectEXBlocks.STONE_TABLE), "stone_table"));
+		}
+
+		if (ProjectEXConfig.items.alchemy_table)
+		{
+			r.register(withName(new ItemBlock(ProjectEXBlocks.ALCHEMY_TABLE), "alchemy_table"));
 		}
 
 		if (ProjectEXConfig.items.stars)

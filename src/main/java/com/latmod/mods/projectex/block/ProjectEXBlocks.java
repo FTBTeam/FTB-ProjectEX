@@ -19,4 +19,5 @@ public class ProjectEXBlocks
 	public static final Block RELAY = Blocks.AIR;
 	public static final Block POWER_FLOWER = Blocks.AIR;
 	public static final Block STONE_TABLE = Blocks.AIR;
+	public static final Block ALCHEMY_TABLE = Blocks.AIR;
 }

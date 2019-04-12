@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:alchemy_table",
+	"result": {"item": "alchemy_table"},
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:alchemy_table"
+		}
+	],
+	"pattern": [
+		"LTL",
+		"TST",
+		"LTL"
+	],
+	"key": {
+		"S": {"item": "stone_table"},
+		"L": {"type": "forge:ore_dict", "ore": "stickWood"},
+		"T": {"type": "forge:ore_dict", "ore": "torch"}
+	}
+}

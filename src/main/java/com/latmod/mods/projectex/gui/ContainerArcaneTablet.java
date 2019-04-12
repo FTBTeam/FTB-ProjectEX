@@ -48,7 +48,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 			{
 				super.onCrafting(stack);
 
-				if (ProjectEXUtils.addKnowledge(player, playerData, ProjectEXUtils.fixOutput(stack)) == 2 && knowledgeUpdate != null)
+				if (ProjectEAPI.getEMCProxy().hasValue(stack) && ProjectEXUtils.addKnowledge(player, playerData, ProjectEXUtils.fixOutput(stack)) == 2 && knowledgeUpdate != null)
 				{
 					knowledgeUpdate.updateKnowledge();
 				}
@@ -219,7 +219,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 		{
 			if (recipe[i] != null && recipe[i].length > 0)
 			{
-				if (transferFromInventory(i, recipe[i], false) || transferFromInventory(i, recipe[i], true))
+				if (transferFromInventory(i, recipe[i]))
 				{
 					//recipe[i] = null;
 				}
@@ -279,7 +279,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 		return false;
 	}
 
-	private boolean transferFromInventory(int i, ItemStack[] possibilities, boolean ignoreNBT)
+	private boolean transferFromInventory(int i, ItemStack[] possibilities)
 	{
 		for (ItemStack possibility : possibilities)
 		{
@@ -289,7 +289,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 			{
 				ItemStack stack = player.inventory.getStackInSlot(j);
 
-				if (possibility.getItem() == stack.getItem() && (meta == -1 || possibility.getMetadata() == meta) && (meta == -1 || ignoreNBT || Objects.equals(possibility.getItem().getNBTShareTag(possibility), stack.getItem().getNBTShareTag(stack))))
+				if (possibility.getItem() == stack.getItem() && (meta == -1 || possibility.getMetadata() == meta) && (meta == -1 || Objects.equals(possibility.getItem().getNBTShareTag(possibility), stack.getItem().getNBTShareTag(stack))))
 				{
 					ItemStack slotItem = craftMatrix.getStackInSlot(i);
 

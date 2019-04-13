@@ -6,12 +6,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Random;
 
@@ -58,7 +60,7 @@ public class BlockAlchemyTable extends Block
 	public void randomDisplayTick(IBlockState state, World world, BlockPos pos, Random rand)
 	{
 		double x = pos.getX();
-		double y = pos.getY() + 1.1D;
+		double y = pos.getY() + 1.15D;
 		double z = pos.getZ();
 
 		world.spawnParticle(EnumParticleTypes.FLAME, x + 2.5D / 16D, y, z + 2.5D / 16D, 0D, 0D, 0D);
@@ -79,5 +81,23 @@ public class BlockAlchemyTable extends Block
 	public boolean isFullCube(IBlockState state)
 	{
 		return false;
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
+	{
+		TileEntity tileentity = world.getTileEntity(pos);
+
+		if (tileentity instanceof TileAlchemyTable)
+		{
+			ItemStackHandler items = ((TileAlchemyTable) tileentity).items;
+
+			for (int i = 0; i < items.getSlots(); i++)
+			{
+				InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), items.getStackInSlot(i));
+			}
+		}
+
+		super.breakBlock(world, pos, state);
 	}
 }

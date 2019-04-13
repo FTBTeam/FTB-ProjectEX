@@ -1,27 +1,57 @@
 package com.latmod.mods.projectex.tile;
 
+import com.latmod.mods.projectex.ProjectEXUtils;
+import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * @author LatvianModder
  */
-public class TileAlchemyTable extends TileEntity implements ITickable, IItemHandlerModifiable, IEmcAcceptor
+public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAcceptor
 {
 	public double storedEMC = 0D;
-	public ItemStack input = ItemStack.EMPTY;
-	public ItemStack output = ItemStack.EMPTY;
+	public int progress = 0;
+
+	public double totalCost = 0D;
+	public int totalProgress = 0;
+
+	public final ItemStackHandler items = new ItemStackHandler(2)
+	{
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
+		{
+			if (slot == 1 || !AlchemyTableRecipes.INSTANCE.hasOutput(stack))
+			{
+				return stack;
+			}
+
+			return super.insertItem(slot, stack, simulate);
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack)
+		{
+			return slot == 0 && AlchemyTableRecipes.INSTANCE.hasOutput(stack);
+		}
+	};
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		storedEMC = nbt.getDouble("emc");
+		progress = nbt.getInteger("progress");
+
+		NBTTagCompound itemsTag = new NBTTagCompound();
+		itemsTag.setTag("Items", nbt.getTagList("items", Constants.NBT.TAG_COMPOUND));
+		items.deserializeNBT(itemsTag);
+
 		super.readFromNBT(nbt);
 	}
 
@@ -33,16 +63,12 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IItemHand
 			nbt.setDouble("emc", storedEMC);
 		}
 
-		if (!input.isEmpty())
+		if (progress > 0)
 		{
-			nbt.setTag("input", input.serializeNBT());
+			nbt.setInteger("progress", progress);
 		}
 
-		if (!output.isEmpty())
-		{
-			nbt.setTag("output", output.serializeNBT());
-		}
-
+		nbt.setTag("items", items.serializeNBT().getTag("Items"));
 		return super.writeToNBT(nbt);
 	}
 
@@ -60,6 +86,66 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IItemHand
 	@Override
 	public void update()
 	{
+		if (world.isRemote)
+		{
+			return;
+		}
+
+		totalCost = 0D;
+		totalProgress = 0;
+
+		ItemStack output = items.getStackInSlot(1);
+		boolean hasOutput = !output.isEmpty();
+
+		if (hasOutput && output.getCount() >= output.getMaxStackSize())
+		{
+			return;
+		}
+
+		ItemStack input = items.getStackInSlot(0);
+
+		AlchemyTableRecipe recipe = AlchemyTableRecipes.INSTANCE.getOutput(input);
+
+		if (recipe == null)
+		{
+			return;
+		}
+
+		if (hasOutput && (recipe.output.isEmpty() || recipe.output.getItem() != output.getItem() || recipe.output.getMetadata() != output.getMetadata()))
+		{
+			return;
+		}
+
+		totalCost = recipe.emcOverride > 0L ? recipe.emcOverride : (ProjectEAPI.getEMCProxy().getValue(recipe.output) - ProjectEAPI.getEMCProxy().getValue(input)) * 2L;
+		totalProgress = recipe.progressOverride > 0 ? recipe.progressOverride : 200;
+
+		if (storedEMC < totalCost)
+		{
+			return;
+		}
+
+		progress++;
+
+		if (progress >= totalProgress)
+		{
+			storedEMC -= totalCost;
+			progress = 0;
+
+			input.shrink(1);
+			items.setStackInSlot(0, input);
+
+			if (hasOutput)
+			{
+				output.grow(1);
+				items.setStackInSlot(1, output);
+			}
+			else
+			{
+				items.setStackInSlot(1, ProjectEXUtils.fixOutput(recipe.output));
+			}
+		}
+
+		markDirty();
 	}
 
 	@Override
@@ -72,9 +158,22 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IItemHand
 	}
 
 	@Override
-	public double acceptEMC(EnumFacing enumFacing, double v)
+	public double acceptEMC(EnumFacing facing, double v)
 	{
-		return 0;
+		if (!world.isRemote)
+		{
+			if (totalCost <= 0D)
+			{
+				return 0D;
+			}
+
+			double d = Math.min(v, getMaximumEmc() - storedEMC);
+			storedEMC += d;
+			markDirty();
+			return d;
+		}
+
+		return 0D;
 	}
 
 	@Override
@@ -86,119 +185,6 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IItemHand
 	@Override
 	public double getMaximumEmc()
 	{
-		return 1D;
-	}
-
-	@Override
-	public int getSlots()
-	{
-		return 2;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int slot)
-	{
-		return slot == 0 ? input : output;
-	}
-
-	@Override
-	public void setStackInSlot(int slot, ItemStack stack)
-	{
-		if (slot == 0)
-		{
-			input = stack;
-		}
-		else
-		{
-			output = stack;
-		}
-	}
-
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate)
-	{
-		if (stack.isEmpty())
-		{
-			return ItemStack.EMPTY;
-		}
-
-		ItemStack existing = slot == 0 ? input : output;
-
-		int limit = stack.getMaxStackSize();
-
-		if (!existing.isEmpty())
-		{
-			if (!ItemHandlerHelper.canItemStacksStack(stack, existing))
-			{
-				return stack;
-			}
-
-			limit -= existing.getCount();
-		}
-
-		if (limit <= 0)
-		{
-			return stack;
-		}
-
-		boolean reachedLimit = stack.getCount() > limit;
-
-		if (!simulate)
-		{
-			if (existing.isEmpty())
-			{
-				//this.stacks.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
-			}
-			else
-			{
-				existing.grow(reachedLimit ? limit : stack.getCount());
-			}
-
-			markDirty();
-		}
-
-		return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
-	}
-
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate)
-	{
-		if (amount == 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		ItemStack existing = slot == 0 ? input : output;
-
-		if (existing.isEmpty())
-		{
-			return ItemStack.EMPTY;
-		}
-
-		int toExtract = Math.min(amount, existing.getMaxStackSize());
-
-		if (existing.getCount() <= toExtract)
-		{
-			if (!simulate)
-			{
-				//this.stacks.set(slot, ItemStack.EMPTY);
-				markDirty();
-			}
-
-			return existing;
-		}
-		else if (!simulate)
-		{
-			//this.stacks.set(slot, ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
-			markDirty();
-		}
-
-		return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
-	}
-
-	@Override
-	public int getSlotLimit(int slot)
-	{
-		return 64;
+		return totalCost * 8D;
 	}
 }

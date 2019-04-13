@@ -4,6 +4,7 @@ import com.latmod.mods.projectex.gui.EMCFormat;
 import com.latmod.mods.projectex.gui.ProjectEXGuiHandler;
 import com.latmod.mods.projectex.item.ProjectEXItems;
 import com.latmod.mods.projectex.net.ProjectEXNetHandler;
+import com.latmod.mods.projectex.tile.AlchemyTableRecipes;
 import com.latmod.mods.projectex.tile.TilePowerFlower;
 import moze_intel.projecte.PECore;
 import moze_intel.projecte.utils.Constants;
@@ -79,5 +80,7 @@ public class ProjectEX
 		{
 			FMLInterModComms.sendMessage(PECore.MODID, "timewatchblacklist", TilePowerFlower.class.getName());
 		}
+
+		AlchemyTableRecipes.INSTANCE.addDefaultRecipes();
 	}
 }

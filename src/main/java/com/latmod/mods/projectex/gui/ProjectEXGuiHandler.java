@@ -1,8 +1,10 @@
 package com.latmod.mods.projectex.gui;
 
 import com.latmod.mods.projectex.ProjectEX;
+import com.latmod.mods.projectex.tile.TileAlchemyTable;
 import com.latmod.mods.projectex.tile.TileLink;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -46,6 +48,15 @@ public class ProjectEXGuiHandler implements IGuiHandler
 		{
 			return new ContainerArcaneTablet(player);
 		}
+		else if (id == ALCHEMY_TABLE)
+		{
+			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
+
+			if (tileEntity instanceof TileAlchemyTable)
+			{
+				return new ContainerAlchemyTable(player, (TileAlchemyTable) tileEntity);
+			}
+		}
 
 		return null;
 	}
@@ -54,28 +65,40 @@ public class ProjectEXGuiHandler implements IGuiHandler
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
-		return getClientGuiElement0(id, player, world, x, y, z);
+		Object container = getServerGuiElement(id, player, world, x, y, z);
+		return getClientGuiElement0(id, (Container) container);
 	}
 
 	@Nullable
-	private Object getClientGuiElement0(int id, EntityPlayer player, World world, int x, int y, int z)
+	private Object getClientGuiElement0(int id, @Nullable Container container)
 	{
 		if (id == LINK)
 		{
-			TileEntity tileEntity = world.getTileEntity(new BlockPos(x, y, z));
-
-			if (tileEntity instanceof TileLink)
+			if (container instanceof ContainerLink)
 			{
-				return new GuiLink(new ContainerLink(player, (TileLink) tileEntity));
+				return new GuiLink((ContainerLink) container);
 			}
 		}
 		else if (id == STONE_TABLE)
 		{
-			return new GuiStoneTable(new ContainerStoneTable(player));
+			if (container instanceof ContainerStoneTable)
+			{
+				return new GuiStoneTable((ContainerStoneTable) container);
+			}
 		}
 		else if (id == ARCANE_TABLET)
 		{
-			return new GuiArcaneTablet(new ContainerArcaneTablet(player));
+			if (container instanceof ContainerArcaneTablet)
+			{
+				return new GuiArcaneTablet((ContainerArcaneTablet) container);
+			}
+		}
+		else if (id == ALCHEMY_TABLE)
+		{
+			if (container instanceof ContainerAlchemyTable)
+			{
+				return new GuiAlchemyTable((ContainerAlchemyTable) container);
+			}
 		}
 
 		return null;

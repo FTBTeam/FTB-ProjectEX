@@ -273,7 +273,7 @@ public class ProjectEXEventHandler
 				Ingredient relay = Ingredient.fromStacks(new ItemStack(ProjectEXItems.RELAY, 1, tier.ordinal()));
 
 				list.add(ccollector);
-				list.add(Ingredient.fromItem(ProjectEXItems.PERSONAL_LINK));
+				list.add(Ingredient.fromItem(ProjectEXItems.ENERGY_LINK));
 				list.add(ccollector);
 				list.add(relay);
 				list.add(relay);

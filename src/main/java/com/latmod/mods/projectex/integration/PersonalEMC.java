@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -33,6 +34,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = ProjectEX.MOD_ID)
 public class PersonalEMC
 {
+	private static final HashSet<UUID> LOGGED_IN_PLAYERS = new HashSet<>(); //Required because of a Forge bug https://github.com/MinecraftForge/MinecraftForge/issues/5696
 	private static final Map<UUID, OfflineKnowledgeProvider> OFFLINE_MAP = new HashMap<>();
 	private static final Map<UUID, Double> EMC_MAP = new HashMap<>();
 
@@ -100,7 +102,7 @@ public class PersonalEMC
 	@SubscribeEvent
 	public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP)
+		if (event.player instanceof EntityPlayerMP && LOGGED_IN_PLAYERS.add(event.player.getUniqueID()))
 		{
 			OfflineKnowledgeProvider knowledgeProvider = OFFLINE_MAP.get(event.player.getUniqueID());
 
@@ -117,7 +119,7 @@ public class PersonalEMC
 	@SubscribeEvent
 	public static void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		if (event.player instanceof EntityPlayerMP)
+		if (event.player instanceof EntityPlayerMP && LOGGED_IN_PLAYERS.remove(event.player.getUniqueID()))
 		{
 			IKnowledgeProvider provider = get(event.player);
 			OfflineKnowledgeProvider knowledgeProvider = new OfflineKnowledgeProvider(event.player.getUniqueID());
@@ -214,6 +216,7 @@ public class PersonalEMC
 	{
 		if (!event.getWorld().isRemote && event.getWorld().provider.getDimension() == 0)
 		{
+			LOGGED_IN_PLAYERS.clear();
 			OFFLINE_MAP.clear();
 			EMC_MAP.clear();
 		}

@@ -283,13 +283,13 @@ public class ContainerArcaneTablet extends ContainerTableBase
 	{
 		for (ItemStack possibility : possibilities)
 		{
-			int meta = possibility.getItem().isDamageable() ? -1 : possibility.getMetadata();
+			ItemStack fixedp = ProjectEXUtils.fixOutput(possibility);
 
 			for (int j = 0; j < player.inventory.getSizeInventory(); ++j)
 			{
 				ItemStack stack = player.inventory.getStackInSlot(j);
 
-				if (possibility.getItem() == stack.getItem() && (meta == -1 || possibility.getMetadata() == meta) && (meta == -1 || Objects.equals(possibility.getItem().getNBTShareTag(possibility), stack.getItem().getNBTShareTag(stack))))
+				if (ItemStack.areItemStacksEqualUsingNBTShareTag(fixedp, ProjectEXUtils.fixOutput(stack)))
 				{
 					ItemStack slotItem = craftMatrix.getStackInSlot(i);
 

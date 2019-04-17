@@ -7,7 +7,9 @@ import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
+import mezz.jei.api.ingredients.VanillaTypes;
 import mezz.jei.api.recipe.VanillaRecipeCategoryUid;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -26,6 +28,18 @@ public class ProjectEXJEIIntegration implements IModPlugin
 		registry.addRecipeClickArea(GuiArcaneTablet.class, -60, 75, 33, 17, VanillaRecipeCategoryUid.CRAFTING);
 		registry.getRecipeTransferRegistry().addRecipeTransferHandler(ArcaneTabletJEI.INSTANCE, VanillaRecipeCategoryUid.CRAFTING);
 		registry.addRecipeCatalyst(new ItemStack(ProjectEXItems.ARCANE_TABLET), VanillaRecipeCategoryUid.CRAFTING);
+
+		addInfo(registry, ProjectEXItems.ENERGY_LINK);
+		addInfo(registry, ProjectEXItems.PERSONAL_LINK);
+		addInfo(registry, ProjectEXItems.REFINED_LINK);
+		addInfo(registry, ProjectEXItems.COMPRESSED_REFINED_LINK);
+
+		addInfo(registry, ProjectEXItems.FINAL_STAR);
+	}
+
+	private void addInfo(IModRegistry registry, Item item)
+	{
+		registry.addIngredientInfo(new ItemStack(item), VanillaTypes.ITEM, item.getTranslationKey() + ".tooltip");
 	}
 
 	@Override

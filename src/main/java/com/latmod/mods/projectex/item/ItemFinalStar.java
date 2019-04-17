@@ -119,6 +119,6 @@ public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 	@SideOnly(Side.CLIENT)
 	public List<String> getPedestalDescription()
 	{
-		return Collections.singletonList(I18n.format("item.projectex.final_star.description"));
+		return Collections.singletonList(I18n.format("item.projectex.final_star.tooltip"));
 	}
 }

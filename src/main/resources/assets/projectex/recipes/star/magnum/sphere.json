@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "projectex:star",
 	"conditions": [
 		{
@@ -8,11 +8,10 @@
 		}
 	],
 	"result": {"item": "magnum_star_sphere"},
-	"pattern": [
-		"SS",
-		"SS"
-	],
-	"key": {
-		"S": {"item": "magnum_star_vier"}
-	}
+	"ingredients": [
+		{"item": "magnum_star_vier"},
+		{"item": "magnum_star_vier"},
+		{"item": "magnum_star_vier"},
+		{"item": "magnum_star_vier"}
+	]
 }

@@ -80,7 +80,7 @@ public class EMCFormat extends DecimalFormat
 	@Override
 	public StringBuffer format(long number, StringBuffer result, FieldPosition fieldPosition)
 	{
-		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000L && !GuiScreen.isShiftKeyDown())
+		if (ProjectEXConfig.general.override_emc_formatter && number >= 1_000_000L && (ignoreShift || !GuiScreen.isShiftKeyDown()))
 		{
 			double num;
 			char c;

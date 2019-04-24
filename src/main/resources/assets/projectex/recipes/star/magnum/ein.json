@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "projectex:star",
 	"conditions": [
 		{
@@ -8,11 +8,10 @@
 		}
 	],
 	"result": {"item": "magnum_star_ein"},
-	"pattern": [
-		"SS",
-		"SS"
-	],
-	"key": {
-		"S": {"item": "projecte:item.pe_klein_star", "data": 5}
-	}
+	"ingredients": [
+		{"item": "projecte:item.pe_klein_star", "data": 5},
+		{"item": "projecte:item.pe_klein_star", "data": 5},
+		{"item": "projecte:item.pe_klein_star", "data": 5},
+		{"item": "projecte:item.pe_klein_star", "data": 5}
+	]
 }

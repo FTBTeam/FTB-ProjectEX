@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "projectex:star",
 	"conditions": [
 		{
@@ -8,11 +8,10 @@
 		}
 	],
 	"result": {"item": "colossal_star_ein"},
-	"pattern": [
-		"SS",
-		"SS"
-	],
-	"key": {
-		"S": {"item": "magnum_star_omega"}
-	}
+	"ingredients": [
+		{"item": "magnum_star_omega"},
+		{"item": "magnum_star_omega"},
+		{"item": "magnum_star_omega"},
+		{"item": "magnum_star_omega"}
+	]
 }

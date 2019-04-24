@@ -1,5 +1,5 @@
 {
-	"type": "minecraft:crafting_shaped",
+	"type": "minecraft:crafting_shapeless",
 	"group": "projectex:star",
 	"conditions": [
 		{
@@ -8,11 +8,10 @@
 		}
 	],
 	"result": {"item": "colossal_star_vier"},
-	"pattern": [
-		"SS",
-		"SS"
-	],
-	"key": {
-		"S": {"item": "colossal_star_drei"}
-	}
+	"ingredients": [
+		{"item": "colossal_star_drei"},
+		{"item": "colossal_star_drei"},
+		{"item": "colossal_star_drei"},
+		{"item": "colossal_star_drei"}
+	]
 }

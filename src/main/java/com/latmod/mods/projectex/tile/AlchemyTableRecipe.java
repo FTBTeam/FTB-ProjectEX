@@ -9,6 +9,6 @@ public class AlchemyTableRecipe
 {
 	public ItemStack input = ItemStack.EMPTY;
 	public ItemStack output = ItemStack.EMPTY;
-	public double emcOverride = 0D;
+	public long emcOverride = 0L;
 	public int progressOverride = 0;
 }

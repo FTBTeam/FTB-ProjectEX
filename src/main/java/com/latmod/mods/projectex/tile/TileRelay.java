@@ -22,20 +22,20 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 		return i < 0 ? i + n : i;
 	}
 
-	public double stored = 0D;
+	public long stored = 0L;
 	private boolean isDirty = false;
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		nbt.setDouble("stored_emc", stored);
+		nbt.setLong("stored_emc", stored);
 		return super.writeToNBT(nbt);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		stored = nbt.getDouble("stored_emc");
+		stored = nbt.getLong("stored_emc");
 		super.readFromNBT(nbt);
 	}
 
@@ -53,7 +53,7 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 	@Override
 	public void update()
 	{
-		if (world.isRemote || stored <= 0D || world.getTotalWorldTime() % 20L != mod(hashCode(), 20))
+		if (world.isRemote || stored <= 0L || world.getTotalWorldTime() % 20L != mod(hashCode(), 20))
 		{
 			return;
 		}
@@ -74,15 +74,15 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 
 		if (tempSize > 0)
 		{
-			double s = Math.min(stored / tempSize, EnumTier.byMeta(getBlockMetadata()).properties.relay_transfer);
+			long s = (long) (Math.min(stored / tempSize, Math.min(Long.MAX_VALUE, EnumTier.byMeta(getBlockMetadata()).properties.relay_transfer)));
 
 			for (int i = 0; i < 6; i++)
 			{
 				if (TEMP[i] != null)
 				{
-					double a = TEMP[i].acceptEMC(EnumFacing.VALUES[i].getOpposite(), s);
+					long a = TEMP[i].acceptEMC(EnumFacing.VALUES[i].getOpposite(), s);
 
-					if (a > 0D)
+					if (a > 0L)
 					{
 						stored -= a;
 						markDirty();
@@ -105,11 +105,11 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 	}
 
 	@Override
-	public double acceptEMC(EnumFacing facing, double v)
+	public long acceptEMC(EnumFacing facing, long v)
 	{
-		double v1 = Math.min(getMaximumEmc() - stored, v);
+		long v1 = Math.min(getMaximumEmc() - stored, v);
 
-		if (v1 > 0D)
+		if (v1 > 0L)
 		{
 			stored += v1;
 			markDirty();
@@ -119,11 +119,11 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 	}
 
 	@Override
-	public double provideEMC(EnumFacing facing, double v)
+	public long provideEMC(EnumFacing facing, long v)
 	{
-		double v1 = Math.min(stored, v);
+		long v1 = Math.min(stored, v);
 
-		if (v1 > 0D)
+		if (v1 > 0L)
 		{
 			stored -= v1;
 			markDirty();
@@ -133,19 +133,19 @@ public class TileRelay extends TileEntity implements ITickable, IEmcAcceptor, IE
 	}
 
 	@Override
-	public double getStoredEmc()
+	public long getStoredEmc()
 	{
 		return stored;
 	}
 
 	@Override
-	public double getMaximumEmc()
+	public long getMaximumEmc()
 	{
-		return Double.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	public void addRelayBonus(EnumFacing facing)
 	{
-		acceptEMC(facing, EnumTier.byMeta(getBlockMetadata()).properties.relay_bonus);
+		acceptEMC(facing, (long) EnumTier.byMeta(getBlockMetadata()).properties.relay_bonus);
 	}
 }

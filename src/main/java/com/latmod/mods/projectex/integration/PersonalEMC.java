@@ -2,6 +2,7 @@ package com.latmod.mods.projectex.integration;
 
 import com.latmod.mods.projectex.ProjectEX;
 import com.latmod.mods.projectex.net.MessageSyncEMC;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.impl.KnowledgeImpl;
@@ -36,7 +37,12 @@ public class PersonalEMC
 {
 	private static final HashSet<UUID> LOGGED_IN_PLAYERS = new HashSet<>(); //Required because of a Forge bug https://github.com/MinecraftForge/MinecraftForge/issues/5696
 	private static final Map<UUID, OfflineKnowledgeProvider> OFFLINE_MAP = new HashMap<>();
-	private static final Map<UUID, Double> EMC_MAP = new HashMap<>();
+	private static final Object2LongOpenHashMap<UUID> EMC_MAP = new Object2LongOpenHashMap<>();
+
+	static
+	{
+		EMC_MAP.defaultReturnValue(-1L);
+	}
 
 	@Nullable
 	public static IKnowledgeProvider get(@Nullable World world, @Nullable UUID id)
@@ -125,7 +131,7 @@ public class PersonalEMC
 			OfflineKnowledgeProvider knowledgeProvider = new OfflineKnowledgeProvider(event.player.getUniqueID());
 			OfflineKnowledgeProvider.copy(provider, knowledgeProvider);
 			OFFLINE_MAP.put(knowledgeProvider.playerId, knowledgeProvider);
-			EMC_MAP.remove(knowledgeProvider.playerId);
+			EMC_MAP.removeLong(knowledgeProvider.playerId);
 		}
 	}
 
@@ -134,10 +140,10 @@ public class PersonalEMC
 	{
 		if (event.player instanceof EntityPlayerMP)
 		{
-			Double prev = EMC_MAP.get(event.player.getUniqueID());
-			double emc = get(event.player).getEmc();
+			long prev = EMC_MAP.getLong(event.player.getUniqueID());
+			long emc = get(event.player).getEmc();
 
-			if (prev == null || prev != emc)
+			if (prev == -1L || prev != emc)
 			{
 				EMC_MAP.put(event.player.getUniqueID(), emc);
 				MessageSyncEMC.sync(event.player, emc);

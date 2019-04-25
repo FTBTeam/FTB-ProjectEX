@@ -6,6 +6,7 @@ import moze_intel.projecte.gameObjs.items.KleinStar;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author LatvianModder
@@ -42,34 +43,34 @@ public class ItemMagnumStar extends Item implements IItemEmc
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack)
 	{
-		double emc = getStoredEmc(stack);
-		return emc == 0D ? 1D : 1D - emc / getMaximumEmc(stack);
+		long emc = getStoredEmc(stack);
+		return emc == 0D ? 1D : MathHelper.clamp(1D - emc / (double) getMaximumEmc(stack), 0D, 1D);
 	}
 
 	@Override
-	public double addEmc(ItemStack stack, double toAdd)
+	public long addEmc(ItemStack stack, long toAdd)
 	{
-		double add = Math.min(getMaximumEmc(stack) - getStoredEmc(stack), toAdd);
+		long add = Math.min(getMaximumEmc(stack) - getStoredEmc(stack), toAdd);
 		ItemPE.addEmcToStack(stack, add);
 		return add;
 	}
 
 	@Override
-	public double extractEmc(ItemStack stack, double toRemove)
+	public long extractEmc(ItemStack stack, long toRemove)
 	{
-		double sub = Math.min(getStoredEmc(stack), toRemove);
+		long sub = Math.min(getStoredEmc(stack), toRemove);
 		ItemPE.removeEmc(stack, sub);
 		return sub;
 	}
 
 	@Override
-	public double getStoredEmc(ItemStack stack)
+	public long getStoredEmc(ItemStack stack)
 	{
 		return ItemPE.getEmc(stack);
 	}
 
 	@Override
-	public double getMaximumEmc(ItemStack stack)
+	public long getMaximumEmc(ItemStack stack)
 	{
 		return STAR_EMC[tier.ordinal()];
 	}

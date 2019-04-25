@@ -250,12 +250,15 @@ public class ProjectEXConfig
 	public static class BlockTier
 	{
 		@Config.LangKey("projectex.tiers.collector_output")
+		@Config.RangeDouble(min = 0D, max = Long.MAX_VALUE)
 		public double collector_output;
 
 		@Config.LangKey("projectex.tiers.relay_bonus")
+		@Config.RangeDouble(min = 0D, max = Long.MAX_VALUE)
 		public double relay_bonus;
 
 		@Config.LangKey("projectex.tiers.relay_transfer")
+		@Config.RangeDouble(min = 1D, max = Long.MAX_VALUE)
 		public double relay_transfer;
 
 		public BlockTier(double co, double rb, double rt)

@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-	deobfCompile "projecte:ProjectE:1.12:${projecte_version}"
+	deobfCompile "projecte:ProjectE:1.12.2:PE${projecte_version}"
 	compile "mezz.jei:jei_${mc_version}:${jei_version}:api"
 }
 

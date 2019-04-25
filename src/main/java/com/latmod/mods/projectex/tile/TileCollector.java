@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.block.EnumTier;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
-import moze_intel.projecte.api.tile.IEmcProvider;
 import moze_intel.projecte.gameObjs.tiles.RelayMK1Tile;
 import moze_intel.projecte.gameObjs.tiles.RelayMK2Tile;
 import moze_intel.projecte.gameObjs.tiles.RelayMK3Tile;
@@ -13,7 +12,7 @@ import net.minecraft.util.ITickable;
 /**
  * @author LatvianModder
  */
-public class TileCollector extends TileEntity implements ITickable, IEmcProvider
+public class TileCollector extends TileEntity implements ITickable
 {
 	@Override
 	public void onLoad()
@@ -53,22 +52,22 @@ public class TileCollector extends TileEntity implements ITickable, IEmcProvider
 				}
 				else if (emcAcceptor instanceof RelayMK3Tile)
 				{
-					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 10D);
+					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 10L);
 				}
 				else if (emcAcceptor instanceof RelayMK2Tile)
 				{
-					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 3D);
+					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 3L);
 				}
 				else if (emcAcceptor instanceof RelayMK1Tile)
 				{
-					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 1D);
+					emcAcceptor.acceptEMC(EnumFacing.VALUES[i].getOpposite(), 1L);
 				}
 			}
 		}
 
 		if (tempSize > 0)
 		{
-			double s = EnumTier.byMeta(getBlockMetadata()).properties.collector_output / tempSize;
+			long s = (long) (EnumTier.byMeta(getBlockMetadata()).properties.collector_output / tempSize);
 
 			for (int i = 0; i < 6; i++)
 			{
@@ -85,23 +84,5 @@ public class TileCollector extends TileEntity implements ITickable, IEmcProvider
 	@Override
 	public void markDirty()
 	{
-	}
-
-	@Override
-	public double provideEMC(EnumFacing facing, double v)
-	{
-		return 0D;
-	}
-
-	@Override
-	public double getStoredEmc()
-	{
-		return 0D;
-	}
-
-	@Override
-	public double getMaximumEmc()
-	{
-		return Double.MAX_VALUE;
 	}
 }

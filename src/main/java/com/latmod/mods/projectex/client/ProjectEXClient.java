@@ -17,7 +17,7 @@ public class ProjectEXClient extends ProjectEXCommon
 	}
 
 	@Override
-	public void updateEMC(double emc)
+	public void updateEMC(long emc)
 	{
 		PersonalEMC.get(Minecraft.getMinecraft().player).setEmc(emc);
 	}

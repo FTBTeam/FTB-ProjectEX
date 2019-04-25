@@ -16,10 +16,10 @@ import net.minecraftforge.items.ItemStackHandler;
  */
 public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAcceptor
 {
-	public double storedEMC = 0D;
+	public long storedEMC = 0L;
 	public int progress = 0;
 
-	public double totalCost = 0D;
+	public long totalCost = 0L;
 	public int totalProgress = 0;
 
 	public final ItemStackHandler items = new ItemStackHandler(2)
@@ -45,7 +45,7 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAccep
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
-		storedEMC = nbt.getDouble("emc");
+		storedEMC = nbt.getLong("emc");
 		progress = nbt.getInteger("progress");
 
 		NBTTagCompound itemsTag = new NBTTagCompound();
@@ -58,9 +58,9 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAccep
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt)
 	{
-		if (storedEMC > 0D)
+		if (storedEMC > 0L)
 		{
-			nbt.setDouble("emc", storedEMC);
+			nbt.setLong("emc", storedEMC);
 		}
 
 		if (progress > 0)
@@ -91,7 +91,7 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAccep
 			return;
 		}
 
-		totalCost = 0D;
+		totalCost = 0L;
 		totalProgress = 0;
 
 		ItemStack output = items.getStackInSlot(1);
@@ -158,33 +158,33 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAccep
 	}
 
 	@Override
-	public double acceptEMC(EnumFacing facing, double v)
+	public long acceptEMC(EnumFacing facing, long v)
 	{
 		if (!world.isRemote)
 		{
-			if (totalCost <= 0D)
+			if (totalCost <= 0L)
 			{
-				return 0D;
+				return 0L;
 			}
 
-			double d = Math.min(v, getMaximumEmc() - storedEMC);
+			long d = Math.min(v, getMaximumEmc() - storedEMC);
 			storedEMC += d;
 			markDirty();
 			return d;
 		}
 
-		return 0D;
+		return 0L;
 	}
 
 	@Override
-	public double getStoredEmc()
+	public long getStoredEmc()
 	{
 		return storedEMC;
 	}
 
 	@Override
-	public double getMaximumEmc()
+	public long getMaximumEmc()
 	{
-		return totalCost * 8D;
+		return totalCost * 8L;
 	}
 }

@@ -251,9 +251,9 @@ public class ContainerArcaneTablet extends ContainerTableBase
 
 			if (playerData.hasKnowledge(stack1))
 			{
-				double value = ProjectEAPI.getEMCProxy().getValue(stack1);
+				long value = ProjectEAPI.getEMCProxy().getValue(stack1);
 
-				if (value > 0D && playerData.getEmc() >= value)
+				if (value > 0L && playerData.getEmc() >= value)
 				{
 					ItemStack slotItem = craftMatrix.getStackInSlot(i);
 

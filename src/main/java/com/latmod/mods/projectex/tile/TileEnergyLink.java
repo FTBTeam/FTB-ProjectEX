@@ -18,14 +18,15 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 {
 	public UUID owner = new UUID(0L, 0L);
 	public String name = "";
-	public double storedEMC = 0D;
+	public long storedEMC = 0L;
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
 		owner = nbt.getUniqueId("owner");
 		name = nbt.getString("name");
-		storedEMC = nbt.getDouble("emc");
+		double storedEMC1 = nbt.getDouble("emc");
+		storedEMC = storedEMC1 > Long.MAX_VALUE ? Long.MAX_VALUE : (long) storedEMC1;
 		super.readFromNBT(nbt);
 	}
 
@@ -35,9 +36,9 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 		nbt.setUniqueId("owner", owner);
 		nbt.setString("name", name);
 
-		if (storedEMC > 0D)
+		if (storedEMC > 0L)
 		{
-			nbt.setDouble("emc", storedEMC);
+			nbt.setLong("emc", storedEMC);
 		}
 
 		return super.writeToNBT(nbt);
@@ -71,7 +72,7 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 			return;
 		}
 
-		if (storedEMC > 0D)
+		if (storedEMC > 0L)
 		{
 			EntityPlayerMP player = world.getMinecraftServer().getPlayerList().getPlayerByUUID(owner);
 
@@ -79,14 +80,14 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 			{
 				IKnowledgeProvider knowledgeProvider = PersonalEMC.get(player);
 				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
-				storedEMC = 0D;
+				storedEMC = 0L;
 				markDirty();
 			}
 		}
 	}
 
 	@Override
-	public double acceptEMC(EnumFacing facing, double v)
+	public long acceptEMC(EnumFacing facing, long v)
 	{
 		if (!world.isRemote)
 		{
@@ -97,14 +98,14 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 	}
 
 	@Override
-	public double getStoredEmc()
+	public long getStoredEmc()
 	{
 		return storedEMC;
 	}
 
 	@Override
-	public double getMaximumEmc()
+	public long getMaximumEmc()
 	{
-		return Double.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 }

@@ -37,27 +37,27 @@ public class ItemFinalStar extends Item implements IItemEmc, IPedestalItem
 	}
 
 	@Override
-	public double addEmc(ItemStack stack, double toAdd)
+	public long addEmc(ItemStack stack, long toAdd)
 	{
-		return 0D;
+		return 0L;
 	}
 
 	@Override
-	public double extractEmc(ItemStack stack, double toRemove)
+	public long extractEmc(ItemStack stack, long toRemove)
 	{
 		return toRemove;
 	}
 
 	@Override
-	public double getStoredEmc(ItemStack stack)
+	public long getStoredEmc(ItemStack stack)
 	{
-		return 1_000_000_000_000_000D;
+		return 1_000_000_000_000_000L;
 	}
 
 	@Override
-	public double getMaximumEmc(ItemStack stack)
+	public long getMaximumEmc(ItemStack stack)
 	{
-		return Double.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override

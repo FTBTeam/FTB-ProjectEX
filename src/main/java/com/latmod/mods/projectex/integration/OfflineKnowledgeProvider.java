@@ -32,7 +32,7 @@ public class OfflineKnowledgeProvider implements IKnowledgeProvider
 	public final UUID playerId;
 	private final List<ItemStack> knowledge;
 	private final IItemHandlerModifiable inputLocks;
-	private double emc;
+	private long emc;
 	private boolean fullKnowledge;
 	public boolean shouldSave;
 
@@ -41,7 +41,7 @@ public class OfflineKnowledgeProvider implements IKnowledgeProvider
 		playerId = id;
 		knowledge = new ArrayList<>();
 		inputLocks = new ItemStackHandler(9);
-		emc = 0D;
+		emc = 0L;
 		fullKnowledge = false;
 		shouldSave = false;
 	}
@@ -170,13 +170,13 @@ public class OfflineKnowledgeProvider implements IKnowledgeProvider
 	}
 
 	@Override
-	public double getEmc()
+	public long getEmc()
 	{
 		return emc;
 	}
 
 	@Override
-	public void setEmc(double e)
+	public void setEmc(long e)
 	{
 		emc = e;
 		shouldSave = true;
@@ -208,7 +208,9 @@ public class OfflineKnowledgeProvider implements IKnowledgeProvider
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		emc = nbt.getDouble("transmutationEmc");
+		double emc1 = nbt.getDouble("transmutationEmc");
+		emc = emc1 > Long.MAX_VALUE ? Long.MAX_VALUE : (long) emc1;
+
 		NBTTagList list = nbt.getTagList("knowledge", 10);
 
 		for (int i = 0; i < list.tagCount(); i++)

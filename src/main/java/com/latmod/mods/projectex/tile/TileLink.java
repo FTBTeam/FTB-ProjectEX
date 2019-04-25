@@ -37,7 +37,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	public String name = "";
 	private boolean isDirty = false;
 	public final ItemStack[] inputSlots, outputSlots;
-	public double storedEMC = 0D;
+	public long storedEMC = 0L;
 
 	public TileLink(int in, int out)
 	{
@@ -57,7 +57,8 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	{
 		owner = nbt.getUniqueId("owner");
 		name = nbt.getString("name");
-		storedEMC = nbt.getDouble("emc");
+		double storedEMC1 = nbt.getDouble("emc");
+		storedEMC = storedEMC1 > Long.MAX_VALUE ? Long.MAX_VALUE : (long) storedEMC1;
 
 		Arrays.fill(inputSlots, ItemStack.EMPTY);
 		Arrays.fill(outputSlots, ItemStack.EMPTY);
@@ -200,9 +201,9 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		double value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
 
-		if (value > 0D)
+		if (value > 0L)
 		{
 			int c = getCount(PersonalEMC.get(world, owner), value, ProjectEXConfig.general.emc_link_max_out);
 
@@ -300,9 +301,9 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		double value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
+		long value = ProjectEAPI.getEMCProxy().getValue(outputSlots[index]);
 
-		if (value <= 0D)
+		if (value <= 0L)
 		{
 			return ItemStack.EMPTY;
 		}
@@ -394,7 +395,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 				if (storedEMC > 0D)
 				{
 					knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
-					storedEMC = 0D;
+					storedEMC = 0L;
 					markDirty();
 				}
 
@@ -417,9 +418,9 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		}
 	}
 
-	public int getCount(@Nullable IKnowledgeProvider knowledgeProvider, double value, int limit)
+	public int getCount(@Nullable IKnowledgeProvider knowledgeProvider, long value, int limit)
 	{
-		double emc = knowledgeProvider == null ? storedEMC : knowledgeProvider.getEmc();
+		long emc = knowledgeProvider == null ? storedEMC : knowledgeProvider.getEmc();
 
 		if (emc < value)
 		{
@@ -430,7 +431,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	}
 
 	@Override
-	public double acceptEMC(EnumFacing facing, double v)
+	public long acceptEMC(EnumFacing facing, long v)
 	{
 		if (!world.isRemote)
 		{
@@ -442,15 +443,15 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 	}
 
 	@Override
-	public double getStoredEmc()
+	public long getStoredEmc()
 	{
 		return storedEMC;
 	}
 
 	@Override
-	public double getMaximumEmc()
+	public long getMaximumEmc()
 	{
-		return Double.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	public boolean setOutputStack(EntityPlayer player, int slot, ItemStack stack, boolean addKnowledge)

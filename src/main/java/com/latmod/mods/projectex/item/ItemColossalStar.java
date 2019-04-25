@@ -21,7 +21,7 @@ public class ItemColossalStar extends ItemMagnumStar
 	}
 
 	@Override
-	public double getMaximumEmc(ItemStack stack)
+	public long getMaximumEmc(ItemStack stack)
 	{
 		return STAR_EMC[tier.ordinal() + 6];
 	}

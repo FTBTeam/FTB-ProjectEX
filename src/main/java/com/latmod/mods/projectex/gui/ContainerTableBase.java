@@ -70,7 +70,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss);
+			playerData.setEmc((long) (playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
 			slot.putStack(ItemStack.EMPTY);
 			return stack1;
 		}
@@ -98,9 +98,9 @@ public class ContainerTableBase extends Container
 			if (mode == BURN_ALT && stack.getItem() instanceof IItemEmc)
 			{
 				IItemEmc emcItem = (IItemEmc) stack.getItem();
-				double stored = emcItem.getStoredEmc(stack);
+				long stored = emcItem.getStoredEmc(stack);
 
-				if (stored > 0D)
+				if (stored > 0L)
 				{
 					playerData.setEmc(playerData.getEmc() + emcItem.extractEmc(stack, stored));
 				}
@@ -136,7 +136,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss);
+			playerData.setEmc((long) (playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
 			player.inventory.setItemStack(ItemStack.EMPTY);
 			return true;
 		}
@@ -148,16 +148,16 @@ public class ContainerTableBase extends Container
 			}
 
 			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(type, 1);
-			double value = ProjectEAPI.getEMCProxy().getValue(stack1);
+			long value = ProjectEAPI.getEMCProxy().getValue(stack1);
 
-			if (value <= 0D)
+			if (value <= 0L)
 			{
 				return false;
 			}
 
 			int amount = type.getMaxStackSize();
 
-			double max = playerData.getEmc() / value;
+			long max = playerData.getEmc() / value;
 
 			if (amount > max)
 			{
@@ -187,9 +187,9 @@ public class ContainerTableBase extends Container
 			}
 
 			ItemStack stack1 = ItemHandlerHelper.copyStackWithSize(type, 1);
-			double value = ProjectEAPI.getEMCProxy().getValue(stack1);
+			long value = ProjectEAPI.getEMCProxy().getValue(stack1);
 
-			if (value <= 0D)
+			if (value <= 0L)
 			{
 				return false;
 			}

@@ -15,7 +15,7 @@ public class ProjectEXCommon
 		return null;
 	}
 
-	public void updateEMC(double emc)
+	public void updateEMC(long emc)
 	{
 	}
 }

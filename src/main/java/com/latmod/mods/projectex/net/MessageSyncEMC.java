@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
  */
 public class MessageSyncEMC implements IMessage
 {
-	public static void sync(@Nullable EntityPlayer player, double emc)
+	public static void sync(@Nullable EntityPlayer player, long emc)
 	{
 		if (player instanceof EntityPlayerMP)
 		{
@@ -26,18 +26,18 @@ public class MessageSyncEMC implements IMessage
 		}
 	}
 
-	public double emc;
+	public long emc;
 
 	@Override
 	public void fromBytes(ByteBuf buf)
 	{
-		emc = buf.readDouble();
+		emc = buf.readLong();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf)
 	{
-		buf.writeDouble(emc);
+		buf.writeLong(emc);
 	}
 
 	public static class Handler implements IMessageHandler<MessageSyncEMC, IMessage>

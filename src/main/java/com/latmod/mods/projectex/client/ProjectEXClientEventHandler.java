@@ -16,7 +16,11 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.Arrays;
 
 /**
  * @author LatvianModder
@@ -24,10 +28,11 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod.EventBusSubscriber(modid = ProjectEX.MOD_ID, value = Side.CLIENT)
 public class ProjectEXClientEventHandler
 {
-	private static double lastEMC;
-	private static long lastUpdate;
-	private static double[] emcsa = new double[5];
-	public static double emcs = 0D;
+	private static long emc;
+	private static long lastEMC;
+	private static int timer;
+	private static long[] emcsa = new long[5];
+	public static long emcs = 0L;
 
 	private static void addModel(Item item, String variant)
 	{
@@ -119,41 +124,54 @@ public class ProjectEXClientEventHandler
 	}
 
 	@SubscribeEvent
-	public static void addInfoText(RenderGameOverlayEvent.Text event)
+	public static void clientTick(TickEvent.ClientTickEvent event)
 	{
-		if (Minecraft.getMinecraft().player != null)
+		if (event.phase == TickEvent.Phase.END && Minecraft.getMinecraft().player != null)
 		{
-			long now = System.currentTimeMillis();
-			double emc = PersonalEMC.get(Minecraft.getMinecraft().player).getEmc();
+			emc = PersonalEMC.get(Minecraft.getMinecraft().player).getEmc();
 
-			if ((now - lastUpdate) >= 1000L)
+			if (timer % 20 == 1)
 			{
 				System.arraycopy(emcsa, 1, emcsa, 0, emcsa.length - 1);
 				emcsa[emcsa.length - 1] = emc - lastEMC;
 				lastEMC = emc;
-				lastUpdate = now;
 
-				emcs = 0D;
+				emcs = 0L;
 
-				for (double d : emcsa)
+				for (long d : emcsa)
 				{
 					emcs += d;
 				}
 
-				emcs /= (double) emcsa.length;
+				emcs /= emcsa.length;
 			}
 
-			if (ProjectEXClientConfig.general.emc_screen_position != EnumScreenPosition.DISABLED && emc > 0D)
+			timer++;
+		}
+	}
+
+	@SubscribeEvent
+	public static void clientDisconnectionFromServer(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
+	{
+		emc = 0L;
+		timer = 0;
+		emcs = 0L;
+		Arrays.fill(emcsa, 0L);
+	}
+
+	@SubscribeEvent
+	public static void addInfoText(RenderGameOverlayEvent.Text event)
+	{
+		if (ProjectEXClientConfig.general.emc_screen_position != EnumScreenPosition.DISABLED && emc > 0D)
+		{
+			String s = EMCFormat.INSTANCE.format(emc);
+
+			if (emcs != 0L)
 			{
-				String s = EMCFormat.INSTANCE.format(emc);
-
-				if (emcs != 0D)
-				{
-					s += (emcs > 0D ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + EMCFormat.INSTANCE.format(Math.abs(emcs)) + "/s";
-				}
-
-				(ProjectEXClientConfig.general.emc_screen_position == EnumScreenPosition.TOP_LEFT ? event.getLeft() : event.getRight()).add("EMC: " + s);
+				s += (emcs > 0L ? (TextFormatting.GREEN + "+") : (TextFormatting.RED + "-")) + EMCFormat.INSTANCE.format(Math.abs(emcs)) + "/s";
 			}
+
+			(ProjectEXClientConfig.general.emc_screen_position == EnumScreenPosition.TOP_LEFT ? event.getLeft() : event.getRight()).add("EMC: " + s);
 		}
 	}
 }

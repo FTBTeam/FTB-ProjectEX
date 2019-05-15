@@ -379,8 +379,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 					{
 						if (knowledgeProvider != null && learnItems())
 						{
-							knowledgeProvider.addKnowledge(ProjectEXUtils.fixOutput(inputSlots[i]));
-							syncKnowledge = true;
+							syncKnowledge = knowledgeProvider.addKnowledge(ProjectEXUtils.fixOutput(inputSlots[i]));
 						}
 
 						storedEMC += (double) inputSlots[i].getCount() * value * ProjectEConfig.difficulty.covalenceLoss;

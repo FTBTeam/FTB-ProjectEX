@@ -1,7 +1,6 @@
 package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.integration.PersonalEMC;
-import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,8 +77,7 @@ public class TileEnergyLink extends TileEntity implements ITickable, IEmcAccepto
 
 			if (player != null)
 			{
-				IKnowledgeProvider knowledgeProvider = PersonalEMC.get(player);
-				knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
+				PersonalEMC.add(PersonalEMC.get(player), storedEMC);
 				storedEMC = 0L;
 				markDirty();
 			}

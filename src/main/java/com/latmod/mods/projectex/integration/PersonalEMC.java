@@ -105,6 +105,26 @@ public class PersonalEMC
 		return Objects.requireNonNull(player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY, null));
 	}
 
+	public static void add(IKnowledgeProvider knowledgeProvider, long add)
+	{
+		long l = Math.min(add, Long.MAX_VALUE - knowledgeProvider.getEmc());
+
+		if (l > 0L)
+		{
+			knowledgeProvider.setEmc(knowledgeProvider.getEmc() + l);
+		}
+	}
+
+	public static void remove(IKnowledgeProvider knowledgeProvider, long remove)
+	{
+		long l = Math.min(knowledgeProvider.getEmc(), remove);
+
+		if (l > 0L)
+		{
+			knowledgeProvider.setEmc(knowledgeProvider.getEmc() - l);
+		}
+	}
+
 	@SubscribeEvent
 	public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
 	{

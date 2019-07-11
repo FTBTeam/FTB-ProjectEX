@@ -70,7 +70,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc((long) (playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
+			PersonalEMC.add(playerData, (long) (ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
 			slot.putStack(ItemStack.EMPTY);
 			return stack1;
 		}
@@ -102,11 +102,11 @@ public class ContainerTableBase extends Container
 
 				if (stored > 0L)
 				{
-					playerData.setEmc(playerData.getEmc() + emcItem.extractEmc(stack, stored));
+					PersonalEMC.add(playerData, emcItem.extractEmc(stack, stored));
 				}
 				else
 				{
-					playerData.setEmc(playerData.getEmc() - emcItem.addEmc(stack, Math.min(playerData.getEmc(), emcItem.getMaximumEmc(stack))));
+					PersonalEMC.remove(playerData, emcItem.addEmc(stack, Math.min(playerData.getEmc(), emcItem.getMaximumEmc(stack))));
 				}
 
 				player.inventory.setItemStack(stack);
@@ -136,7 +136,7 @@ public class ContainerTableBase extends Container
 				knowledgeUpdate.updateKnowledge();
 			}
 
-			playerData.setEmc((long) (playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
+			PersonalEMC.add(playerData, (long) (ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount() * ProjectEConfig.difficulty.covalenceLoss));
 			player.inventory.setItemStack(ItemStack.EMPTY);
 			return true;
 		}
@@ -169,7 +169,7 @@ public class ContainerTableBase extends Container
 				return false;
 			}
 
-			playerData.setEmc(playerData.getEmc() - value * amount);
+			PersonalEMC.remove(playerData, value * amount);
 			stack1.setCount(amount);
 			player.inventory.placeItemBackInInventory(player.world, stack1);
 			return true;
@@ -199,7 +199,7 @@ public class ContainerTableBase extends Container
 				return false;
 			}
 
-			playerData.setEmc(playerData.getEmc() - value);
+			PersonalEMC.remove(playerData, value);
 
 			if (!stack.isEmpty())
 			{

@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
 import com.latmod.mods.projectex.ProjectEXUtils;
+import com.latmod.mods.projectex.integration.PersonalEMC;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.config.ProjectEConfig;
 import net.minecraft.entity.player.EntityPlayer;
@@ -270,7 +271,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 						continue;
 					}
 
-					playerData.setEmc(playerData.getEmc() - value);
+					PersonalEMC.remove(playerData, value);
 					return true;
 				}
 			}
@@ -335,7 +336,7 @@ public class ContainerArcaneTablet extends ContainerTableBase
 
 					if (k > 0)
 					{
-						playerData.setEmc(playerData.getEmc() + ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
+						PersonalEMC.add(playerData, ProjectEAPI.getEMCProxy().getValue(stack) * stack.getCount());
 
 						if (k > 1 && knowledgeUpdate != null)
 						{

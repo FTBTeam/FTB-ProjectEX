@@ -2,7 +2,6 @@ package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.block.EnumTier;
 import com.latmod.mods.projectex.integration.PersonalEMC;
-import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -68,8 +67,7 @@ public class TilePowerFlower extends TileEntity implements ITickable
 
 		if (player != null)
 		{
-			IKnowledgeProvider knowledgeProvider = PersonalEMC.get(player);
-			knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
+			PersonalEMC.add(PersonalEMC.get(player), storedEMC);
 			storedEMC = 0;
 		}
 		else

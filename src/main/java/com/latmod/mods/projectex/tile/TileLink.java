@@ -308,9 +308,9 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			return ItemStack.EMPTY;
 		}
 
-		IKnowledgeProvider knowledgeProvider = PersonalEMC.get(world, owner);
+		IKnowledgeProvider knowledgeProvider = null;
 
-		if ((knowledgeProvider == null ? storedEMC : knowledgeProvider.getEmc()) < value)
+		if (storedEMC < value && ((knowledgeProvider = PersonalEMC.get(world, owner)) == null || knowledgeProvider.getEmc() < value))
 		{
 			return ItemStack.EMPTY;
 		}
@@ -322,14 +322,16 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 		{
 			if (!simulate)
 			{
-				if (knowledgeProvider == null)
+				long v = value * stack.getCount();
+
+				if (storedEMC >= v)
 				{
-					storedEMC -= value * stack.getCount();
+					storedEMC -= v;
 					markDirty();
 				}
-				else
+				else if (knowledgeProvider != null)
 				{
-					knowledgeProvider.setEmc(knowledgeProvider.getEmc() - value * stack.getCount());
+					PersonalEMC.remove(knowledgeProvider, v);
 				}
 			}
 
@@ -393,7 +395,7 @@ public class TileLink extends TileEntity implements IItemHandlerModifiable, ITic
 			{
 				if (storedEMC > 0D)
 				{
-					knowledgeProvider.setEmc(knowledgeProvider.getEmc() + storedEMC);
+					PersonalEMC.add(knowledgeProvider, storedEMC);
 					storedEMC = 0L;
 					markDirty();
 				}

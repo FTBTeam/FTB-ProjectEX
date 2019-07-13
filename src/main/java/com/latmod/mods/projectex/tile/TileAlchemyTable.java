@@ -1,7 +1,6 @@
 package com.latmod.mods.projectex.tile;
 
 import com.latmod.mods.projectex.ProjectEXUtils;
-import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.tile.IEmcAcceptor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -116,8 +115,8 @@ public class TileAlchemyTable extends TileEntity implements ITickable, IEmcAccep
 			return;
 		}
 
-		totalCost = recipe.emcOverride > 0L ? recipe.emcOverride : (ProjectEAPI.getEMCProxy().getValue(recipe.output) - ProjectEAPI.getEMCProxy().getValue(input)) * 2L;
-		totalProgress = recipe.progressOverride > 0 ? recipe.progressOverride : 200;
+		totalCost = recipe.getTotalCost();
+		totalProgress = recipe.getTotalProgress();
 
 		if (storedEMC < totalCost)
 		{

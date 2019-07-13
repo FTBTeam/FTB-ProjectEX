@@ -37,12 +37,12 @@ public class GuiAlchemyTable extends GuiContainer
 
 		if (container.emc > 0)
 		{
-			drawTexturedModalRect(guiLeft + 77, guiTop + 34, 177, 17, (int) (container.emc / 255F * 24F), 18);
+			drawTexturedModalRect(guiLeft + 77, guiTop + 34, 177, 17, Math.max(1, (int) (container.emc / 255F * 24F)), 18);
 		}
 
 		if (container.progress > 0)
 		{
-			drawTexturedModalRect(guiLeft + 78, guiTop + 35, 177, 0, (int) (container.progress / 255F * 22F), 16);
+			drawTexturedModalRect(guiLeft + 78, guiTop + 35, 177, 0, Math.max(1, (int) (container.progress / 255F * 22F)), 16);
 		}
 	}
 

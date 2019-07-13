@@ -84,13 +84,27 @@ public class AlchemyTableRecipes
 		addSteps(
 				new ItemStack(Items.COOKIE),
 				new ItemStack(Items.BREAD),
-				new ItemStack(Blocks.CAKE)
+				new ItemStack(Items.CAKE)
+		);
+
+		addSteps(
+				new ItemStack(ObjHandler.fuels, 1, 0),
+				new ItemStack(Blocks.REDSTONE_BLOCK),
+				new ItemStack(Items.LAVA_BUCKET),
+				new ItemStack(Blocks.OBSIDIAN)
+		);
+
+		addSteps(
+				new ItemStack(Blocks.LEAVES, 1),
+				new ItemStack(Blocks.TALLGRASS, 1, 1),
+				new ItemStack(Blocks.TALLGRASS, 1, 2),
+				new ItemStack(Blocks.VINE),
+				new ItemStack(Blocks.WATERLILY)
 		);
 
 		add(new ItemStack(Items.ENDER_EYE), new ItemStack(Items.CHORUS_FRUIT));
-		add(new ItemStack(Blocks.CONCRETE, 1, 15), new ItemStack(Blocks.OBSIDIAN));
-		add(new ItemStack(Items.LAVA_BUCKET), new ItemStack(Blocks.OBSIDIAN));
 		add(new ItemStack(Items.STRING), new ItemStack(Items.FEATHER));
+		add(new ItemStack(Items.STICK), new ItemStack(Blocks.TALLGRASS, 1, 0));
 	}
 
 	public boolean hasOutput(ItemStack input)

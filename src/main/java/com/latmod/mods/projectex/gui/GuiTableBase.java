@@ -1,5 +1,6 @@
 package com.latmod.mods.projectex.gui;
 
+import com.latmod.mods.projectex.ProjectEXKeyBindings;
 import com.latmod.mods.projectex.ProjectEXUtils;
 import com.latmod.mods.projectex.client.ProjectEXClientConfig;
 import com.latmod.mods.projectex.integration.jei.ProjectEXJEIIntegration;
@@ -260,7 +261,7 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 			return;
 		}
 
-		if (!searchField.isFocused() && (typedChar == '\t' || typedChar == ' '))
+		if (!searchField.isFocused() && ProjectEXKeyBindings.FOCUS_SEARCH_BAR.isActiveAndMatches(keyCode))
 		{
 			searchField.setFocused(true);
 			return;

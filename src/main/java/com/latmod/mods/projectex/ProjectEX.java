@@ -74,6 +74,8 @@ public class ProjectEX
 			{
 				ex.printStackTrace();
 			}
+
+			ProjectEXKeyBindings.init();
 		}
 
 		if (ProjectEXConfig.general.blacklist_power_flower_from_watch)

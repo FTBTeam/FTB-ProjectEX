@@ -7,7 +7,7 @@ buildscript {
 	dependencies {
 		classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
 		classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.1.0'
-		classpath 'com.wynprice.cursemaven:CurseMaven:1.2.1'
+		classpath 'com.wynprice.cursemaven:CurseMaven:1.2.2'
 	}
 }
 
@@ -37,13 +37,9 @@ minecraft {
 	replaceIn project.mod_reference
 }
 
-repositories {
-	maven { url 'https://dvs1.progwml6.com/files/maven' } //JEI
-}
-
 dependencies {
-	deobfCompile curse.resolve('projecte', project.projecte_file as Integer)
-	compile "mezz.jei:jei_${mc_version}:${jei_version}:api"
+	deobfCompile curse.resolve('projecte', project.projecte_file)
+	deobfProvided curse.resolve('jei', project.jei_file)
 }
 
 processResources {

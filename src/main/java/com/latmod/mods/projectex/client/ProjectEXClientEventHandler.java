@@ -144,6 +144,7 @@ public class ProjectEXClientEventHandler
 				}
 
 				emcs /= emcsa.length;
+				timer = 0;
 			}
 
 			timer++;

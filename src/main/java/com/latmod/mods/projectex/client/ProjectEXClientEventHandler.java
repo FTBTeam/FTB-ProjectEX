@@ -144,7 +144,7 @@ public class ProjectEXClientEventHandler
 				}
 
 				emcs /= emcsa.length;
-				timer = 0;
+				timer = -1; //Should be -1 as this leaves the if it would increment. Toys0125
 			}
 
 			timer++;

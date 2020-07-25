@@ -16,6 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Loader;
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -53,7 +54,12 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 
 	private String trim(String s)
 	{
-		return TextFormatting.getTextWithoutFormattingCodes(s.trim()).toLowerCase();
+		if (s == null)
+		{
+			return s;
+		}
+		return TextFormatting.getTextWithoutFormattingCodes(s.trim())
+				.toLowerCase();
 	}
 
 	public void updateValidItemList()
@@ -69,7 +75,13 @@ public abstract class GuiTableBase extends GuiContainer implements ContainerTabl
 
 		for (ItemStack stack : table.playerData.getKnowledge())
 		{
-			if (table.isItemValid(stack) && (s.isEmpty() || mod ? stack.getItem().getRegistryName().getNamespace().startsWith(s) : trim(stack.getDisplayName()).contains(s)))
+			if (stack == null)
+			{
+				continue;
+			}
+			if (table.isItemValid(stack) && (s.isEmpty() || mod
+					? stack.getItem().getRegistryName().getNamespace().startsWith(s)
+					: StringUtils.contains(trim(stack.getDisplayName()), s)))
 			{
 				validItems.add(ProjectEXUtils.fixOutput(stack));
 			}

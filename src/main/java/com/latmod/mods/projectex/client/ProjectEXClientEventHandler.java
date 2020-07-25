@@ -130,7 +130,7 @@ public class ProjectEXClientEventHandler
 		{
 			emc = PersonalEMC.get(Minecraft.getMinecraft().player).getEmc();
 
-			if (timer % 20 == 1)
+			if (timer == 1)
 			{
 				System.arraycopy(emcsa, 1, emcsa, 0, emcsa.length - 1);
 				emcsa[emcsa.length - 1] = emc - lastEMC;
@@ -146,7 +146,7 @@ public class ProjectEXClientEventHandler
 				emcs /= emcsa.length;
 			}
 
-			timer++;
+			timer = (timer + 1) % 20;
 		}
 	}
 

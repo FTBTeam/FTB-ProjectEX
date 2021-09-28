@@ -1,0 +1,7 @@
+pluginManagement {
+	repositories {
+		maven { url "https://maven.creeperhost.net/" }
+		maven { url "https://maven.shedaniel.me/" }
+		gradlePluginPortal()
+	}
+}

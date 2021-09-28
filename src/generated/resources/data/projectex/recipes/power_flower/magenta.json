@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:matter/magenta",
+	"pattern": [
+		"CLC",
+		"RRR",
+		"RRR"
+	],
+	"key": {
+		"L": {
+			"item": "projectex:energy_link"
+		},
+		"C": {
+			"item": "projectex:magenta_compressed_collector"
+		},
+		"R": {
+			"item": "projectex:magenta_relay"
+		}
+	},
+	"result": {
+		"item": "projectex:magenta_power_flower"
+	}
+}

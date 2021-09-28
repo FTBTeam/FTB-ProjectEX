@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:colossal_star",
+	"ingredients": [
+		{
+			"item": "projectex:magnum_star_omega"
+		},
+		{
+			"item": "projectex:magnum_star_omega"
+		},
+		{
+			"item": "projectex:magnum_star_omega"
+		},
+		{
+			"item": "projectex:magnum_star_omega"
+		}
+	],
+	"result": {
+		"item": "projectex:colossal_star_ein"
+	}
+}

@@ -1,0 +1,46 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:stone_table",
+	"result": {
+		"item": "stone_table"
+	},
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:stone_table"
+		}
+	],
+	"pattern": [
+		"SSS",
+		"STS",
+		"SSS"
+	],
+	"key": {
+		"S": [
+			{
+				"item": "minecraft:stonebrick",
+				"data": 0
+			},
+			{
+				"item": "minecraft:stonebrick",
+				"data": 1
+			},
+			{
+				"item": "minecraft:stonebrick",
+				"data": 2
+			},
+			{
+				"item": "minecraft:stonebrick",
+				"data": 3
+			}
+		],
+		"T": [
+			{
+				"item": "projecte:transmutation_table"
+			},
+			{
+				"item": "projecte:item.pe_philosophers_stone"
+			}
+		]
+	}
+}

@@ -1,6 +1,0 @@
-{
-	"parent": "projectex:block/relay/relay",
-	"textures": {
-		"texture": "projectex:blocks/relays/white"
-	}
-}

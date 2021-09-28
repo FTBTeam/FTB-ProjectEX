@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:matter/orange",
+	"ingredients": [
+		{
+			"item": "projectex:yellow_relay"
+		},
+		{
+			"item": "projectex:orange_matter"
+		}
+	],
+	"result": {
+		"item": "projectex:orange_relay"
+	}
+}

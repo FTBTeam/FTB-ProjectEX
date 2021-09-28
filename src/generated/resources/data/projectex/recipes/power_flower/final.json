@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:matter/final",
+	"pattern": [
+		"CLC",
+		"RRR",
+		"RRR"
+	],
+	"key": {
+		"L": {
+			"item": "projectex:energy_link"
+		},
+		"C": {
+			"item": "projectex:final_compressed_collector"
+		},
+		"R": {
+			"item": "projectex:final_relay"
+		}
+	},
+	"result": {
+		"item": "projectex:final_power_flower"
+	}
+}

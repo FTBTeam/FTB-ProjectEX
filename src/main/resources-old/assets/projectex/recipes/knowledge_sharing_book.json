@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:tome",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:knowledge_sharing_book"
+		}
+	],
+	"result": {
+		"item": "projectex:knowledge_sharing_book"
+	},
+	"pattern": [
+		"RNR",
+		"NBN",
+		"RNR"
+	],
+	"key": {
+		"R": {
+			"item": "projectex:matter",
+			"data": 3
+		},
+		"B": {
+			"item": "minecraft:writable_book"
+		},
+		"N": {
+			"type": "forge:ore_dict",
+			"ore": "netherStar"
+		}
+	}
+}

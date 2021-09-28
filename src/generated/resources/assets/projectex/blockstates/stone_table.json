@@ -1,0 +1,30 @@
+{
+	"variants": {
+		"facing=down": {
+			"model": "projectex:block/stone_table"
+		},
+		"facing=up": {
+			"model": "projectex:block/stone_table",
+			"x": 180
+		},
+		"facing=north": {
+			"model": "projectex:block/stone_table",
+			"x": 90,
+			"y": 180
+		},
+		"facing=south": {
+			"model": "projectex:block/stone_table",
+			"x": 90
+		},
+		"facing=west": {
+			"model": "projectex:block/stone_table",
+			"x": 90,
+			"y": 90
+		},
+		"facing=east": {
+			"model": "projectex:block/stone_table",
+			"x": 90,
+			"y": 270
+		}
+	}
+}

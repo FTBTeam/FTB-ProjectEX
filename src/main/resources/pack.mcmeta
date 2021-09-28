@@ -1,6 +1,6 @@
 {
-    "pack": {
-        "description": "Project EX Resources",
-        "pack_format": 3
-    }
+	"pack": {
+		"description": "ProjectEX Resources",
+		"pack_format": 6
+	}
 }

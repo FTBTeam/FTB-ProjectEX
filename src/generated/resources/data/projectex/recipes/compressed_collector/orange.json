@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:matter/orange",
+	"pattern": [
+		"CCC",
+		"CCC",
+		"CCC"
+	],
+	"key": {
+		"C": {
+			"item": "projectex:orange_collector"
+		}
+	},
+	"result": {
+		"item": "projectex:orange_compressed_collector"
+	}
+}

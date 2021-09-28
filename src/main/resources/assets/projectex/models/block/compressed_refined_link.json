@@ -1,6 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "projectex:blocks/compressed_refined_link"
-	}
-}

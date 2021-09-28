@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:matter/green",
+	"ingredients": [
+		{
+			"item": "projectex:cyan_collector"
+		},
+		{
+			"item": "projectex:green_matter"
+		}
+	],
+	"result": {
+		"item": "projectex:green_collector"
+	}
+}

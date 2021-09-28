@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:matter/pink",
+	"pattern": [
+		"CCC",
+		"CCC",
+		"CCC"
+	],
+	"key": {
+		"C": {
+			"item": "projectex:pink_collector"
+		}
+	},
+	"result": {
+		"item": "projectex:pink_compressed_collector"
+	}
+}

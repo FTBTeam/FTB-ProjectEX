@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:collector",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:collector"
+		}
+	],
+	"result": {
+		"item": "collector",
+		"data": 0
+	},
+	"ingredients": [
+		{
+			"item": "projecte:collector_mk1"
+		}
+	]
+}

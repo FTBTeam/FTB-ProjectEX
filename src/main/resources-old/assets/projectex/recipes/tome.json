@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:tome",
+	"conditions": [
+		{
+			"type": "projectex:tome"
+		}
+	],
+	"result": {
+		"item": "projecte:item.pe_tome"
+	},
+	"pattern": [
+		"BBB",
+		"BSB",
+		"BBB"
+	],
+	"key": {
+		"S": {
+			"item": "projectex:final_star_shard"
+		},
+		"B": {
+			"item": "projectex:knowledge_sharing_book"
+		}
+	}
+}

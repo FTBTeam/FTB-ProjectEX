@@ -2,21 +2,82 @@
 	"parent": "block/block",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "projectex:blocks/stone_table_side",
-		"1": "projectex:blocks/stone_table_top",
-		"particle": "projectex:blocks/stone_table_top"
+		"0": "projectex:block/stone_table_side",
+		"1": "projectex:block/stone_table_top",
+		"particle": "projectex:block/stone_table_top"
 	},
 	"elements": [
 		{
-			"from": [0, 0, 0],
-			"to": [16, 4, 16],
+			"from": [
+				0,
+				0,
+				0
+			],
+			"to": [
+				16,
+				4,
+				16
+			],
 			"faces": {
-				"north": {"uv": [0, 12, 16, 16], "texture": "#0", "cullface": "north"},
-				"east": {"uv": [0, 12, 16, 16], "texture": "#0", "cullface": "east"},
-				"south": {"uv": [0, 12, 16, 16], "texture": "#0", "cullface": "south"},
-				"west": {"uv": [0, 12, 16, 16], "texture": "#0", "cullface": "west"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"}
+				"north": {
+					"uv": [
+						0,
+						12,
+						16,
+						16
+					],
+					"texture": "#0",
+					"cullface": "north"
+				},
+				"east": {
+					"uv": [
+						0,
+						12,
+						16,
+						16
+					],
+					"texture": "#0",
+					"cullface": "east"
+				},
+				"south": {
+					"uv": [
+						0,
+						12,
+						16,
+						16
+					],
+					"texture": "#0",
+					"cullface": "south"
+				},
+				"west": {
+					"uv": [
+						0,
+						12,
+						16,
+						16
+					],
+					"texture": "#0",
+					"cullface": "west"
+				},
+				"up": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#1"
+				},
+				"down": {
+					"uv": [
+						0,
+						0,
+						16,
+						16
+					],
+					"texture": "#1",
+					"cullface": "down"
+				}
 			}
 		}
 	]

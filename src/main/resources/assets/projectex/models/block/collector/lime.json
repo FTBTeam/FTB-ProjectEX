@@ -1,6 +1,0 @@
-{
-	"parent": "projectex:block/collector/collector",
-	"textures": {
-		"texture": "projectex:blocks/collectors/lime"
-	}
-}

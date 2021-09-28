@@ -1,6 +1,0 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "projectex:items/magnum_star_ein"
-	}
-}

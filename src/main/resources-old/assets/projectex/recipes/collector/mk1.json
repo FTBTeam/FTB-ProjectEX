@@ -1,0 +1,36 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:collector",
+	"conditions": [
+		{
+			"type": "minecraft:item_exists",
+			"item": "projectex:collector"
+		}
+	],
+	"result": {
+		"item": "collector",
+		"data": 0
+	},
+	"pattern": [
+		"GSG",
+		"GAG",
+		"GFG"
+	],
+	"key": {
+		"G": {
+			"type": "forge:ore_dict",
+			"ore": "glowstone"
+		},
+		"A": {
+			"item": "projecte:fuel_block",
+			"data": 2
+		},
+		"S": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		},
+		"F": {
+			"item": "minecraft:furnace"
+		}
+	}
+}

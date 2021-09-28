@@ -1,1 +1,1 @@
-# Project EX [![](http://cf.way2muchnoise.eu/project-ex.svg) ![](http://cf.way2muchnoise.eu/versions/project-ex.svg)](https://www.curseforge.com/minecraft/mc-mods/project-ex)
+# ProjectEX [![](http://cf.way2muchnoise.eu/projectex-forge.svg) ![](http://cf.way2muchnoise.eu/versions/projectex-forge.svg)](https://www.curseforge.com/minecraft/mc-mods/projectex-forge)

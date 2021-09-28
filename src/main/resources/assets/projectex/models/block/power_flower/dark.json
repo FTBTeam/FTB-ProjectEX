@@ -1,7 +1,0 @@
-{
-	"parent": "projectex:block/power_flower/power_flower",
-	"textures": {
-		"collector": "projectex:blocks/collectors/dark",
-		"relay": "projectex:blocks/relays/dark"
-	}
-}

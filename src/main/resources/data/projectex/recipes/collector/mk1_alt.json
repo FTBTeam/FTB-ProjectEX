@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "projectex:matter/basic",
+	"result": {
+		"item": "projectex:basic_collector"
+	},
+	"ingredients": [
+		{
+			"item": "projecte:collector_mk1"
+		}
+	]
+}

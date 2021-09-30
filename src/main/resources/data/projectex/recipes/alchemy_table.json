@@ -1,0 +1,35 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:alchemy_table",
+	"result": {
+		"item": "projectex:alchemy_table"
+	},
+	"pattern": [
+		"123",
+		"TST",
+		"LDL"
+	],
+	"key": {
+		"1": {
+			"item": "projecte:low_covalence_dust"
+		},
+		"2": {
+			"item": "projecte:medium_covalence_dust"
+		},
+		"3": {
+			"item": "projecte:high_covalence_dust"
+		},
+		"S": {
+			"item": "projectex:stone_table"
+		},
+		"L": {
+			"tag": "forge:rods/wooden"
+		},
+		"D": {
+			"tag": "forge:gems/diamond"
+		},
+		"T": {
+			"item": "minecraft:torch"
+		}
+	}
+}

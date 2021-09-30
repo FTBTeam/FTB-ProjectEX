@@ -1,6 +1,7 @@
 package dev.latvian.mods.projectex;
 
 import dev.latvian.mods.projectex.block.ProjectEXBlocks;
+import dev.latvian.mods.projectex.block.entity.ProjectEXBlockEntities;
 import dev.latvian.mods.projectex.item.ProjectEXItems;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -30,7 +31,7 @@ public class ProjectEX {
 
 		ProjectEXBlocks.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
 		ProjectEXItems.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		// ProjectEXBlockEntities.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+		ProjectEXBlockEntities.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
 		// ProjectEXRecipeSerializers.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
 		// ProjectEXMenus.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
 

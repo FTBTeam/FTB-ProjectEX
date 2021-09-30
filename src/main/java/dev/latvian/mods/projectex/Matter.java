@@ -33,6 +33,9 @@ public enum Matter {
 	public final String displayName;
 	public final boolean hasMatterItem;
 
+	public long collectorOutput;
+	public long relayBonus;
+
 	@Nullable
 	public final Supplier<Item> item;
 
@@ -41,6 +44,9 @@ public enum Matter {
 		displayName = d;
 		hasMatterItem = i;
 		item = it;
+
+		collectorOutput = 1L << ordinal();
+		relayBonus = 1L << ordinal();
 	}
 
 	public Supplier<Item> getItem() {
@@ -54,5 +60,9 @@ public enum Matter {
 
 	public String getMK() {
 		return "[MK" + (ordinal() + 1) + "]";
+	}
+
+	public long getPowerFlowerOutput() {
+		return collectorOutput * 18L + relayBonus * 30L;
 	}
 }

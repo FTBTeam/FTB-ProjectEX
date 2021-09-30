@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:link",
+	"result": {
+		"item": "projectex:personal_link"
+	},
+	"pattern": [
+		"RBR",
+		"BCB",
+		"RBR"
+	],
+	"key": {
+		"B": {
+			"item": "projectex:energy_link"
+		},
+		"R": {
+			"item": "projecte:red_matter_block"
+		},
+		"C": {
+			"item": "projecte:condenser_mk2"
+		}
+	}
+}

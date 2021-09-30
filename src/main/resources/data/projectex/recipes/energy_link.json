@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:link",
+	"result": {
+		"item": "projectex:energy_link"
+	},
+	"pattern": [
+		"LMH",
+		"SRS",
+		"HML"
+	],
+	"key": {
+		"S": {
+			"tag": "forge:stone"
+		},
+		"R": {
+			"item": "projecte:red_matter"
+		},
+		"L": {
+			"item": "projecte:low_covalence_dust"
+		},
+		"M": {
+			"item": "projecte:medium_covalence_dust"
+		},
+		"H": {
+			"item": "projecte:high_covalence_dust"
+		}
+	}
+}

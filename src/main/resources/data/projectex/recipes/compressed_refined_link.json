@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:link",
+	"result": {
+		"item": "projectex:compressed_refined_link"
+	},
+	"pattern": [
+		"LLL",
+		"LLL"
+	],
+	"key": {
+		"L": {
+			"item": "projectex:refined_link"
+		}
+	}
+}

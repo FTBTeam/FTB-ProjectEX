@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"group": "projectex:stone_table",
+	"result": {
+		"item": "projectex:stone_table"
+	},
+	"pattern": [
+		"SSS",
+		"STS",
+		"SSS"
+	],
+	"key": {
+		"S": {
+			"tag": "minecraft:stone_bricks"
+		},
+		"T": [
+			{
+				"item": "projecte:transmutation_table"
+			},
+			{
+				"item": "projecte:philosophers_stone"
+			}
+		]
+	}
+}

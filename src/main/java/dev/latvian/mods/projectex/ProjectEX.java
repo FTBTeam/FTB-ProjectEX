@@ -3,6 +3,7 @@ package dev.latvian.mods.projectex;
 import dev.latvian.mods.projectex.block.ProjectEXBlocks;
 import dev.latvian.mods.projectex.block.entity.ProjectEXBlockEntities;
 import dev.latvian.mods.projectex.item.ProjectEXItems;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -15,6 +16,8 @@ public class ProjectEX {
 	public static final String MOD_ID = "projectex";
 
 	//public static ProjectEXCommon PROXY;
+
+	public static final Direction[] DIRECTIONS = Direction.values();
 
 	public static CreativeModeTab tab;
 

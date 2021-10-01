@@ -18,14 +18,6 @@ import java.util.function.Supplier;
 public interface ProjectEXItems {
 	DeferredRegister<Item> REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, ProjectEX.MOD_ID);
 
-	static Supplier<Item> basicItem(String id) {
-		return REGISTRY.register(id, () -> new Item(new Item.Properties().tab(ProjectEX.tab)));
-	}
-
-	static Supplier<Item> glowingBasicItem(String id) {
-		return REGISTRY.register(id, () -> new GlowingItem(new Item.Properties().tab(ProjectEX.tab)));
-	}
-
 	static Supplier<BlockItem> blockItem(String id, Supplier<Block> sup) {
 		return REGISTRY.register(id, () -> new BlockItem(sup.get(), new Item.Properties().tab(ProjectEX.tab)));
 	}
@@ -58,32 +50,32 @@ public interface ProjectEXItems {
 
 	Map<Star, Supplier<Item>> MAGNUM_STAR = Util.make(new LinkedHashMap<>(), map -> {
 		for (Star star : Star.VALUES) {
-			map.put(star, basicItem("magnum_star_" + star.name));
+			map.put(star, REGISTRY.register("magnum_star_" + star.name, () -> new MagnumStarItem(star)));
 		}
 	});
 
 	Map<Star, Supplier<Item>> COLOSSAL_STAR = Util.make(new LinkedHashMap<>(), map -> {
 		for (Star star : Star.VALUES) {
-			map.put(star, basicItem("colossal_star_" + star.name));
+			map.put(star, REGISTRY.register("colossal_star_" + star.name, () -> new ColossalStarItem(star)));
 		}
 	});
 
 	Map<Matter, Supplier<Item>> MATTER = Util.make(new LinkedHashMap<>(), map -> {
 		for (Matter matter : Matter.VALUES) {
 			if (matter.hasMatterItem) {
-				map.put(matter, basicItem(matter.name + "_matter"));
+				map.put(matter, REGISTRY.register(matter.name + "_matter", BasicItem::new));
 			}
 		}
 	});
 
-	Supplier<Item> FINAL_STAR_SHARD = basicItem("final_star_shard");
-	Supplier<Item> FINAL_STAR = basicItem("final_star");
-	Supplier<Item> KNOWLEDGE_SHARING_BOOK = basicItem("knowledge_sharing_book");
-	Supplier<Item> ARCANE_TABLET = basicItem("arcane_tablet");
+	Supplier<Item> FINAL_STAR_SHARD = REGISTRY.register("final_star_shard", BasicItem::new);
+	Supplier<Item> FINAL_STAR = REGISTRY.register("final_star", FinalStarItem::new);
+	Supplier<Item> KNOWLEDGE_SHARING_BOOK = REGISTRY.register("knowledge_sharing_book", KnowledgeSharingBookItem::new);
+	Supplier<Item> ARCANE_TABLET = REGISTRY.register("arcane_tablet", ArcaneTabletItem::new);
 
 	Map<Matter, Supplier<Item>> COMPRESSED_COLLECTOR = Util.make(new LinkedHashMap<>(), map -> {
 		for (Matter matter : Matter.VALUES) {
-			map.put(matter, glowingBasicItem(matter.name + "_compressed_collector"));
+			map.put(matter, REGISTRY.register(matter.name + "_compressed_collector", FoilItem::new));
 		}
 	});
 }

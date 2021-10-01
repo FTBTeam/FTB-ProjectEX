@@ -1,13 +1,14 @@
 package dev.latvian.mods.projectex.block.entity;
 
-import dev.latvian.mods.projectex.ProjectEX;
-import dev.latvian.mods.projectex.block.CollectorBlock;
 import moze_intel.projecte.api.ProjectEAPI;
+import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.tile.IEmcStorage;
-import moze_intel.projecte.gameObjs.tiles.RelayMK1Tile;
+import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -15,30 +16,37 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigInteger;
+import java.util.UUID;
 
-public class CollectorBlockEntity extends BlockEntity implements TickableBlockEntity, IEmcStorage {
+public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEntity, IEmcStorage {
+	public UUID owner = Util.NIL_UUID;
+	public String ownerName = "";
 	public int tick = 0;
-	public long storedEMC = 0L;
+	public BigInteger storedEMC = BigInteger.ZERO;
 	private LazyOptional<IEmcStorage> emcStorageCapability;
 
-	public CollectorBlockEntity() {
-		super(ProjectEXBlockEntities.COLLECTOR.get());
+	public LinkBaseBlockEntity(BlockEntityType<?> type, int in, int out) {
+		super(type);
 	}
 
 	@Override
 	public void load(BlockState state, CompoundTag tag) {
 		super.load(state, tag);
+		owner = tag.getUUID("Owner");
+		ownerName = tag.getString("OwnerName");
 		tick = tag.getByte("Tick") & 0xFF;
-		storedEMC = tag.getLong("StoredEMC");
+		String s = tag.getString("StoredEMC");
+		storedEMC = s.equals("0") ? BigInteger.ZERO : new BigInteger(s);
 	}
 
 	@Override
 	public CompoundTag save(CompoundTag tag) {
 		super.save(tag);
+		tag.putUUID("Owner", owner);
+		tag.putString("OwnerName", ownerName);
 		tag.putByte("Tick", (byte) tick);
-		tag.putLong("StoredEMC", storedEMC);
+		tag.putString("StoredEMC", storedEMC.toString());
 		return tag;
 	}
 
@@ -62,49 +70,14 @@ public class CollectorBlockEntity extends BlockEntity implements TickableBlockEn
 		if (tick >= 20) {
 			tick = 0;
 
-			BlockState state = getBlockState();
+			ServerPlayer player = level.getServer().getPlayerList().getPlayer(owner);
+			IKnowledgeProvider provider = player == null ? null : player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY).orElse(null);
 
-			if (state.getBlock() instanceof CollectorBlock) {
-				storedEMC += ((CollectorBlock) state.getBlock()).matter.collectorOutput;
-
-				List<IEmcStorage> temp = new ArrayList<>(1);
-
-				for (Direction direction : ProjectEX.DIRECTIONS) {
-					BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(direction));
-					IEmcStorage storage = blockEntity == null ? null : blockEntity.getCapability(ProjectEAPI.EMC_STORAGE_CAPABILITY, direction.getOpposite()).orElse(null);
-
-					if (storage != null && storage.insertEmc(1L, IEmcStorage.EmcAction.SIMULATE) > 0L) {
-						temp.add(storage);
-
-						if (blockEntity instanceof RelayMK1Tile) {
-							for (int i = 0; i < 20; i++) {
-								((RelayMK1Tile) blockEntity).addBonus();
-							}
-
-							blockEntity.setChanged();
-						} else if (blockEntity instanceof RelayBlockEntity) {
-							((RelayBlockEntity) blockEntity).addBonus();
-							blockEntity.setChanged();
-						}
-					}
-				}
-
-				if (!temp.isEmpty() && storedEMC >= temp.size()) {
-					long s = storedEMC / temp.size();
-
-					for (IEmcStorage storage : temp) {
-						long a = storage.insertEmc(s, EmcAction.EXECUTE);
-
-						if (a > 0L) {
-							storedEMC -= a;
-							setChanged();
-
-							if (storedEMC < s) {
-								break;
-							}
-						}
-					}
-				}
+			if (provider != null && !storedEMC.equals(BigInteger.ZERO)) {
+				provider.setEmc(provider.getEmc().add(storedEMC));
+				storedEMC = BigInteger.ZERO;
+				setChanged();
+				provider.syncEmc(player);
 			}
 		}
 	}
@@ -118,7 +91,7 @@ public class CollectorBlockEntity extends BlockEntity implements TickableBlockEn
 
 	@Override
 	public long getStoredEmc() {
-		return storedEMC;
+		return 0L;
 	}
 
 	@Override
@@ -128,19 +101,19 @@ public class CollectorBlockEntity extends BlockEntity implements TickableBlockEn
 
 	@Override
 	public long extractEmc(long emc, EmcAction action) {
-		long e = Math.min(storedEMC, emc);
-
-		if (e < 0L) {
-			return insertEmc(-e, action);
-		} else if (action.execute()) {
-			storedEMC -= e;
-		}
-
-		return e;
+		return emc < 0L ? insertEmc(-emc, action) : 0L;
 	}
 
 	@Override
-	public long insertEmc(long l, EmcAction emcAction) {
+	public long insertEmc(long emc, EmcAction action) {
+		if (emc > 0L) {
+			if (action.execute()) {
+				storedEMC = storedEMC.add(BigInteger.valueOf(emc));
+			}
+
+			return emc;
+		}
+
 		return 0L;
 	}
 

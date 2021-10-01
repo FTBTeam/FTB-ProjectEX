@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[36,)"
-issueTrackerURL = "https://github.com/LatvianModder/ProjectEX/issues"
+issueTrackerURL = "https://github.com/latvian-dev/ProjectEX/issues"
 license = "GNU LGPLv3"
 
 [[mods]]

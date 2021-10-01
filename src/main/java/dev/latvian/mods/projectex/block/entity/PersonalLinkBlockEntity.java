@@ -1,9 +1,7 @@
 package dev.latvian.mods.projectex.block.entity;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
-
-public class PersonalLinkBlockEntity extends BlockEntity {
+public class PersonalLinkBlockEntity extends LinkBaseBlockEntity {
 	public PersonalLinkBlockEntity() {
-		super(ProjectEXBlockEntities.PERSONAL_LINK.get());
+		super(ProjectEXBlockEntities.PERSONAL_LINK.get(), 18, 1);
 	}
 }

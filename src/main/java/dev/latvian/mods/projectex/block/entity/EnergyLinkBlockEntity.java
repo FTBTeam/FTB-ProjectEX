@@ -1,9 +1,7 @@
 package dev.latvian.mods.projectex.block.entity;
 
-import net.minecraft.world.level.block.entity.BlockEntity;
-
-public class EnergyLinkBlockEntity extends BlockEntity {
+public class EnergyLinkBlockEntity extends LinkBaseBlockEntity {
 	public EnergyLinkBlockEntity() {
-		super(ProjectEXBlockEntities.ENERGY_LINK.get());
+		super(ProjectEXBlockEntities.ENERGY_LINK.get(), 0, 0);
 	}
 }

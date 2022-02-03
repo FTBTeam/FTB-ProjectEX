@@ -10,7 +10,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Supplier;
 
 public interface ProjectEXBlockEntities {
-	DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, ProjectEX.MOD_ID);
+	DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ProjectEX.MOD_ID);
 
 	Supplier<BlockEntityType<?>> ENERGY_LINK = REGISTRY.register("energy_link", () -> BlockEntityType.Builder.of(EnergyLinkBlockEntity::new, ProjectEXBlocks.ENERGY_LINK.get()).build(null));
 	Supplier<BlockEntityType<?>> PERSONAL_LINK = REGISTRY.register("personal_link", () -> BlockEntityType.Builder.of(PersonalLinkBlockEntity::new, ProjectEXBlocks.PERSONAL_LINK.get()).build(null));

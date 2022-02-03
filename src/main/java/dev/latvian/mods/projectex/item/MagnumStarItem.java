@@ -2,16 +2,19 @@ package dev.latvian.mods.projectex.item;
 
 import dev.latvian.mods.projectex.ProjectEX;
 import dev.latvian.mods.projectex.Star;
+import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import moze_intel.projecte.api.capabilities.item.IItemEmcHolder;
-import moze_intel.projecte.api.capabilities.tile.IEmcStorage;
 import moze_intel.projecte.capability.EmcHolderItemCapabilityWrapper;
+import moze_intel.projecte.gameObjs.items.IBarHelper;
 import moze_intel.projecte.gameObjs.items.ItemPE;
 import moze_intel.projecte.integration.IntegrationHelper;
+import moze_intel.projecte.utils.EMCHelper;
 import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class MagnumStarItem extends ItemPE implements IItemEmcHolder {
+public class MagnumStarItem extends ItemPE implements IItemEmcHolder, IBarHelper
+{
 	public static final long[] STAR_EMC = new long[12];
 
 	static {
@@ -33,14 +36,24 @@ public class MagnumStarItem extends ItemPE implements IItemEmcHolder {
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
+	public boolean isBarVisible(@Nonnull ItemStack stack) {
 		return stack.hasTag();
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
+	public float getWidthForBar(ItemStack stack) {
 		long starEmc = getStoredEmc(stack);
-		return starEmc == 0L ? 1D : 1D - (double) starEmc / (double) getMaximumEmc(stack);
+		return (float) (starEmc == 0L ? 1D : 1D - (double) starEmc / (double) getMaximumEmc(stack));
+	}
+
+	@Override
+	public int getBarWidth(@Nonnull ItemStack stack) {
+		return this.getScaledBarWidth(stack);
+	}
+
+	@Override
+	public int getBarColor(@Nonnull ItemStack stack) {
+		return this.getColorForBar(stack);
 	}
 
 	@Override

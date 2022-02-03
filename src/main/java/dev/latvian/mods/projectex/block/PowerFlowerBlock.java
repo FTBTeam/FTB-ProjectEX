@@ -16,9 +16,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -31,7 +35,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class PowerFlowerBlock extends Block {
+public class PowerFlowerBlock extends BaseEntityBlock
+{
 	public static final VoxelShape SHAPE = Shapes.or(
 			box(0, 0, 0, 16, 1, 16),
 			box(3.5, 4, 6.5, 12.5, 13, 9.5),
@@ -49,14 +54,27 @@ public class PowerFlowerBlock extends Block {
 		matter = m;
 	}
 
+	@Nullable
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
+	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
+	{
+		return new PowerFlowerBlockEntity(blockPos, blockState);
 	}
 
+	@org.jetbrains.annotations.Nullable
 	@Override
-	public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-		return new PowerFlowerBlockEntity();
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
+	{
+		return (level1, blockPos, blockState, t) ->
+		{
+			if(!level1.isClientSide)
+			{
+				if (t instanceof PowerFlowerBlockEntity tile)
+				{
+					tile.tick();
+				}
+			}
+		};
 	}
 
 	@Override
@@ -96,5 +114,11 @@ public class PowerFlowerBlock extends Block {
 		super.appendHoverText(stack, level, list, flag);
 		list.add(new TranslatableComponent("block.projectex.collector.tooltip").withStyle(ChatFormatting.GRAY));
 		list.add(new TranslatableComponent("block.projectex.collector.emc_produced", new TextComponent("").append(TransmutationEMCFormatter.formatEMC(matter.getPowerFlowerOutput())).withStyle(ChatFormatting.GREEN)).withStyle(ChatFormatting.GRAY));
+	}
+
+	@Override
+	public RenderShape getRenderShape(BlockState blockState)
+	{
+		return RenderShape.MODEL;
 	}
 }

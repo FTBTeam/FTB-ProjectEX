@@ -3,6 +3,7 @@ package dev.latvian.mods.projectex.item;
 import dev.latvian.mods.projectex.ProjectEX;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.api.capabilities.PECapabilities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -38,7 +39,7 @@ public class FinalStarItem extends Item {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
 		if (!level.isClientSide() && player.isCrouching()) {
-			IKnowledgeProvider provider = player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY).orElse(null);
+			IKnowledgeProvider provider = player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).orElse(null);
 			provider.setEmc(BigInteger.ZERO);
 			provider.syncEmc((ServerPlayer) player);
 			return InteractionResultHolder.success(player.getItemInHand(hand));

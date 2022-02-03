@@ -1,31 +1,31 @@
 package dev.latvian.mods.projectex.block.entity;
 
 import dev.latvian.mods.projectex.block.PowerFlowerBlock;
-import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
+import moze_intel.projecte.api.capabilities.PECapabilities;
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.math.BigInteger;
 import java.util.UUID;
 
-public class PowerFlowerBlockEntity extends BlockEntity implements TickableBlockEntity {
+public class PowerFlowerBlockEntity extends BlockEntity {
 	public UUID owner = Util.NIL_UUID;
 	public String ownerName = "";
 	public int tick = 0;
 	public BigInteger storedEMC = BigInteger.ZERO;
 
-	public PowerFlowerBlockEntity() {
-		super(ProjectEXBlockEntities.POWER_FLOWER.get());
+	public PowerFlowerBlockEntity(BlockPos blockPos, BlockState blockState) {
+		super(ProjectEXBlockEntities.POWER_FLOWER.get(), blockPos, blockState);
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag tag) {
-		super.load(state, tag);
+	public void load(CompoundTag tag) {
+		super.load(tag);
 		owner = tag.getUUID("Owner");
 		ownerName = tag.getString("OwnerName");
 		tick = tag.getByte("Tick") & 0xFF;
@@ -34,25 +34,24 @@ public class PowerFlowerBlockEntity extends BlockEntity implements TickableBlock
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
-		super.save(tag);
+	protected void saveAdditional(CompoundTag tag)
+	{
+		super.saveAdditional(tag);
 		tag.putUUID("Owner", owner);
 		tag.putString("OwnerName", ownerName);
 		tag.putByte("Tick", (byte) tick);
 		tag.putString("StoredEMC", storedEMC.toString());
-		return tag;
 	}
 
 	@Override
 	public void onLoad() {
 		if (level != null && level.isClientSide()) {
-			level.tickableBlockEntities.remove(this);
+//			level.tickableBlockEntities.remove(this);
 		}
 
 		super.onLoad();
 	}
 
-	@Override
 	public void tick() {
 		if (level.isClientSide()) {
 			return;
@@ -69,7 +68,7 @@ public class PowerFlowerBlockEntity extends BlockEntity implements TickableBlock
 				long gen = ((PowerFlowerBlock) state.getBlock()).matter.getPowerFlowerOutput();
 
 				ServerPlayer player = level.getServer().getPlayerList().getPlayer(owner);
-				IKnowledgeProvider provider = player == null ? null : player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY).orElse(null);
+				IKnowledgeProvider provider = player == null ? null : player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).orElse(null);
 
 				if (provider != null) {
 					provider.setEmc(provider.getEmc().add(BigInteger.valueOf(gen)));
@@ -92,7 +91,7 @@ public class PowerFlowerBlockEntity extends BlockEntity implements TickableBlock
 	@Override
 	public void setChanged() {
 		if (level != null) {
-			level.blockEntityChanged(worldPosition, this);
+			level.blockEntityChanged(worldPosition);
 		}
 	}
 }

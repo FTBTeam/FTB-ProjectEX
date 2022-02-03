@@ -1,15 +1,15 @@
 package dev.latvian.mods.projectex.block.entity;
 
-import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
-import moze_intel.projecte.api.capabilities.tile.IEmcStorage;
+import moze_intel.projecte.api.capabilities.PECapabilities;
+import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,20 +19,21 @@ import javax.annotation.Nullable;
 import java.math.BigInteger;
 import java.util.UUID;
 
-public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEntity, IEmcStorage {
+public class LinkBaseBlockEntity extends BlockEntity implements IEmcStorage
+{
 	public UUID owner = Util.NIL_UUID;
 	public String ownerName = "";
 	public int tick = 0;
 	public BigInteger storedEMC = BigInteger.ZERO;
 	private LazyOptional<IEmcStorage> emcStorageCapability;
 
-	public LinkBaseBlockEntity(BlockEntityType<?> type, int in, int out) {
-		super(type);
+	public LinkBaseBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+		super(type, blockPos, blockState);
 	}
 
 	@Override
-	public void load(BlockState state, CompoundTag tag) {
-		super.load(state, tag);
+	public void load(CompoundTag tag) {
+		super.load(tag);
 		owner = tag.getUUID("Owner");
 		ownerName = tag.getString("OwnerName");
 		tick = tag.getByte("Tick") & 0xFF;
@@ -41,25 +42,26 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag tag) {
-		super.save(tag);
+	protected void saveAdditional(CompoundTag tag)
+	{
+		super.saveAdditional(tag);
 		tag.putUUID("Owner", owner);
 		tag.putString("OwnerName", ownerName);
 		tag.putByte("Tick", (byte) tick);
 		tag.putString("StoredEMC", storedEMC.toString());
-		return tag;
 	}
+
 
 	@Override
 	public void onLoad() {
 		if (level != null && level.isClientSide()) {
-			level.tickableBlockEntities.remove(this);
+			//TODO
+//			level.tickableBlockEntities.remove(this);
 		}
 
 		super.onLoad();
 	}
 
-	@Override
 	public void tick() {
 		if (level.isClientSide()) {
 			return;
@@ -71,7 +73,7 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 			tick = 0;
 
 			ServerPlayer player = level.getServer().getPlayerList().getPlayer(owner);
-			IKnowledgeProvider provider = player == null ? null : player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY).orElse(null);
+			IKnowledgeProvider provider = player == null ? null : player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).orElse(null);
 
 			if (provider != null && !storedEMC.equals(BigInteger.ZERO)) {
 				provider.setEmc(provider.getEmc().add(storedEMC));
@@ -85,7 +87,7 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 	@Override
 	public void setChanged() {
 		if (level != null) {
-			level.blockEntityChanged(worldPosition, this);
+			level.blockEntityChanged(worldPosition);
 		}
 	}
 
@@ -120,7 +122,7 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 	@Override
 	@Nonnull
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-		if (cap == ProjectEAPI.EMC_STORAGE_CAPABILITY) {
+		if (cap == PECapabilities.EMC_STORAGE_CAPABILITY) {
 			if (emcStorageCapability == null || !emcStorageCapability.isPresent()) {
 				emcStorageCapability = LazyOptional.of(() -> this);
 			}
@@ -132,7 +134,7 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 	}
 
 	@Override
-	protected void invalidateCaps() {
+	public void invalidateCaps() {
 		super.invalidateCaps();
 
 		if (emcStorageCapability != null && emcStorageCapability.isPresent()) {

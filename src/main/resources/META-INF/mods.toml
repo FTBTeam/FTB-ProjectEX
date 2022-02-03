@@ -1,11 +1,11 @@
 modLoader = "javafml"
-loaderVersion = "[36,)"
+loaderVersion = "[39,)"
 issueTrackerURL = "https://github.com/latvian-dev/ProjectEX/issues"
 license = "GNU LGPLv3"
 
 [[mods]]
 modId = "projectex"
-version = "${version}"
+version = "${file.jarVersion}"
 displayName = "ProjectEX"
 authors = "LatvianModder"
 description = '''
@@ -16,14 +16,14 @@ logoFile = "projectex_logo.png"
 [[dependencies.projectex]]
 modId = "forge"
 mandatory = true
-versionRange = "[36,)"
+versionRange = "[39,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.projectex]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.16.5,)"
+versionRange = "[1.18,)"
 ordering = "NONE"
 side = "BOTH"
 

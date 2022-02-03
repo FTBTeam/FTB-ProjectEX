@@ -9,7 +9,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,14 +19,11 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class LinkBaseBlock extends Block {
-	public LinkBaseBlock() {
+public class LinkBaseBlock extends BaseEntityBlock
+{
+	public LinkBaseBlock()
+	{
 		super(Properties.of(Material.STONE).strength(5F).sound(SoundType.STONE));
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
 	}
 
 	@Override
@@ -50,5 +49,18 @@ public class LinkBaseBlock extends Block {
 				((LinkBaseBlockEntity) e).ownerName = entity.getScoreboardName();
 			}
 		}
+	}
+
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_)
+	{
+		return null;
+	}
+
+	@Override
+	public RenderShape getRenderShape(BlockState blockState)
+	{
+		return RenderShape.MODEL;
 	}
 }

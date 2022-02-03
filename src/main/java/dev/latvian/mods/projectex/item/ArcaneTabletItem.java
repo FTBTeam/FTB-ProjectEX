@@ -19,7 +19,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -56,7 +56,7 @@ public class ArcaneTabletItem extends Item {
 
 		@Override
 		public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-			return new TransmutationContainer(windowId, playerInventory, this.hand);
+			return new TransmutationContainer(windowId, playerInventory, this.hand, 0);
 		}
 
 		@Override

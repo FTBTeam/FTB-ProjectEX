@@ -9,6 +9,7 @@ import moze_intel.projecte.gameObjs.registries.PEItems;
 import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -33,7 +34,7 @@ import net.minecraftforge.common.data.ForgeLootTableProvider;
 import net.minecraftforge.common.data.LanguageProvider;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -261,7 +262,8 @@ public class ProjectEXDataGen {
 		}
 
 		@Override
-		protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+		protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer)
+		{
 			/*
 			ShapedRecipeBuilder.shaped(FTBJarModItems.CAST_IRON_BLOCK.get())
 					.unlockedBy("has_item", has(CAST_IRON_INGOT))
@@ -406,7 +408,8 @@ public class ProjectEXDataGen {
 		}
 	}
 
-	private static class JMLootTableProvider extends ForgeLootTableProvider {
+	private static class JMLootTableProvider extends LootTableProvider
+	{
 		private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> lootTables = Lists.newArrayList(Pair.of(JMBlockLootTableProvider::new, LootContextParamSets.BLOCK));
 
 		public JMLootTableProvider(DataGenerator dataGeneratorIn) {

@@ -21,6 +21,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -31,7 +32,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -89,13 +90,19 @@ public class StoneTableBlock extends Block {
 		list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
 	}
 
+	@Override
+	public RenderShape getRenderShape(BlockState blockState)
+	{
+		return RenderShape.MODEL;
+	}
+
 	private static class ContainerProvider implements MenuProvider {
 		private ContainerProvider() {
 		}
 
 		@Override
 		public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-			return new TransmutationContainer(windowId, playerInventory, InteractionHand.OFF_HAND);
+			return new TransmutationContainer(windowId, playerInventory, InteractionHand.OFF_HAND, 0);
 		}
 
 		@Override

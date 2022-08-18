@@ -1,139 +1,76 @@
-buildscript {
-	repositories {
-		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
-		maven { url = 'https://maven.minecraftforge.net' }
-		mavenCentral()
-	}
-	dependencies {
-		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-	}
+plugins {
+	id "dev.architectury.loom" version "0.12.0-SNAPSHOT"
+	id "maven-publish"
+	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
-apply plugin: 'net.minecraftforge.gradle'
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
-version = '1605.2.0'
-group = 'dev.latvian.mods' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'projectex'
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_17
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-minecraft {
-	// The mappings can be changed at any time and must be in the following format.
-	// Channel:   Version:
-	// snapshot   YYYYMMDD   Snapshot are built nightly.
-	// stable     #          Stables are built at the discretion of the MCP team.
-	// official   MCVersion  Official field/method names from Mojang mapping files
-	//
-	// You must be aware of the Mojang license when using the 'official' mappings.
-	// See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-	//
-	// Use non-default mappings at your own risk. They may not always work.
-	// Simply re-run your setup task after changing the mappings to update your workspace.
-	mappings channel: 'official', version: '1.18.1'
+def ENV = System.getenv()
 
-	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+loom {
+	silentMojangMappingsLicense()
 
-	// Default run configurations.
-	// These can be tweaked, removed, or duplicated as needed.
-	runs {
-		client {
-			workingDirectory project.file('run')
+	forge {
+		mixinConfigs = [
+//				"examplemod.mixins.json"
+		]
 
-			// Recommended logging data for a userdev environment
-			// The markers can be added/remove as needed separated by commas.
-			// "SCAN": For mods scan.
-			// "REGISTRIES": For firing of registry events.
-			// "REGISTRYDUMP": For getting the contents of all registries.
-			property 'forge.logging.markers', 'REGISTRIES'
-
-			// Recommended logging level for the console
-			// You can set various levels here.
-			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-			property 'forge.logging.console.level', 'debug'
-
-			mods {
-				projectex {
-					source sourceSets.main
-				}
-			}
+		dataGen {
+			mod project.mod_id
 		}
+	}
 
-		server {
-			workingDirectory project.file('run')
-
-			// Recommended logging data for a userdev environment
-			// The markers can be added/remove as needed separated by commas.
-			// "SCAN": For mods scan.
-			// "REGISTRIES": For firing of registry events.
-			// "REGISTRYDUMP": For getting the contents of all registries.
-			property 'forge.logging.markers', 'REGISTRIES'
-
-			// Recommended logging level for the console
-			// You can set various levels here.
-			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-			property 'forge.logging.console.level', 'debug'
-
-			mods {
-				projectex {
-					source sourceSets.main
-				}
-			}
-		}
-
+	launches {
 		data {
-			workingDirectory project.file('run')
-
-			// Recommended logging data for a userdev environment
-			// The markers can be added/remove as needed separated by commas.
-			// "SCAN": For mods scan.
-			// "REGISTRIES": For firing of registry events.
-			// "REGISTRYDUMP": For getting the contents of all registries.
-			property 'forge.logging.markers', 'REGISTRIES'
-
-			// Recommended logging level for the console
-			// You can set various levels here.
-			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-			property 'forge.logging.console.level', 'debug'
-
-			// Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-			args '--mod', 'projectex', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-			mods {
-				projectex {
-					source sourceSets.main
-				}
-			}
+			arg "--existing", file("src/main/resources").absolutePath
 		}
 	}
 }
-
-// Include resources generated by data generators.
-sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
 	maven {
-		name = "JEI"
-		url  = 'https://dvs1.progwml6.com/files/maven'
+		url "https://cursemaven.com"
 	}
-	flatDir {
-		dirs '/libs'
+	maven {
+		url 'https://dvs1.progwml6.com/files/maven'
 	}
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.18.1-39.0.64'
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-	implementation fg.deobf("projecte:projecte:1.0.1")
+	mappings loom.officialMojangMappings()
+	forge "net.minecraftforge:forge:${project.forge_version}"
 
-	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
-	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+	modImplementation "curse.maven:projecte-226410:${project.projecte_file}"
+
+	modCompileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
+	modRuntimeOnly "mezz.jei:jei-${minecraft_version}:${jei_version}"
 }
 
-// Example for how to get properties into the manifest for reading at runtime.
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("META-INF/mods.toml") {
+		expand "version": project.version
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+	options.release = 17
+}
+
+java {
+	withSourcesJar()
+}
+
+
 jar {
 	manifest {
 		attributes([
@@ -148,21 +85,223 @@ jar {
 	}
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
-// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
-// publish.dependsOn('reobfJar')
+if (ENV.CURSEFORGE_KEY) {
+	curseforge {
+		apiKey = ENV.CURSEFORGE_KEY
+		project {
+			id = project.curseforge_id
+			releaseType = project.curseforge_type
+			addGameVersion "Forge"
+			addGameVersion = project.minecraft_version
+			mainArtifact(remapJar.archivePath)
+			relations {
+				requiredDependency 'jei'
+				optionalDependency 'projecte'
+			}
+			changelog = file("./CHANGELOG.md")
+			changelogType = 'markdown'
+		}
+	}
+}
 
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			artifact jar
+			artifact(remapJar) {
+				builtBy remapJar
+			}
 		}
 	}
+
 	repositories {
-		maven {
-			url "file://${project.projectDir}/mcmodsrepo"
+		if (ENV.FTB_MAVEN_TOKEN) {
+			maven {
+				url "https://maven.ftb.dev/release"
+				credentials {
+					username = "ftb"
+					password = "${ENV.FTB_MAVEN_TOKEN}"
+				}
+			}
+		}
+
+		if (ENV.SAPS_TOKEN) {
+			maven {
+				url "https://maven.saps.dev/minecraft"
+				credentials {
+					username = "ftb"
+					password = "${ENV.SAPS_TOKEN}"
+				}
+			}
 		}
 	}
 }
+
+
+//buildscript {
+//	repositories {
+//		// These repositories are only for Gradle plugins, put any other repositories in the repository block further below
+//		maven { url = 'https://maven.minecraftforge.net' }
+//		mavenCentral()
+//	}
+//	dependencies {
+//		classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+//	}
+//}
+//apply plugin: 'net.minecraftforge.gradle'
+//// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+//apply plugin: 'eclipse'
+//apply plugin: 'maven-publish'
+//
+//version = '1605.2.0'
+//group = 'dev.latvian.mods' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+//archivesBaseName = 'projectex'
+//
+//// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+//java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+//
+//println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+//minecraft {
+//	// The mappings can be changed at any time and must be in the following format.
+//	// Channel:   Version:
+//	// snapshot   YYYYMMDD   Snapshot are built nightly.
+//	// stable     #          Stables are built at the discretion of the MCP team.
+//	// official   MCVersion  Official field/method names from Mojang mapping files
+//	//
+//	// You must be aware of the Mojang license when using the 'official' mappings.
+//	// See more information here: https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
+//	//
+//	// Use non-default mappings at your own risk. They may not always work.
+//	// Simply re-run your setup task after changing the mappings to update your workspace.
+//	mappings channel: 'official', version: '1.18.1'
+//
+//	// accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg') // Currently, this location cannot be changed from the default.
+//
+//	// Default run configurations.
+//	// These can be tweaked, removed, or duplicated as needed.
+//	runs {
+//		client {
+//			workingDirectory project.file('run')
+//
+//			// Recommended logging data for a userdev environment
+//			// The markers can be added/remove as needed separated by commas.
+//			// "SCAN": For mods scan.
+//			// "REGISTRIES": For firing of registry events.
+//			// "REGISTRYDUMP": For getting the contents of all registries.
+//			property 'forge.logging.markers', 'REGISTRIES'
+//
+//			// Recommended logging level for the console
+//			// You can set various levels here.
+//			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+//			property 'forge.logging.console.level', 'debug'
+//
+//			mods {
+//				projectex {
+//					source sourceSets.main
+//				}
+//			}
+//		}
+//
+//		server {
+//			workingDirectory project.file('run')
+//
+//			// Recommended logging data for a userdev environment
+//			// The markers can be added/remove as needed separated by commas.
+//			// "SCAN": For mods scan.
+//			// "REGISTRIES": For firing of registry events.
+//			// "REGISTRYDUMP": For getting the contents of all registries.
+//			property 'forge.logging.markers', 'REGISTRIES'
+//
+//			// Recommended logging level for the console
+//			// You can set various levels here.
+//			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+//			property 'forge.logging.console.level', 'debug'
+//
+//			mods {
+//				projectex {
+//					source sourceSets.main
+//				}
+//			}
+//		}
+//
+//		data {
+//			workingDirectory project.file('run')
+//
+//			// Recommended logging data for a userdev environment
+//			// The markers can be added/remove as needed separated by commas.
+//			// "SCAN": For mods scan.
+//			// "REGISTRIES": For firing of registry events.
+//			// "REGISTRYDUMP": For getting the contents of all registries.
+//			property 'forge.logging.markers', 'REGISTRIES'
+//
+//			// Recommended logging level for the console
+//			// You can set various levels here.
+//			// Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+//			property 'forge.logging.console.level', 'debug'
+//
+//			// Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+//			args '--mod', 'projectex', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+//
+//			mods {
+//				projectex {
+//					source sourceSets.main
+//				}
+//			}
+//		}
+//	}
+//}
+//
+//// Include resources generated by data generators.
+//sourceSets.main.resources { srcDir 'src/generated/resources' }
+//
+//repositories {
+//	maven {
+//		name = "JEI"
+//		url  = 'https://dvs1.progwml6.com/files/maven'
+//	}
+//	flatDir {
+//		dirs '/libs'
+//	}
+//}
+//
+//dependencies {
+//	minecraft 'net.minecraftforge:forge:1.18.1-39.0.64'
+//
+//	implementation fg.deobf("projecte:projecte:1.0.1")
+//
+//	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
+//	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")
+//}
+//
+//// Example for how to get properties into the manifest for reading at runtime.
+//jar {
+//	manifest {
+//		attributes([
+//				"Specification-Title"     : project.mod_id,
+//				"Specification-Vendor"    : project.mod_author,
+//				"Specification-Version"   : "1",
+//				"Implementation-Title"    : project.name,
+//				"Implementation-Version"  : version,
+//				"Implementation-Vendor"   : project.mod_author,
+//				"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+//		])
+//	}
+//}
+//
+//// Example configuration to allow publishing using the maven-publish plugin
+//// This is the preferred method to reobfuscate your jar file
+//jar.finalizedBy('reobfJar')
+//// However if you are in a multi-project build, dev time needs unobfed jar files, so you can delay the obfuscation until publishing by doing
+//// publish.dependsOn('reobfJar')
+//
+//publishing {
+//	publications {
+//		mavenJava(MavenPublication) {
+//			artifact jar
+//		}
+//	}
+//	repositories {
+//		maven {
+//			url "file://${project.projectDir}/mcmodsrepo"
+//		}
+//	}
+//}

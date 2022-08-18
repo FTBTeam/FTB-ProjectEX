@@ -23,6 +23,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.ValidationContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraftforge.client.model.generators.BlockModelProvider;
@@ -36,9 +38,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -408,22 +408,24 @@ public class ProjectEXDataGen {
 		}
 	}
 
-	private static class JMLootTableProvider extends LootTableProvider
-	{
-		private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> lootTables = Lists.newArrayList(Pair.of(JMBlockLootTableProvider::new, LootContextParamSets.BLOCK));
-
+	private static class JMLootTableProvider extends LootTableProvider {
 		public JMLootTableProvider(DataGenerator dataGeneratorIn) {
 			super(dataGeneratorIn);
 		}
 
 		@Override
 		protected List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> getTables() {
-			return lootTables;
+			return Lists.newArrayList(Pair.of(JMBlockLootTableProvider::new, LootContextParamSets.BLOCK));
+		}
+
+		@Override
+		protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext tracker) {
+			map.forEach((k, v) -> LootTables.validate(tracker, k, v));
 		}
 	}
 
 	public static class JMBlockLootTableProvider extends BlockLoot {
-		private final Map<ResourceLocation, LootTable.Builder> tables = Maps.newHashMap();
+		private final Set<Block> blocks = new HashSet<>();
 
 		@Override
 		protected void addTables() {
@@ -439,29 +441,14 @@ public class ProjectEXDataGen {
 		}
 
 		@Override
-		public void accept(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
-			addTables();
-
-			for (ResourceLocation rs : new ArrayList<>(tables.keySet())) {
-				if (rs != BuiltInLootTables.EMPTY) {
-					LootTable.Builder builder = tables.remove(rs);
-
-					if (builder == null) {
-						throw new IllegalStateException(String.format("Missing loottable '%s'", rs));
-					}
-
-					consumer.accept(rs, builder);
-				}
-			}
-
-			if (!tables.isEmpty()) {
-				throw new IllegalStateException("Created block loot tables for non-blocks: " + tables.keySet());
-			}
+		protected void add(Block blockIn, LootTable.Builder table) {
+			super.add(blockIn, table);
+			this.blocks.add(blockIn);
 		}
 
 		@Override
-		protected void add(Block blockIn, LootTable.Builder table) {
-			tables.put(blockIn.getLootTable(), table);
+		protected Iterable<Block> getKnownBlocks() {
+			return this.blocks;
 		}
 	}
 }

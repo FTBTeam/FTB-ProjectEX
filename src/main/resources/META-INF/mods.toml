@@ -5,7 +5,7 @@ license = "GNU LGPLv3"
 
 [[mods]]
 modId = "projectex"
-version = "${file.jarVersion}"
+version = "${version}"
 displayName = "ProjectEX"
 authors = "LatvianModder"
 description = '''

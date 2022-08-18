@@ -32,9 +32,9 @@ public enum Matter {
 	public final String name;
 	public final String displayName;
 	public final boolean hasMatterItem;
-	public long collectorOutput;
-	public long relayBonus;
-	public long relayTransfer;
+	public final long collectorOutput;
+	public final long relayBonus;
+	public final long relayTransfer;
 	public final Supplier<Item> item;
 
 	Matter(String n, String d, boolean i, long co, long rb, long rt, @Nullable Supplier<Item> it) {
@@ -48,7 +48,7 @@ public enum Matter {
 	}
 
 	public Supplier<Item> getItem() {
-		// Need to be kept as lambdas so it doesnt reference the class before its loaded
+		// Need to be kept as lambdas, so it doesn't reference the class before its loaded
 		return item == null ? ProjectEXItems.MATTER.get(this) : item;
 	}
 

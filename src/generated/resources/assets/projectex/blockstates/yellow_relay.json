@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/yellow_relay"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/yellow_relay"
+    }
+  }
 }

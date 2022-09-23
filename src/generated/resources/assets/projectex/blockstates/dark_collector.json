@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/dark_collector"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/dark_collector"
+    }
+  }
 }

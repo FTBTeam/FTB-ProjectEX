@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:rotten_flesh"
+  },
+  "output": {
+    "item": "minecraft:leather"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

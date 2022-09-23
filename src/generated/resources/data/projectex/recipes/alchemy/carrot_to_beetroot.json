@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:carrot"
+  },
+  "output": {
+    "item": "minecraft:beetroot"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

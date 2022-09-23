@@ -1,20 +1,20 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"group": "projectex:matter/green",
-	"pattern": [
-		"FFF",
-		"MMM",
-		"FFF"
-	],
-	"key": {
-		"F": {
-			"item": "projecte:aeternalis_fuel"
-		},
-		"M": {
-			"item": "projectex:cyan_matter"
-		}
-	},
-	"result": {
-		"item": "projectex:green_matter"
-	}
+  "type": "minecraft:crafting_shaped",
+  "group": "projectex:matter/green",
+  "pattern": [
+    "FFF",
+    "MMM",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "projecte:aeternalis_fuel"
+    },
+    "M": {
+      "item": "projectex:cyan_matter"
+    }
+  },
+  "result": {
+    "item": "projectex:green_matter"
+  }
 }

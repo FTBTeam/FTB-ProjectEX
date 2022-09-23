@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "projecte:alchemical_coal"
+  },
+  "output": {
+    "item": "minecraft:redstone_block"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

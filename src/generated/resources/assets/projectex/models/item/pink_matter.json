@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "projectex:item/matter/pink"
-	}
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "projectex:item/matter/pink"
+  }
 }

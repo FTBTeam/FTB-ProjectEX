@@ -1,17 +1,17 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"group": "projectex:matter/cyan",
-	"pattern": [
-		"CCC",
-		"CCC",
-		"CCC"
-	],
-	"key": {
-		"C": {
-			"item": "projectex:cyan_collector"
-		}
-	},
-	"result": {
-		"item": "projectex:cyan_compressed_collector"
-	}
+  "type": "minecraft:crafting_shaped",
+  "group": "projectex:matter/cyan",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "projectex:cyan_collector"
+    }
+  },
+  "result": {
+    "item": "projectex:cyan_compressed_collector"
+  }
 }

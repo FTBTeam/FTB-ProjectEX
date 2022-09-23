@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "projectex:alchemy/lapis_lazuli_to_prismarine_shard"
+    ]
+  },
+  "criteria": {
+    "alchemy_table": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "projectex:alchemy_table"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "projectex:alchemy/lapis_lazuli_to_prismarine_shard"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "alchemy_table",
+      "has_the_recipe"
+    ]
+  ]
+}

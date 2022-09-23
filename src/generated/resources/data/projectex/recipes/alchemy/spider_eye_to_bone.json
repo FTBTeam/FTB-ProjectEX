@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:spider_eye"
+  },
+  "output": {
+    "item": "minecraft:bone"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

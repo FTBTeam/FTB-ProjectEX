@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/violet_collector"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/violet_collector"
+    }
+  }
 }

@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "projectex:block/collector/green"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "projectex:block/collector/green"
+  }
 }

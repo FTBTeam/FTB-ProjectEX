@@ -1,7 +1,5 @@
 package dev.latvian.mods.projectex.item;
 
-import dev.latvian.mods.projectex.ProjectEX;
-import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import net.minecraft.ChatFormatting;
@@ -24,27 +22,27 @@ import java.math.BigInteger;
 import java.util.List;
 
 public class FinalStarItem extends Item {
-	public FinalStarItem() {
-		super(new Properties().stacksTo(1).tab(ProjectEX.tab));
-	}
+    public FinalStarItem() {
+        super(new Properties().stacksTo(1).tab(ProjectEXItems.ItemGroups.CREATIVE_TAB));
+    }
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(stack, level, list, flag);
-		list.add(new TranslatableComponent("item.projectex.final_star.tooltip").withStyle(ChatFormatting.GRAY));
-		list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
-	}
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(stack, level, list, flag);
+        list.add(new TranslatableComponent("item.projectex.final_star.tooltip").withStyle(ChatFormatting.GRAY));
+        list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
+    }
 
-	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		if (!level.isClientSide() && player.isCrouching()) {
-			IKnowledgeProvider provider = player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).orElse(null);
-			provider.setEmc(BigInteger.ZERO);
-			provider.syncEmc((ServerPlayer) player);
-			return InteractionResultHolder.success(player.getItemInHand(hand));
-		}
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide() && player.isCrouching()) {
+            IKnowledgeProvider provider = player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).orElse(null);
+            provider.setEmc(BigInteger.ZERO);
+            provider.syncEmc((ServerPlayer) player);
+            return InteractionResultHolder.success(player.getItemInHand(hand));
+        }
 
-		return super.use(level, player, hand);
-	}
+        return super.use(level, player, hand);
+    }
 }

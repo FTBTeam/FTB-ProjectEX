@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/refined_link"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/refined_link"
+    }
+  }
 }

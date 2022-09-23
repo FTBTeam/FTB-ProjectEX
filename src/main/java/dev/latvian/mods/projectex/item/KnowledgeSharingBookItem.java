@@ -1,6 +1,5 @@
 package dev.latvian.mods.projectex.item;
 
-import dev.latvian.mods.projectex.ProjectEX;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -15,19 +14,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class KnowledgeSharingBookItem extends Item {
-	public KnowledgeSharingBookItem() {
-		super(new Properties().stacksTo(1).tab(ProjectEX.tab));
-	}
+    public KnowledgeSharingBookItem() {
+        super(new Properties().stacksTo(1).tab(ProjectEXItems.ItemGroups.CREATIVE_TAB));
+    }
 
-	@Override
-	public boolean isFoil(ItemStack stack) {
-		return false;
-	}
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return false;
+    }
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(stack, level, list, flag);
-		list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
-	}
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(stack, level, list, flag);
+        list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
+    }
 }

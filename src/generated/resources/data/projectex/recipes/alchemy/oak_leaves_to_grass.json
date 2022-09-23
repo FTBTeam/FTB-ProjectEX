@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:oak_leaves"
+  },
+  "output": {
+    "item": "minecraft:grass"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

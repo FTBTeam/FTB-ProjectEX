@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:vine"
+  },
+  "output": {
+    "item": "minecraft:lily_pad"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

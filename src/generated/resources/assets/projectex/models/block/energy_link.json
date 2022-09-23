@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "projectex:block/energy_link"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "projectex:block/energy_link"
+  }
 }

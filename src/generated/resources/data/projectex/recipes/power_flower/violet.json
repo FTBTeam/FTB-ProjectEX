@@ -1,23 +1,23 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"group": "projectex:matter/violet",
-	"pattern": [
-		"CLC",
-		"RRR",
-		"RRR"
-	],
-	"key": {
-		"L": {
-			"item": "projectex:energy_link"
-		},
-		"C": {
-			"item": "projectex:violet_compressed_collector"
-		},
-		"R": {
-			"item": "projectex:violet_relay"
-		}
-	},
-	"result": {
-		"item": "projectex:violet_power_flower"
-	}
+  "type": "minecraft:crafting_shaped",
+  "group": "projectex:matter/violet",
+  "pattern": [
+    "CLC",
+    "RRR",
+    "RRR"
+  ],
+  "key": {
+    "L": {
+      "item": "projectex:energy_link"
+    },
+    "C": {
+      "item": "projectex:violet_compressed_collector"
+    },
+    "R": {
+      "item": "projectex:violet_relay"
+    }
+  },
+  "result": {
+    "item": "projectex:violet_power_flower"
+  }
 }

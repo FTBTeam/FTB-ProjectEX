@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/energy_link"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/energy_link"
+    }
+  }
 }

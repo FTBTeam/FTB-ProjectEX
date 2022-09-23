@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/fading_relay"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/fading_relay"
+    }
+  }
 }

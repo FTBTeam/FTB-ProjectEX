@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/final_power_flower"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/final_power_flower"
+    }
+  }
 }

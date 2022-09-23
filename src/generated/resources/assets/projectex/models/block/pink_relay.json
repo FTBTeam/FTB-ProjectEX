@@ -1,6 +1,6 @@
 {
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "projectex:block/relay/pink"
-	}
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "projectex:block/relay/pink"
+  }
 }

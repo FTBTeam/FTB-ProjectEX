@@ -1,6 +1,5 @@
 package dev.latvian.mods.projectex.item;
 
-import dev.latvian.mods.projectex.ProjectEX;
 import moze_intel.projecte.gameObjs.container.TransmutationContainer;
 import moze_intel.projecte.utils.text.PELang;
 import net.minecraft.ChatFormatting;
@@ -26,43 +25,43 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ArcaneTabletItem extends Item {
-	public ArcaneTabletItem() {
-		super(new Properties().stacksTo(1).tab(ProjectEX.tab));
-	}
+    public ArcaneTabletItem() {
+        super(new Properties().stacksTo(1).tab(ProjectEXItems.ItemGroups.CREATIVE_TAB));
+    }
 
-	@Override
-	@Nonnull
-	public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
-		if (!world.isClientSide) {
-			NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(hand), (buf) -> buf.writeEnum(hand));
-		}
+    @Override
+    @Nonnull
+    public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
+        if (!world.isClientSide) {
+            NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(hand), (buf) -> buf.writeEnum(hand));
+        }
 
-		return InteractionResultHolder.success(player.getItemInHand(hand));
-	}
+        return InteractionResultHolder.success(player.getItemInHand(hand));
+    }
 
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(stack, level, list, flag);
-		list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
-	}
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(stack, level, list, flag);
+        list.add(new TextComponent("WIP!").withStyle(ChatFormatting.RED));
+    }
 
-	private static class ContainerProvider implements MenuProvider {
-		private final InteractionHand hand;
+    private static class ContainerProvider implements MenuProvider {
+        private final InteractionHand hand;
 
-		private ContainerProvider(InteractionHand hand) {
-			this.hand = hand;
-		}
+        private ContainerProvider(InteractionHand hand) {
+            this.hand = hand;
+        }
 
-		@Override
-		public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-			return new TransmutationContainer(windowId, playerInventory, this.hand, 0);
-		}
+        @Override
+        public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
+            return new TransmutationContainer(windowId, playerInventory, this.hand, 0);
+        }
 
-		@Override
-		@Nonnull
-		public Component getDisplayName() {
-			return PELang.TRANSMUTATION_TRANSMUTE.translate();
-		}
-	}
+        @Override
+        @Nonnull
+        public Component getDisplayName() {
+            return PELang.TRANSMUTATION_TRANSMUTE.translate();
+        }
+    }
 }

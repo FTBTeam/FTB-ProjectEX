@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:apple"
+  },
+  "output": {
+    "item": "minecraft:carrot"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

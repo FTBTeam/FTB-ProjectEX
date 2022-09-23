@@ -1,0 +1,11 @@
+{
+  "type": "projectex:alchemy_table",
+  "input": {
+    "item": "minecraft:lava_bucket"
+  },
+  "output": {
+    "item": "minecraft:obsidian"
+  },
+  "emc_override": 0,
+  "crafting_time": 200
+}

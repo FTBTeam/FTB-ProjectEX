@@ -2,43 +2,55 @@ package dev.latvian.mods.projectex;
 
 import dev.latvian.mods.projectex.block.ProjectEXBlocks;
 import dev.latvian.mods.projectex.block.entity.ProjectEXBlockEntities;
+import dev.latvian.mods.projectex.client.ClientSetup;
+import dev.latvian.mods.projectex.config.ConfigHolder;
 import dev.latvian.mods.projectex.item.ProjectEXItems;
+import dev.latvian.mods.projectex.menu.ProjectEXMenuTypes;
+import dev.latvian.mods.projectex.network.NetworkHandler;
+import dev.latvian.mods.projectex.recipes.ProjectEXRecipeSerializers;
+import dev.latvian.mods.projectex.recipes.ProjectEXRecipeTypes;
+import dev.latvian.mods.projectex.recipes.RecipeCache;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(ProjectEX.MOD_ID)
 public class ProjectEX {
-	public static final String MOD_ID = "projectex";
+    public static final String MOD_ID = "projectex";
 
-	//public static ProjectEXCommon PROXY;
+    public static final Direction[] DIRECTIONS = Direction.values();
 
-	public static final Direction[] DIRECTIONS = Direction.values();
+    public ProjectEX() {
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> ClientSetup::initEarly);
 
-	public static CreativeModeTab tab;
+        ConfigHolder.init();
 
-	public ProjectEX() {
-		//PROXY = DistExecutor.safeRunForDist(() -> FTBJarModClient::new, () -> FTBJarModCommon::new);
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-		tab = new CreativeModeTab(MOD_ID) {
-			@Override
-			@OnlyIn(Dist.CLIENT)
-			public ItemStack makeIcon() {
-				return new ItemStack(ProjectEXItems.ARCANE_TABLET.get());
-			}
-		};
+        ProjectEXBlocks.REGISTRY.register(modBus);
+        ProjectEXItems.REGISTRY.register(modBus);
+        ProjectEXBlockEntities.REGISTRY.register(modBus);
+        ProjectEXMenuTypes.REGISTRY.register(modBus);
+        ProjectEXRecipeTypes.REGISTRY.register(modBus);
+        ProjectEXRecipeSerializers.REGISTRY.register(modBus);
 
-		ProjectEXBlocks.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		ProjectEXItems.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		ProjectEXBlockEntities.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		// ProjectEXRecipeSerializers.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
-		// ProjectEXMenus.REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+        modBus.addListener(this::commonSetup);
 
-		//ProjectEXNet.init();
-		//PROXY.init();
-	}
+        forgeBus.addListener(this::addReloadListeners);
+    }
+
+    private void commonSetup(FMLCommonSetupEvent event) {
+        NetworkHandler.init();
+    }
+
+    private void addReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(RecipeCache.getCacheReloadListener());
+    }
 }

@@ -1,20 +1,20 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"group": "projectex:matter/violet",
-	"pattern": [
-		"FMF",
-		"FMF",
-		"FMF"
-	],
-	"key": {
-		"F": {
-			"item": "projecte:aeternalis_fuel"
-		},
-		"M": {
-			"item": "projectex:purple_matter"
-		}
-	},
-	"result": {
-		"item": "projectex:violet_matter"
-	}
+  "type": "minecraft:crafting_shaped",
+  "group": "projectex:matter/violet",
+  "pattern": [
+    "FMF",
+    "FMF",
+    "FMF"
+  ],
+  "key": {
+    "F": {
+      "item": "projecte:aeternalis_fuel"
+    },
+    "M": {
+      "item": "projectex:purple_matter"
+    }
+  },
+  "result": {
+    "item": "projectex:violet_matter"
+  }
 }

@@ -1,7 +1,7 @@
 {
-	"variants": {
-		"": {
-			"model": "projectex:block/cyan_collector"
-		}
-	}
+  "variants": {
+    "": {
+      "model": "projectex:block/cyan_collector"
+    }
+  }
 }

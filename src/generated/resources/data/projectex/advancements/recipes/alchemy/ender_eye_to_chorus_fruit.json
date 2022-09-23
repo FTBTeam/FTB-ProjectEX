@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "projectex:alchemy/ender_eye_to_chorus_fruit"
+    ]
+  },
+  "criteria": {
+    "alchemy_table": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "projectex:alchemy_table"
+            ]
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "projectex:alchemy/ender_eye_to_chorus_fruit"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "alchemy_table",
+      "has_the_recipe"
+    ]
+  ]
+}

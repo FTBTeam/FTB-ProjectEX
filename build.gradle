@@ -12,6 +12,9 @@ group = project.maven_group
 
 def ENV = System.getenv()
 
+// All jar files from this folder will be added automatically as runtime mod dependencies
+String extraModsDir = "extra-mods-${project.minecraft_version}"
+
 loom {
 	silentMojangMappingsLicense()
 
@@ -33,24 +36,43 @@ loom {
 }
 
 repositories {
+	flatDir {
+		name "extra-mods"
+		dir file(extraModsDir)
+	}
 	maven {
 		url "https://cursemaven.com"
 	}
 	maven {
 		url 'https://dvs1.progwml6.com/files/maven'
 	}
+	maven { url = 'https://maven.parchmentmc.org' }
 }
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 
-	mappings loom.officialMojangMappings()
+//	mappings loom.officialMojangMappings()
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.18.2:2022.09.04@zip")
+	}
 	forge "net.minecraftforge:forge:${project.forge_version}"
 
 	modImplementation "curse.maven:projecte-226410:${project.projecte_file}"
 
 	modCompileOnly "mezz.jei:jei-${minecraft_version}:${jei_version}:api"
 	modRuntimeOnly "mezz.jei:jei-${minecraft_version}:${jei_version}"
+
+	// Locally sourced extra mods for runtime (i.e. testing) - thanks AE2 for this idea
+	for (extraModJar in fileTree(dir: extraModsDir, include: '*.jar')) {
+		def basename = extraModJar.name.substring(0, extraModJar.name.length() - ".jar".length())
+		def versionSep = basename.lastIndexOf('-')
+		assert versionSep != -1
+		def artifactId = basename.substring(0, versionSep)
+		def version = basename.substring(versionSep + 1)
+		modRuntimeOnly "extra-mods:$artifactId:$version"
+	}
 }
 
 processResources {

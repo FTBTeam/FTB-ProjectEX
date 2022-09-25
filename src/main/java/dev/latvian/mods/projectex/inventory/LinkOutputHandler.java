@@ -39,8 +39,13 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
 
         IKnowledgeProvider knowledgeProvider = null;
         if (owningBlockEntity.getStoredEmc() < value) {
-            knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owningBlockEntity.getOwnerId());
-            if (knowledgeProvider.getEmc().longValue() < value) {
+            try {
+                knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owningBlockEntity.getOwnerId());
+                if (knowledgeProvider.getEmc().longValue() < value) {
+                    return ItemStack.EMPTY;
+                }
+            } catch (NullPointerException e) {
+                // ugly, but it's possible for getKnowledgeProviderFor() to throw an NPE immediately after player death
                 return ItemStack.EMPTY;
             }
         }
@@ -56,6 +61,9 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
                     owningBlockEntity.extractEmc(totalValue, IEmcStorage.EmcAction.EXECUTE);
                 } else if (knowledgeProvider != null) {
                     knowledgeProvider.setEmc(knowledgeProvider.getEmc().subtract(BigInteger.valueOf(totalValue)));
+                } else {
+                    // shouldn't get here, but...
+                    return ItemStack.EMPTY;
                 }
             }
             return toExtract;
@@ -68,7 +76,7 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
     @Override
     public ItemStack getStackInSlot(int slot) {
         if (owningBlockEntity.getLevel().isClientSide()) {
-            return super.getStackInSlot(slot);
+            return getItemForDisplay(slot);
         }
 
         validateSlotIndex(slot);
@@ -92,6 +100,11 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
             return ItemStack.EMPTY;
         }
         return ItemStack.EMPTY;
+    }
+
+    public ItemStack getItemForDisplay(int slot) {
+        // used to display slot contents in the GUI
+        return super.getStackInSlot(slot);
     }
 
     private int capAmount(@Nullable IKnowledgeProvider knowledgeProvider, long value, long limit) {

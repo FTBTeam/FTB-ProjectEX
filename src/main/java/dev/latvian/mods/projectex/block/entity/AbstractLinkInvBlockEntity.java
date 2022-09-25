@@ -111,7 +111,7 @@ public abstract class AbstractLinkInvBlockEntity extends AbstractLinkBlockEntity
         return inputHandler;
     }
 
-    public IItemHandler getOutputHandler() {
+    public LinkOutputHandler getOutputHandler() {
         return outputHandler;
     }
 
@@ -122,12 +122,12 @@ public abstract class AbstractLinkInvBlockEntity extends AbstractLinkBlockEntity
      */
     public void addToOutput(ItemStack stack) {
         for (int i = 0; i < outputHandler.getSlots(); i++) {
-            if (ItemStack.isSame(outputHandler.getStackInSlot(i), stack)) {
+            if (ItemStack.isSame(outputHandler.getItemForDisplay(i), stack)) {
                 return;
             }
         }
         for (int i = 0; i < outputHandler.getSlots(); i++) {
-            if (outputHandler.getStackInSlot(i).isEmpty()) {
+            if (outputHandler.getItemForDisplay(i).isEmpty()) {
                 outputHandler.setStackInSlot(i, stack);
                 return;
             }

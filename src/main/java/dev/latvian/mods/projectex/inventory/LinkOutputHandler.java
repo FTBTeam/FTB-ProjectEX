@@ -1,12 +1,11 @@
 package dev.latvian.mods.projectex.inventory;
 
 import dev.latvian.mods.projectex.block.entity.AbstractLinkInvBlockEntity;
-import dev.latvian.mods.projectex.offline.PersonalEMC;
+import dev.latvian.mods.projectex.config.ConfigHelper;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,10 +38,11 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
         if (value <= 0L) return ItemStack.EMPTY;
 
         IKnowledgeProvider knowledgeProvider = null;
-        Level level = owningBlockEntity.getLevel();
-        if (owningBlockEntity.getStoredEmc() < value
-                && ((knowledgeProvider = PersonalEMC.getKnowledge(level, owningBlockEntity.getOwnerId())) == null || knowledgeProvider.getEmc().longValue() < value)) {
-            return ItemStack.EMPTY;
+        if (owningBlockEntity.getStoredEmc() < value) {
+            knowledgeProvider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owningBlockEntity.getOwnerId());
+            if (knowledgeProvider.getEmc().longValue() < value) {
+                return ItemStack.EMPTY;
+            }
         }
 
         // At this point we know there's either enough EMC in the block, or in the player's personal network
@@ -55,7 +55,7 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
                 if (owningBlockEntity.getStoredEmc() >= totalValue) {
                     owningBlockEntity.extractEmc(totalValue, IEmcStorage.EmcAction.EXECUTE);
                 } else if (knowledgeProvider != null) {
-                    PersonalEMC.remove(knowledgeProvider, BigInteger.valueOf(totalValue));
+                    knowledgeProvider.setEmc(knowledgeProvider.getEmc().subtract(BigInteger.valueOf(totalValue)));
                 }
             }
             return toExtract;
@@ -64,13 +64,38 @@ public class LinkOutputHandler extends BaseItemStackHandler<AbstractLinkInvBlock
         return ItemStack.EMPTY;
     }
 
-    private int capAmount(@Nullable IKnowledgeProvider knowledgeProvider, long value, int limit) {
-        long emc = knowledgeProvider == null ? owningBlockEntity.getStoredEmc() : knowledgeProvider.getEmc().longValue();
-
-        if (emc < value) {
-            return 0;
+    @NotNull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        if (owningBlockEntity.getLevel().isClientSide()) {
+            return super.getStackInSlot(slot);
         }
 
-        return (int) (Math.min(limit, emc / value));
+        validateSlotIndex(slot);
+
+        if (ConfigHelper.server().general.emcLinkMaxOutput.get() <= 0) {
+            return ItemStack.EMPTY;
+        }
+
+        long value = ProjectEAPI.getEMCProxy().getValue(stacks.get(slot));
+        if (value > 0L) {
+            try {
+                IKnowledgeProvider provider = ProjectEAPI.getTransmutationProxy().getKnowledgeProviderFor(owningBlockEntity.getOwnerId());
+                int c = capAmount(provider, value, ConfigHelper.server().general.emcLinkMaxOutput.get());
+                if (c > 0) {
+                    return ItemHandlerHelper.copyStackWithSize(stacks.get(slot), c);
+                }
+            } catch (NullPointerException e) {
+                // ugly, but it's possible for getKnowledgeProviderFor() to throw an NPE immediately after player death
+                // fall through & return an empty stack
+            }
+            return ItemStack.EMPTY;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    private int capAmount(@Nullable IKnowledgeProvider knowledgeProvider, long value, long limit) {
+        long emc = knowledgeProvider == null ? owningBlockEntity.getStoredEmc() : knowledgeProvider.getEmc().longValue();
+        return emc < value ? 0 : (int) (Math.min(limit, emc / value));
     }
 }

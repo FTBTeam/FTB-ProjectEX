@@ -2,10 +2,8 @@ package dev.latvian.mods.projectex.menu;
 
 import dev.latvian.mods.projectex.block.entity.AbstractLinkInvBlockEntity;
 import dev.latvian.mods.projectex.inventory.FilterSlot;
-import dev.latvian.mods.projectex.offline.PersonalEMC;
 import dev.latvian.mods.projectex.util.ProjectEXUtils;
 import moze_intel.projecte.api.ProjectEAPI;
-import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import moze_intel.projecte.config.ProjectEConfig;
@@ -59,11 +57,18 @@ public abstract class AbstractLinkMenu<T extends AbstractLinkInvBlockEntity> ext
                     case QUICK_MOVE -> slot.set(ItemStack.EMPTY);
                     case PICKUP -> {
                         if (!getCarried().isEmpty()) {
-                            slot.set(ItemHandlerHelper.copyStackWithSize(getCarried(), 1));
-                            IKnowledgeProvider provider = PersonalEMC.getKnowledge(player);
-                            if (provider.addKnowledge(getCarried())) {
-                                provider.sync(serverPlayer);
+                            // prevent duplicate items in the filter slots
+                            for (int i = 0; i < getBlockEntity().getOutputHandler().getSlots(); i++) {
+                                if (getBlockEntity().getOutputHandler().getStackInSlot(i).getItem() == getCarried().getItem()) {
+                                    return;
+                                }
                             }
+                            slot.set(ItemHandlerHelper.copyStackWithSize(getCarried(), 1));
+                            player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).ifPresent(provider -> {
+                                if (provider.addKnowledge(getCarried())) {
+                                    provider.sync(serverPlayer);
+                                }
+                            });
                         } else if (slot.hasItem()) {
                             int amount = button == 0 ? slot.getItem().getMaxStackSize() : 1;
                             ItemStack extracted = filterSlot.remove(amount);

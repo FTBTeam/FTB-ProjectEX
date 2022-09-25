@@ -1,7 +1,7 @@
 package dev.latvian.mods.projectex.network;
 
 import dev.latvian.mods.projectex.client.ClientUtils;
-import dev.latvian.mods.projectex.offline.PersonalEMC;
+import moze_intel.projecte.api.capabilities.PECapabilities;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
@@ -32,7 +32,9 @@ public class PacketEMCSync {
         ctx.get().enqueueWork(() -> {
             if (ctx.get().getSender() == null) {
                 Player player = ClientUtils.getClientPlayer();
-                PersonalEMC.getKnowledge(player).setEmc(emc);
+                if (player != null) {
+                    player.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY).ifPresent(provider -> provider.setEmc(emc));
+                }
             }
         });
         ctx.get().setPacketHandled(true);

@@ -103,6 +103,10 @@ public abstract class AbstractLinkInvBlockEntity extends AbstractLinkBlockEntity
         itemCap.invalidate();
     }
 
+    public boolean hasOwner() {
+        return getOwnerId().getLeastSignificantBits() != 0L && getOwnerId().getMostSignificantBits() != 0L;
+    }
+
     public IItemHandler getInputHandler() {
         return inputHandler;
     }

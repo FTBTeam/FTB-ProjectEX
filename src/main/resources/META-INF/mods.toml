@@ -1,12 +1,12 @@
 modLoader = "javafml"
 loaderVersion = "[39,)"
-issueTrackerURL = "https://github.com/latvian-dev/ProjectEX/issues"
+issueTrackerURL = "https://github.com/FTBTeam/FTB-Mods-Issues"
 license = "GNU LGPLv3"
 
 [[mods]]
 modId = "projectex"
 version = "${file.jarVersion}"
-displayName = "ProjectEX"
+displayName = "FTB ProjectEX"
 authors = "LatvianModder"
 description = '''
 An addon to ProjectE

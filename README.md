@@ -1,10 +1,10 @@
-# ProjectEX
+# FTB ProjectEX
 
 [![](http://cf.way2muchnoise.eu/projectex.svg) ![](http://cf.way2muchnoise.eu/versions/projectex.svg)](https://www.curseforge.com/minecraft/mc-mods/projectex)
 
 ## About
 
-ProjectEX is an **unofficial** extention mod for ProjectE providing new features like: 
+FTB ProjectEX is an **unofficial** extention mod for ProjectE providing new features like: 
 
 - Single block, low lag, emc trees
 - An improved Transmutation tablet

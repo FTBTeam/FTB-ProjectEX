@@ -119,15 +119,16 @@ repositories {
 		name = "JEI"
 		url  = 'https://dvs1.progwml6.com/files/maven'
 	}
-	flatDir {
-		dirs '/libs'
+	maven {
+		name = "curseforge"
+		url = "https://cursemaven.com"
 	}
 }
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:1.18.1-39.0.64'
 
-	implementation fg.deobf("projecte:projecte:1.0.1")
+	implementation fg.deobf("curse.maven:projecte-226410:3722831")
 
 	compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}:api")
 	runtimeOnly fg.deobf("mezz.jei:jei-${minecraft_version}:${jei_version}")

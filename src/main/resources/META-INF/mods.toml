@@ -7,7 +7,7 @@ license = "GNU LGPLv3"
 modId = "projectex"
 version = "${file.jarVersion}"
 displayName = "FTB ProjectEX"
-authors = "LatvianModder"
+authors = "FTB Team"
 description = '''
 An addon to ProjectE
 '''

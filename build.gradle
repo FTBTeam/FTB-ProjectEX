@@ -34,6 +34,11 @@ loom {
 
 repositories {
 	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+
+	maven {
 		url "https://maven.shedaniel.me/"
 		content {
 			includeGroup "me.shedaniel"
@@ -60,7 +65,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 	mappings loom.layered() {
 		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-1.16.5:2021.10.17")
+		parchment("org.parchmentmc.data:parchment-1.16.5:2022.03.06")
 	}
 	forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 	modImplementation "curse.maven:projecte-226410:${projecte_file}"

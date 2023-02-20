@@ -1,5 +1,6 @@
 package dev.latvian.mods.projectex.block.entity;
 
+import dev.latvian.mods.projectex.EMCSyncHandler;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.tile.IEmcStorage;
@@ -77,7 +78,7 @@ public class LinkBaseBlockEntity extends BlockEntity implements TickableBlockEnt
 				provider.setEmc(provider.getEmc().add(storedEMC));
 				storedEMC = BigInteger.ZERO;
 				setChanged();
-				provider.syncEmc(player);
+				EMCSyncHandler.INSTANCE.needsSync(player);
 			}
 		}
 	}

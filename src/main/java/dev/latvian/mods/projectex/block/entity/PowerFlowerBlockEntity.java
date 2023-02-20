@@ -1,5 +1,6 @@
 package dev.latvian.mods.projectex.block.entity;
 
+import dev.latvian.mods.projectex.EMCSyncHandler;
 import dev.latvian.mods.projectex.block.PowerFlowerBlock;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
@@ -80,7 +81,7 @@ public class PowerFlowerBlockEntity extends BlockEntity implements TickableBlock
 						setChanged();
 					}
 
-					provider.syncEmc(player);
+					EMCSyncHandler.INSTANCE.needsSync(player);
 				} else {
 					storedEMC = storedEMC.add(BigInteger.valueOf(gen));
 					setChanged();

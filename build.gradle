@@ -1,5 +1,5 @@
 plugins {
-	id "dev.architectury.loom" version "0.7.2-SNAPSHOT"
+	id "dev.architectury.loom" version "0.10.0-SNAPSHOT"
 	id 'maven-publish'
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
@@ -17,20 +17,17 @@ group = project.maven_group
 loom {
 	silentMojangMappingsLicense()
 
-	mixinConfigs = [
-	]
+	forge {
+		dataGen {
+			mod project.mod_id
+		}
 
-	useFabricMixin = true
-
-	dataGen {
-		mod project.mod_id
-	}
-
-	launches {
-		data {
-			arg "--existing", file("src/main/resources").absolutePath
-			arg "--assetIndex", "1.16"
-			arg "--assetsDir", (ENV.GRADLE_USER_HOME ?: "${System.getProperty("user.home")}/.gradle") + "/caches/fabric-loom/assets"
+		launches {
+			data {
+				arg "--existing", file("src/main/resources").absolutePath
+				arg "--assetIndex", "1.16"
+				arg "--assetsDir", (ENV.GRADLE_USER_HOME ?: "${System.getProperty("user.home")}/.gradle") + "/caches/fabric-loom/assets"
+			}
 		}
 	}
 }
@@ -61,7 +58,10 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-	mappings minecraft.officialMojangMappings()
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.16.5:2021.10.17")
+	}
 	forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 	modImplementation "curse.maven:projecte-226410:${projecte_file}"
 	modImplementation "curse.maven:jei-238222:${jei_file}"

@@ -34,7 +34,11 @@ public class ArcaneTabletItem extends Item {
 	@Nonnull
 	public InteractionResultHolder<ItemStack> use(@Nonnull Level world, @Nonnull Player player, @Nonnull InteractionHand hand) {
 		if (!world.isClientSide) {
-			NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(hand), (buf) -> buf.writeEnum(hand));
+			NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(), b -> {
+				b.writeBoolean(true);
+				b.writeEnum(hand);
+				b.writeByte(player.inventory.selected);
+			});
 		}
 
 		return InteractionResultHolder.success(player.getItemInHand(hand));
@@ -48,15 +52,13 @@ public class ArcaneTabletItem extends Item {
 	}
 
 	private static class ContainerProvider implements MenuProvider {
-		private final InteractionHand hand;
 
-		private ContainerProvider(InteractionHand hand) {
-			this.hand = hand;
+		private ContainerProvider() {
 		}
 
 		@Override
 		public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-			return new TransmutationContainer(windowId, playerInventory, this.hand);
+			return new TransmutationContainer(windowId, playerInventory);
 		}
 
 		@Override

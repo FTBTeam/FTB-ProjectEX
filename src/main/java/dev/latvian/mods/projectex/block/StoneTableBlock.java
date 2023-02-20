@@ -73,9 +73,7 @@ public class StoneTableBlock extends Block {
 	@Deprecated
 	public InteractionResult use(@Nonnull BlockState state, Level world, @Nonnull BlockPos pos, @Nonnull Player player, @Nonnull InteractionHand hand, @Nonnull BlockHitResult rtr) {
 		if (!world.isClientSide) {
-			NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(), (b) -> {
-				b.writeEnum(InteractionHand.OFF_HAND);
-			});
+			NetworkHooks.openGui((ServerPlayer) player, new ContainerProvider(), b -> b.writeBoolean(false));
 		}
 
 		return InteractionResult.SUCCESS;
@@ -95,7 +93,7 @@ public class StoneTableBlock extends Block {
 
 		@Override
 		public AbstractContainerMenu createMenu(int windowId, @Nonnull Inventory playerInventory, @Nonnull Player player) {
-			return new TransmutationContainer(windowId, playerInventory, InteractionHand.OFF_HAND);
+			return new TransmutationContainer(windowId, playerInventory);
 		}
 
 		@Override

@@ -30,6 +30,6 @@ side = "BOTH"
 [[dependencies.projectex]]
 modId = "projecte"
 mandatory = true
-versionRange = "*"
+versionRange = "[PE1.0.2,)"
 ordering = "AFTER"
 side = "BOTH"

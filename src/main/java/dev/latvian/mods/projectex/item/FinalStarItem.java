@@ -1,5 +1,6 @@
 package dev.latvian.mods.projectex.item;
 
+import dev.latvian.mods.projectex.EMCSyncHandler;
 import dev.latvian.mods.projectex.ProjectEX;
 import moze_intel.projecte.api.ProjectEAPI;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
@@ -40,7 +41,7 @@ public class FinalStarItem extends Item {
 		if (!level.isClientSide() && player.isCrouching()) {
 			IKnowledgeProvider provider = player.getCapability(ProjectEAPI.KNOWLEDGE_CAPABILITY).orElse(null);
 			provider.setEmc(BigInteger.ZERO);
-			provider.syncEmc((ServerPlayer) player);
+			EMCSyncHandler.INSTANCE.needsSync((ServerPlayer) player);
 			return InteractionResultHolder.success(player.getItemInHand(hand));
 		}
 

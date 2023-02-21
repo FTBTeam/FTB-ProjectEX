@@ -1,10 +1,10 @@
 plugins {
-	id "dev.architectury.loom" version "0.7.2-SNAPSHOT"
+	id "dev.architectury.loom" version "0.10.0-SNAPSHOT"
 	id 'maven-publish'
 	id "com.matthewprenger.cursegradle" version "1.4.0"
 }
 
-apply from: 'https://files.latmod.com/public/markdown-git-changelog.gradle'
+apply from: 'https://files.saps.dev/ci/git-md-changelog.gradle'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -17,25 +17,27 @@ group = project.maven_group
 loom {
 	silentMojangMappingsLicense()
 
-	mixinConfigs = [
-	]
+	forge {
+		dataGen {
+			mod project.mod_id
+		}
 
-	useFabricMixin = true
-
-	dataGen {
-		mod project.mod_id
-	}
-
-	launches {
-		data {
-			arg "--existing", file("src/main/resources").absolutePath
-			arg "--assetIndex", "1.16"
-			arg "--assetsDir", (ENV.GRADLE_USER_HOME ?: "${System.getProperty("user.home")}/.gradle") + "/caches/fabric-loom/assets"
+		launches {
+			data {
+				arg "--existing", file("src/main/resources").absolutePath
+				arg "--assetIndex", "1.16"
+				arg "--assetsDir", (ENV.GRADLE_USER_HOME ?: "${System.getProperty("user.home")}/.gradle") + "/caches/fabric-loom/assets"
+			}
 		}
 	}
 }
 
 repositories {
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
+
 	maven {
 		url "https://maven.shedaniel.me/"
 		content {
@@ -61,7 +63,10 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-	mappings minecraft.officialMojangMappings()
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.16.5:2022.03.06")
+	}
 	forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 	modImplementation "curse.maven:projecte-226410:${projecte_file}"
 	modImplementation "curse.maven:jei-238222:${jei_file}"
@@ -123,7 +128,7 @@ publishing {
 			maven {
 				url "https://maven.ftb.dev/release"
 				credentials {
-					username = "latvian"
+					username = "ftb"
 					password = "${ENV.FTB_MAVEN_TOKEN}"
 				}
 			}
@@ -131,9 +136,9 @@ publishing {
 
 		if (ENV.SAPS_TOKEN) {
 			maven {
-				url "https://maven.saps.dev/minecraft"
+				url "https://maven.saps.dev/releases"
 				credentials {
-					username = "latvian"
+					username = "ftb"
 					password = "${ENV.SAPS_TOKEN}"
 				}
 			}
@@ -148,7 +153,7 @@ if (ENV.CURSEFORGE_KEY) {
 			id = project.curseforge_id
 			releaseType = project.curseforge_type
 			addGameVersion "1.16.5"
-			mainArtifact(remapJar.archivePath)
+			mainArtifact(remapJar.archiveFile)
 			relations {
 				requiredDependency 'projecte'
 			}
